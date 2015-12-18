@@ -1,0 +1,44 @@
+<template>
+	<table if.bind="is_notconnected">
+		<tr>
+			<td style="text-align:center">
+				<sheader-bar></sheader-bar>
+			</td>
+		</tr>
+		<tr>
+			<td if.bind="has_login_image">
+				<img src.bind="login_image"></img>
+			</td>
+			<td>&nbsp;&nbsp;</td>
+			<td>
+				<form role="form">
+					<div class="form-group">
+						<label class="control-label">Identifiant</label>
+						<input id="username" type="text" class="form-control" value.bind="username" placeholder="Identifiant utilisateur" />
+					</div>
+					<div class="form-group">
+						<label class="control-label">Mot de passe</label>
+						<input id="password" type="password" class="form-control" value.bind="password" placeholder="Mot de passe" />
+					</div>
+					<div class="btn-group">
+						<a class="btn btn-primary" click.delegate="perform_login()" href="#" show.bind="can_connect">
+							<i class="fa fa-user"></i>Connecter
+						</a>
+					</div>
+				</form>
+			</td>
+		</tr>
+	</table>
+	<table if.bind="is_connected">
+		<tr>
+			<td style="text-align:center">
+				<connect-bar></connect-bar>
+			</td>
+		</tr>
+		<tr if.bind="has_splash_image">
+			<td style="text-align:center">
+				<img src.bind="splash_image"></img>
+			</td>
+		</tr>
+	</table>
+</template>
