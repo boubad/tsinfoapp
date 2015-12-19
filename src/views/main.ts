@@ -6,6 +6,6 @@ export function configure(aurelia: Aurelia) {
   aurelia.use
     .standardConfiguration()
     .developmentLogging()
-		.feature('js/views/resources');
-  aurelia.start().then(a => a.setRoot('js/views/app'));
+		.feature('views/resources');
+  aurelia.start().then(a => a.setRoot('views/app'));
 }
