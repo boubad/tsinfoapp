@@ -147,6 +147,9 @@ export class AffectationViewModel<T extends IAffectation, P extends IDepartement
     public get cannotSave(): boolean {
         return (!this.canSave);
     }
+	protected perform_remove(): Promise<boolean> {
+		return Promise.resolve(true);
+	}// perforl_remove
     public remove(): Promise<any> {
         if (this.currentAffectations === null) {
             return Promise.resolve(false);
@@ -156,22 +159,20 @@ export class AffectationViewModel<T extends IAffectation, P extends IDepartement
         }
 		return this.confirm('Voulez-vous vraiment supprimer?').then((b) => {
 			if (b) {
+				this.is_busy = true;
 				this.clear_error();
-				let pp: Promise<any>[] = [];
-				let service = this.dataService;
-				for (let x of this.currentAffectations) {
-					let p = service.remove_item(x);
-					pp.push(p);
-				}
-				return Promise.all(pp);
+				return this.perform_remove();
 			} else {
-				return Promise.resolve([]);
+				return Promise.resolve(false);
 			}
 		}).then((r) => {
             this.currentAffectations = [];
             return this.refreshAll();
+		}).then((b) => {
+			this.is_busy = false;
         }).catch((err) => {
             this.set_error(err);
+			this.is_busy = true;
 			return false;
         });
     }// remove
@@ -186,12 +187,16 @@ export class AffectationViewModel<T extends IAffectation, P extends IDepartement
         if (oItems.length < 1) {
 			return Promise.resolve(false);
         }
+		this.is_busy = true;
         this.clear_error();
         return this.dataService.maintains_items(oItems).then((r) => {
             this.currentPersons = [];
             return this.refreshAll();
+		}).then((b)=>{
+			this.is_busy = false;
         }).catch((err) => {
             this.set_error(err);
+			this.is_busy = false;
 			return false;
         });
     }// save

@@ -20,10 +20,10 @@ export class ConsultRouter extends BaseView {
 		config.map([
 			{ route: ['', 'home'], name:'home',moduleId: '../common/home', nav: true, title: 'Accueil' },
 			{route: 'etudsearch', name: 'etudsearch', moduleId:'./etuds-search', nav: true, title: 'Rechercher' },
-			{ route: 'semestreevents', name: 'semestreevents', moduleId:'./semestre-events', nav: true, title: 'Liste Evènements' },
-			{ route: 'groupeeventslist', name: 'groupeeventslist', moduleId:'./groupeevents-list', nav: true, title: 'Liste devoirs' },
-			{ route: 'noteslist', name: 'noteslist', moduleId:'./notes-list', nav: true, title: 'Liste Notes' },
-			{ route: 'groupeevents', name: 'groupeevents', moduleId:'./groupeevents', nav: true, title: 'Edition devoirs' }
+			{ route: 'semestreevents', name: 'semestreevents', moduleId:'./semestre-events', nav: true, title: 'Evènements' },
+			{ route: 'groupeeventslist', name: 'groupeeventslist', moduleId:'./groupeevents-list', nav: true, title: 'Contrôles' },
+			{ route: 'noteslist', name: 'noteslist', moduleId:'./notes-list', nav: true, title: 'Notes' },
+			{ route: 'groupeevents', name: 'groupeevents', moduleId:'./groupeevents', nav: true, title: 'Devoirs' }
 		]);
 		this.router = router;
 	}

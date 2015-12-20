@@ -2,7 +2,7 @@
 //
 import {UserInfo} from './userinfo';
 import {AffectationViewModel} from './affectationsmodel';
-import {IEnseignant, IEnseignantAffectation} from 'infodata';
+import {IEnseignant, IEnseignantAffectation,IGroupeEvent,IPerson} from 'infodata';
 //
 export class EnseignantAffectationsModel extends AffectationViewModel<IEnseignantAffectation, IEnseignant> {
     //
@@ -10,6 +10,63 @@ export class EnseignantAffectationsModel extends AffectationViewModel<IEnseignan
         super(info);
         this.title = 'Affectations enseignants';
     }// constructor
+	//
+	private remove_profaffectation(aff:IEnseignantAffectation):Promise<boolean>{
+		if ((aff === undefined)|| (aff === null)){
+			return Promise.resolve(false);
+		}
+		let affid = aff.id;
+		if ((affid === undefined)|| (affid === null)){
+			return Promise.resolve(false);
+		}
+		let service = this.dataService;
+		let pPers:IPerson = null;
+		return service.find_item_by_id(aff.personid).then((pf:IPerson)=>{
+			pPers = (pf !== undefined) ? pf : null;
+			if (pPers == null){
+				return Promise.resolve([]);
+			} else {
+				let model = this.itemFactory.create_groupeevent();
+				return service.query_items(model.type(),{profaffectationid:affid});
+			}
+		}).then((gg:IGroupeEvent[])=>{
+			let pp:Promise<boolean>[] = [];
+			for (let g of gg){
+				pp.push(this.remove_groupeevent(g));
+			}
+			return Promise.all(pp);
+		}).then((xa)=>{
+			return service.remove_item(aff);
+		}).then((xr)=>{
+			if (pPers !== null){
+				let vv = this.remove_id_from_array(pPers.affectationids,affid);
+				pPers.affectationids = vv;
+				return service.save_item(pPers);
+			} else {
+				return Promise.resolve(false);
+			}
+		}).catch((e)=>{
+			return false;
+		});
+	}//remove_profaffectation
+	protected perform_remove():Promise<boolean>{
+		if (this.currentAffectations === null) {
+            return Promise.resolve(false);
+        }
+        if (this.currentAffectations.length < 1) {
+			return Promise.resolve(false);
+        }
+		let pp:Promise<boolean>[] = [];
+		for (let x of this.currentAffectations) {
+					let p = this.remove_profaffectation(x);
+					pp.push(p);
+				}
+		return Promise.all(pp).then((xx)=>{
+			return true;
+		}).catch((e)=>{
+			return false;
+		});		
+	}// perforl_remove
     //
     protected create_person(): IEnseignant {
 		return this.itemFactory.create_enseignant({ 

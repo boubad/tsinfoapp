@@ -31,7 +31,6 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
     private _noteMode: boolean;
     private _editMode: boolean;
     //
-    private _bBusy: boolean;
 	public xgenres: string[] = [GVT_TP, GVT_CONTROL, GVT_TD, GVT_PROMO, GVT_EXAM, GVT_MISC];
 	private _xgenre: string;
 	public etudEvtGenres: string[] = [EVT_ABSENCE, EVT_RETARD, EVT_MISC];
@@ -58,7 +57,6 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
         this._evtMode = false;
         this._noteMode = false;
         this._editMode = true;
-        this._bBusy = false;
     }// constructor
 	protected get_groupes(): IGroupe[] {
 		return (this.userInfo !== null) ? this.userInfo.groupes : [];
@@ -73,7 +71,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 		return this._editMode;
 	}
 	public set editMode(s: boolean) {
-		this._editMode =  ((s !== undefined) && (s !== null)) ? s : false;
+		this._editMode = ((s !== undefined) && (s !== null)) ? s : false;
 	}
 	public get noteMode(): boolean {
 		return this._noteMode;
@@ -240,6 +238,22 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 			return true;
 		})
     }// fill_etudaffectations
+	private retrieve_events(): Promise<IEtudiantEvent[]> {
+		let oRet: IEtudiantEvent[] = [];
+		let id = this.currentItem.id;
+        if (id === null) {
+            return Promise.resolve(oRet);
+        }
+		return this.dataService.query_items(this.eventModel.type(), { groupeeventid: id }).then((e1: IEtudiantEvent[]) => {
+			let e2: IEtudiantEvent[] = ((e1 !== undefined) && (e1 !== null)) ? e1 : [];
+			return this.retrieve_avatars(e2);
+		}).catch((xx: IEtudiantEvent[]) => {
+			oRet = xx;
+			return oRet;
+		}).catch((e) => {
+			return oRet;
+		})
+	}//retrieve_events
     protected fill_notes(): Promise<any> {
         let id = this.currentItem.id;
         if (id === null) {
@@ -253,7 +267,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
                 let oRet1: IEtudiantEvent[] = [];
                 let oRet2: IEtudiantEvent[] = [];
                 for (let x of ee) {
-					if (x.groupeEventGenre == null){
+					if (x.groupeEventGenre == null) {
 						x.groupeEventGenre = this.currentItem.genre;
 					}
                     if (x.genre == EVT_NOTE) {
@@ -530,7 +544,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
             x.endTime = s;
         }
     }
-	
+
     protected is_refresh(): boolean {
         return (this.modelItem !== null) &&
             (this.personid !== null) && (this.groupeid !== null) && (this.matiereid !== null) &&
@@ -596,7 +610,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 			this.update_profaffectation();
 			return this.fill_etudaffectations();
 		}).then((xr) => {
-			return this.refreshAll();
+			return this.activate_refresh();
         });
     }
     protected post_update_semestre(): Promise<boolean> {
@@ -606,14 +620,14 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 			this.update_profaffectation();
 			return this.fill_etudaffectations();
 		}).then((r) => {
-			return this.refreshAll();
+			return this.activate_refresh();
         });
     }
     protected post_update_matiere(): Promise<boolean> {
 		return super.post_update_matiere().then((rx) => {
 			this.modelItem.matiereid = this.matiereid;
 			this.update_profaffectation();
-			return this.refreshAll();
+			return this.activate_refresh();
 		});
     }
     protected post_change_item(): Promise<any> {
@@ -712,6 +726,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
         }
 		return this.confirm('Voulez-vous vraiment supprimer?').then((b) => {
 			if ((b !== undefined) && (b !== null) && (b == true)) {
+				this.is_busy = true;
 				this.clear_error();
 				let pp: Promise<any>[] = [];
 				let service = this.dataService;
@@ -725,15 +740,22 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 			}
 		}).then((r) => {
             return this.fill_notes();
+		}).then((x) => {
+			this.is_busy = false;
+			return true;
         }).catch((err) => {
             this.set_error(err);
+			this.is_busy = false;
+			return false;
         });
     }// removeetudEvent
     public saveEtudEvents(): any {
+		this.is_busy = true;
         let item = this.currentItem;
         let xgenre = this.etudEvtGenre;
         let id = (item !== null) ? item.id : null;
         if ((xgenre === null) || (id === null)) {
+			this.is_busy = false;
             return;
         }
         let oRet: IEtudiantEvent[] = [];
@@ -778,6 +800,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
             }// selected
         }// a
         if (oRet.length < 1) {
+			this.is_busy = false;
             return Promise.resolve(true);
         }
         let pp: Promise<any>[] = [];
@@ -791,12 +814,17 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
                 aa.selected = false;
             }
             return this.fill_notes();
+		}).then((x) => {
+			this.is_busy = false;
+			return true;
         }).catch((err) => {
             this.set_error(err);
+			this.is_busy = false;
             return false;
         });
     }// saveEtudEvents
     public saveNotes(): any {
+		this.is_busy = true;
         let oRet: IEtudiantEvent[] = [];
         for (let n of this.allNotes) {
             if (n.is_storeable() && n.selected) {
@@ -804,6 +832,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
             }
         }// n
         if (oRet.length < 1) {
+			this.is_busy = false;
             return Promise.resolve(true);
         }
         let pp: Promise<any>[] = [];
@@ -817,31 +846,42 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
                 aa.selected = false;
             }
             return this.fill_notes();
+		}).catch((x) => {
+			this.is_busy = false;
+			return true;
         }).catch((err) => {
             this.set_error(err)
             return false;
         });
     }// saveNotes
     public remove(): Promise<any> {
+		this.is_busy = true;
         let item = this.currentItem;
         if (item === null) {
+			this.is_busy = false;
 			return Promise.resolve(false);
         }
         if ((item.id === null) || (item.rev === null)) {
+			this.is_busy = false;
 			return Promise.resolve(false);
         }
         return this.confirm('Voulez-vous vraiment supprimer ' + item.id + '?').then((b) => {
 			if ((b !== undefined) && (b !== null) && (b == true)) {
 				let service = this.dataService;
 				this.clear_error();
-				return service.remove_item(item)
+				return this.remove_groupeevent(item);
 			} else {
+				this.is_busy = false;
 				return Promise.resolve(false);
 			}
 		}).then((r) => {
             return this.refreshAll();
+		}).then((x) => {
+			this.is_busy = false;
+			return true;
         }).catch((err) => {
             this.set_error(err);
+			this.is_busy = false;
             return false;
         });
     }// remove
@@ -868,10 +908,6 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 		});
 	}// save
 	public refresh(): Promise<any> {
-		if (this._bBusy) {
-			return;
-		}
-		this._bBusy = true;
 		this.clear_error();
 		if (this.items.length > 0) {
 			for (let elem of this.items) {
@@ -887,6 +923,7 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 		if (nbItems < 1) {
 			return Promise.resolve(true);
 		}
+		this.is_busy = true;
 		let nc = this.itemsPerPage;
 		let istart = (this.currentPage - 1) * nc;
 		if (istart < 0) {
@@ -914,11 +951,11 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 			this.pageStatus = this.get_pageStatus();
 			//return this.fill_notes();
 		}).then((xx) => {
-			this._bBusy = false;
+			this.is_busy = false;
 			return true;
 		}).catch((e) => {
-			this._bBusy = false;
-			return true;
+			this.is_busy = false;
+			return false;
 		})
 	}// refresh
 	private get_semestre_groupe_etudaffectations(sem: ISemestre, grp: IGroupe): Promise<IEtudiantAffectation[]> {

@@ -33,8 +33,6 @@
     "browser-sync": "^1.8.1",
     "conventional-changelog": "0.0.11",
     "del": "^1.1.0",
-	"electron-packager": "^5.0.1",
-	"electron-prebuilt": "^0.30.3",
     "es6-module-loader": "^0.17.8",
     "gulp": "^3.8.10",
     "gulp-bump": "^0.3.1",
@@ -97,7 +95,6 @@
   },
   "dependencies": {
     "lie": "^3.0.1",
-    "nconf": "^0.8.2",
     "papaparse": "^4.1.2",
     "pouchdb-find": "^0.8.0",
 	"nconf": "^0.7.2"

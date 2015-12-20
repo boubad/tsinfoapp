@@ -239,6 +239,21 @@ export class InfoElement implements IInfoElement {
         }
         return false;
     }// add_id_to_array
+	 protected remove_id_from_array(cont: string[], id: string): string[] {
+		 let oRet:string[] = [];
+		if ((cont == undefined) || (cont == null)) {
+			return oRet;
+		}
+        if ((id === undefined) || (id === null)) {
+            return oRet;
+        }
+        for (let p of cont) {
+            if (p != id) {
+               oRet.push(p);
+            }
+        }// p
+        return oRet;
+    }// add_id_to_array
 	protected add_array_to_array(cont: string[], oAr: string[]): void {
 		if ((oAr !== undefined) && (oAr !== null)) {
 			let n = oAr.length;

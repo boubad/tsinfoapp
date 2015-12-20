@@ -2,7 +2,7 @@
 //
 import {UserInfo} from './userinfo';
 import {BaseConsultViewModel} from './baseconsultmodel';
-import {IBaseItem, IFileDesc, IUIManager} from 'infodata';
+import {IBaseItem, IFileDesc, IUIManager,IEtudiantEvent,IGroupeEvent} from 'infodata';
 //
 export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel<T> {
 	private _add_mode: boolean = false;
@@ -185,7 +185,14 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 		return super.refresh().then((r) => {
 			let p = this.sync_array(this.items, oldid);
 			this.currentItem = p;
+			this.is_busy = false;
 			return true;
+		}).then((x)=>{
+			this.is_busy = false;
+			return true;
+		}).catch((e)=>{
+			this.is_busy = false;
+			return false;
 		});
 	}// refresh
 	public save(): Promise<any> {
@@ -193,11 +200,16 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 		if (!item.is_storeable()) {
 			return Promise.resolve(false);
 		}
+		this.is_busy = true;
 		this.clear_error();
 		return this.dataService.save_item(item).then((r) => {
 			return this.refreshAll();
+		}).then((x)=>{
+			this.is_busy = false;
+			return true;
 		}).catch((err) => {
 			this.set_error(err);
+			this.is_busy = false;
 			return false;
 		});
 	}// save
@@ -212,8 +224,12 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 			return this.dataService.remove_item(item);
 		}).then((r) => {
 			return this.refreshAll();
+		}).then((x)=>{
+			this.is_busy = false;
+			return true;
 		}).catch((err) => {
 			this.set_error(err);
+			this.is_busy = false;
 			return false;
 		});
 	}// remove
@@ -229,4 +245,35 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 	public set status(s: string) {
 		this.currentItem.status = s;
 	}
+	protected remove_groupeevent(item:IGroupeEvent):Promise<boolean>{
+		if ((item === undefined)|| (item === null)){
+			return Promise.resolve(false);
+		}
+		let id = item.id;
+        if (id === null) {
+            return Promise.resolve(false);
+        }
+		let service = this.dataService;
+		let model = this.itemFactory.create_etudiantevent();
+		return service.query_items(model.type(), { groupeeventid: id }).then((e1: IEtudiantEvent[]) => {
+			let e2: IEtudiantEvent[] = ((e1 !== undefined) && (e1 !== null)) ? e1 : [];
+			for (let p of e2) {
+				p.deleted = true;
+			}// p
+			return service.maintains_items(e2);
+		}).then((xx) => {
+			return service.remove_item(item);
+		}).then((z) => {
+			if (z) {
+				let pPers = this.person;
+				let vv = this.remove_id_from_array(pPers.eventids,id);
+				pPers.eventids = vv;
+				return service.save_item(pPers);
+			} else {
+				return Promise.resolve(false);
+			}
+		}).catch((e)=>{
+			return false;
+		});
+	}//remove_groupeevent
 }// class BaseEditViewModel

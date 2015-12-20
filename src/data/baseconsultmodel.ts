@@ -87,7 +87,6 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 		return (!this.get_isbusy_change());
 	}
 	public refresh(): Promise<any> {
-		this.is_busy = true;
 		this.clear_error();
 		if (this.items.length > 0) {
 			for (let elem of this.items) {
@@ -101,9 +100,9 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 		this.items = [];
 		let nbItems = this.allIds.length;
 		if (nbItems < 1) {
-			this.is_busy =false;
 			return Promise.resolve(true);
 		}
+		this.is_busy = true;
 		let nc = this.itemsPerPage;
 		let istart = (this.currentPage - 1) * nc;
 		if (istart < 0) {
@@ -148,12 +147,11 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 		this.pageStatus = null;
 	}
 	public refreshAll(): Promise<any> {
-		this.is_busy = true;
 		this.prepare_refresh();
 		if (!this.is_refresh()) {
-			this.is_busy = false;
 			return Promise.resolve(true);
 		}
+		this.is_busy = true;
 		let nc = this.itemsPerPage;
 		this.clear_error();
 		return this.get_all_ids().then((ids) => {
@@ -165,6 +163,9 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 				this.pagesCount = np;
 			}
 			return this.refresh();
+		}).then((x)=>{
+			this.is_busy = false;
+			return true;
 		}).catch((err) => {
 			this.set_error(err);
 			this.is_busy = false;
