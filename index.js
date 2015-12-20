@@ -6,7 +6,7 @@
 var app = require('app');
 var BrowserWindow = require('browser-window');
 
-require('crash-reporter').start();
+//require('crash-reporter').start();
 
 var mainWindow = null;
 
@@ -19,10 +19,12 @@ app.on('window-all-closed', function () {
 app.on('ready', function () {
     mainWindow = new BrowserWindow({
         width: 800,
-        height: 600
+        height: 600,
+		resizable:true,
+		title: 'InfoApp'
     });
 
-    mainWindow.loadUrl('file://' + __dirname + '/index.html');
+    mainWindow.loadURL('file://' + __dirname + '/index.html');
     mainWindow.webContents.on('did-finish-load', function () {
         mainWindow.setTitle(app.getName());
     });
