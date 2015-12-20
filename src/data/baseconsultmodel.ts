@@ -240,6 +240,4 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 			this.currentPage = this._pages_count;
 		}
 	}
-
-
 }// class BaseConsultViewModel

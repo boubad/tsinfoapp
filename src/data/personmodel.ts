@@ -174,21 +174,10 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
 			return;
 		}
 		this.is_busy = true;
-		let service = this.dataService;
 		this.clear_error();
-		return service.maintains_attachment(id, avatarid, data, type).then((r) => {
-			p.avatarid = avatarid;
-			return service.save_item(p);
-		}).then((px) => {
-			p.url = this.url;
+		return this.dataService.save_person_avatar(p,avatarid,type,data,this.uiManager).then((r) => {
 			this.fileDesc.clear_url();
 			this.fileDesc.clear();
-			this.currentItem.avatarid = avatarid;
-			return service.save_item(this.currentItem);
-		}).then((xr) => {
-			return this.retrieve_one_avatar(this.currentItem);
-		}).then((xx) => {
-			return this.sync_avatars();
 		}).then((cc)=>{
 			this.is_busy = false;
 			this.info_message = 'Avatar modifié.';
@@ -212,22 +201,10 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
 		}
 		this.is_busy = true;
 		let p = this.currentItem;
-		let service = this.dataService;
 		return this.confirm('Voulez-vous vraiment supprimer cet avatar?').then((bRet) => {
 			if (bRet) {
 				this.clear_error();
-				return service.remove_attachment(pPers.id, avatarid);
-			} else {
-				return Promise.resolve(false);
-			}
-		}).then((b) => {
-			if (b) {
-				if (p.url !== null) {
-					this.uiManager.revokeUrl(p.url);
-					p.url = null;
-				}
-				p.avatarid = null;
-				return service.save_item(p);
+				return this.dataService.remove_person_avatar(pPers,this.uiManager);
 			} else {
 				return Promise.resolve(false);
 			}
@@ -236,12 +213,6 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
 				this.fileDesc.clear();
 				this.info_message = 'Avatar supprimé.';
 				return Promise.resolve(false);
-			} else {
-				return Promise.resolve(false);
-			}
-		}).then((bx)=>{
-			if (bx){
-				return this.sync_avatars();
 			} else {
 				return Promise.resolve(false);
 			}

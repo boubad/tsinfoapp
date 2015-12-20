@@ -1,11 +1,11 @@
 // logininfo.ts
 //
-import {IDocPersist, IDataService, IPerson, IDepartement, IAnnee, IUnite, IGroupe, ISemestre,
+import {IDataManager,IDocPersist, IPerson, IDepartement, IAnnee, IUnite, IGroupe, ISemestre,
 IMatiere, IEtudiant, IEnseignant, IAdministrator, IItemFactory} from 'infodata';
 import {InfoElement} from './infoelement';
 import {PouchDatabase} from './pouchdatabase';
 import {ItemFactory} from './itemfactory';
-import {DataService} from './dataservice';
+import {DataManager} from './datamanager';
 
 //
 export class LoginInfo extends InfoElement {
@@ -26,7 +26,7 @@ export class LoginInfo extends InfoElement {
 	public is_super: boolean = false;
 	public is_connected:boolean = false;
 	public person:IPerson = null;
-	public dataService: IDataService = new DataService(new PouchDatabase(), new ItemFactory());
+	public dataService: IDataManager = new DataManager();
 	//
 	constructor() {
 		super();

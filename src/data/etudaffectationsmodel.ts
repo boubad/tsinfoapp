@@ -16,41 +16,7 @@ export class EtudaffectationsModel extends AffectationViewModel<IEtudiantAffecta
     }// constructor
 	//
 	private remove_etudaffectation(aff:IEtudiantAffectation):Promise<boolean>{
-		if ((aff === undefined)|| (aff === null)){
-			return Promise.resolve(false);
-		}
-		let affid = aff.id;
-		if ((affid === undefined)|| (affid === null)){
-			return Promise.resolve(false);
-		}
-		let service = this.dataService;
-		let pPers:IPerson = null;
-		return service.find_item_by_id(aff.personid).then((pf:IPerson)=>{
-			pPers = (pf !== undefined) ? pf : null;
-			if (pPers == null){
-				return Promise.resolve([]);
-			} else {
-				let model = this.itemFactory.create_etudiantevent();
-				return service.query_items(model.type(),{etudiantaffectationid:affid});
-			}
-		}).then((gg:IEtudiantEvent[])=>{
-			for (let g of gg){
-				g.deleted = true;
-			}
-			return service.maintains_items(gg);
-		}).then((xa)=>{
-			return service.remove_item(aff);
-		}).then((xr)=>{
-			if (pPers !== null){
-				let vv = this.remove_id_from_array(pPers.affectationids,affid);
-				pPers.affectationids = vv;
-				return service.save_item(pPers);
-			} else {
-				return Promise.resolve(false);
-			}
-		}).catch((e)=>{
-			return false;
-		});
+		return this.dataService.remove_etudaffectation(aff);
 	}//remove_profaffectation
 	protected perform_remove():Promise<boolean>{
 		if (this.currentAffectations === null) {

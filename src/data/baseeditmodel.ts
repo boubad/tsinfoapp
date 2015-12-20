@@ -246,34 +246,6 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 		this.currentItem.status = s;
 	}
 	protected remove_groupeevent(item:IGroupeEvent):Promise<boolean>{
-		if ((item === undefined)|| (item === null)){
-			return Promise.resolve(false);
-		}
-		let id = item.id;
-        if (id === null) {
-            return Promise.resolve(false);
-        }
-		let service = this.dataService;
-		let model = this.itemFactory.create_etudiantevent();
-		return service.query_items(model.type(), { groupeeventid: id }).then((e1: IEtudiantEvent[]) => {
-			let e2: IEtudiantEvent[] = ((e1 !== undefined) && (e1 !== null)) ? e1 : [];
-			for (let p of e2) {
-				p.deleted = true;
-			}// p
-			return service.maintains_items(e2);
-		}).then((xx) => {
-			return service.remove_item(item);
-		}).then((z) => {
-			if (z) {
-				let pPers = this.person;
-				let vv = this.remove_id_from_array(pPers.eventids,id);
-				pPers.eventids = vv;
-				return service.save_item(pPers);
-			} else {
-				return Promise.resolve(false);
-			}
-		}).catch((e)=>{
-			return false;
-		});
+		return this.dataService.remove_groupeevent(item);
 	}//remove_groupeevent
 }// class BaseEditViewModel

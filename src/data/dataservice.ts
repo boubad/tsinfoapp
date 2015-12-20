@@ -2,35 +2,39 @@
 //
 import {IDataService, IDocPersist, IBaseItem, IItemFactory, IPerson} from 'infodata';
 import {InfoElement} from './infoelement';
+import {ItemFactory} from './itemfactory';
+import {PouchDatabase} from './pouchdatabase';
 //
 export class DataService extends InfoElement implements IDataService {
 	//
 	private _service: IDocPersist;
 	private _factory: IItemFactory;
 	//
-	constructor(serv: IDocPersist, fact: IItemFactory) {
+	constructor(serv?: IDocPersist, fact?: IItemFactory) {
 		super();
 		if (serv !== undefined) {
 			this._service = serv;
+		} else {
+			this._service = new PouchDatabase();
 		}
 		if (fact !== undefined) {
 			this._factory = fact;
+		} else {
+			this._factory = new ItemFactory();
 		}
 	}// constructor
 	//
 	public get service(): IDocPersist {
-		return (this._service !== undefined) ? this._service : null;
+		return this._service;
 	}
 	public get itemFactory(): IItemFactory {
-		return (this._factory !== undefined) ? this._factory : null;
+		return this._factory;
 	}
 	public get name(): string {
-		return (this.service !== null) ? this.service.name : null;
+		return this.service.name;
 	}
 	public set name(s: string) {
-		if (this.service !== null) {
-			this.service.name = s;
-		}
+		this.service.name = s;
 	}
 	public get is_valid(): boolean {
 		return (this.service !== null) && (this.itemFactory !== null);
@@ -99,7 +103,7 @@ export class DataService extends InfoElement implements IDataService {
 	}
 	//
 	//
-	public query_items(xtype: string, selector?: any, skip?: number, limit?: number): Promise<IBaseItem[]> {
+	public query_items(xtype: string, selector?: any, skip?: number, limit?: number,fields?: string[]): Promise<IBaseItem[]> {
 		let oRet: IBaseItem[] = [];
 		if ((xtype === undefined) || (xtype === null)) {
 			return Promise.resolve(oRet);
@@ -121,7 +125,7 @@ export class DataService extends InfoElement implements IDataService {
 				}// skey
 			}// key
 		}
-		return this.service.query_docs(xsel, skip, limit).then((dd) => {
+		return this.service.query_docs(xsel, skip, limit,fields).then((dd) => {
 			if ((dd !== undefined) && (dd !== null)) {
 				for (let doc of dd) {
 					let item = this.itemFactory.create_item(doc);
@@ -136,7 +140,7 @@ export class DataService extends InfoElement implements IDataService {
 			return oRet;
 		});
 	}// query_items
-	public query_by_template(temp: IBaseItem, skip?: number, limit?: number): Promise<IBaseItem[]> {
+	public query_by_template(temp: IBaseItem, skip?: number, limit?: number,fields?: string[]): Promise<IBaseItem[]> {
 		let oRet: IBaseItem[] = [];
 		if ((temp === undefined) || (temp === null)) {
 			return Promise.resolve(oRet);
@@ -147,7 +151,7 @@ export class DataService extends InfoElement implements IDataService {
 		}
 		let xsel: any = {};
 		temp.to_map(xsel);
-		return this.query_items(xtype, xsel, skip, limit);
+		return this.query_items(xtype, xsel, skip, limit,fields);
 	}// query_by_template
 	//
 	public query_ids(selector?: any, skip?: number, limit?: number): Promise<string[]> {

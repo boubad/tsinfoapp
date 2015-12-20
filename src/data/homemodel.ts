@@ -1,51 +1,40 @@
 //homemodel.ts
-import {IPerson,IDocPersist} from 'infodata';
+import {IPerson} from 'infodata';
 import {BaseView} from './baseview';
 import {UserInfo} from './userinfo';
 import {ADMIN_ROUTE, CONSULT_ROUTE} from './infoconstants';
 //
-const INDEXED_FIELDS:string[] = ["_id","type","status","dossier","sexe","birthDate","birthYear",
-"username","firstname","lastname","ville","etablissement",
-"serieBac","optionBac","mentionBac","etudesSuperieures","apb",
-"sigle","departementid","uniteid","anneeid","groupeid","matiereid","semestreid",
-"etudiantid","enseignantid","profaffectationid","groupeeventid","etudiantaffectationid",
-"genre","name","startDate","endDate","eventDate","note"];
-//
-
 export class HomeModel extends BaseView {
-	private _username: string;
-	private _password: string;
-	private _splashImage: string;
-	//
-	private _bInitialized: boolean;
+	private _username: string = null;
+	private _password: string = null;
+	private _splashImage: string = null;
 	//
 	constructor(info: UserInfo) {
 		super(info);
 		this.title= 'Connexion';
-		this._bInitialized = false;
 	}
 	//
 	public get username():string {
-		return (this._username !== undefined) ? this._username : null;
+		return this._username;
 	}
 	public set username(s:string){
 		this._username = this.check_string(s);
 	}
 	public get password():string {
-		return (this._password !== undefined) ? this._password : null;
+		return this._password;
 	}
 	public set password(s:string){
-		this._password = s;
+		this._password = (s !== undefined) ? s : null;
 	}
 	public get splash_image():string {
-		return (this._splashImage !== undefined) ? this._splashImage : null;
+		return this._splashImage;
 	}
 	public set splash_image(s:string){
 		this._splashImage = this.check_string(s);
 	}
 	//
 	public get can_connect(): boolean {
-		return (this.userInfo !== null) && (this.username !== null) && (this.password !== null) &&
+		return this.is_not_busy && (this.username !== null) && (this.password !== null) &&
 			(this.username.trim().length > 0) && (this.password.trim().length > 0);
 	}
 	public get cannot_connect(): boolean {
@@ -73,17 +62,22 @@ export class HomeModel extends BaseView {
 			return this.login_image;
 		}
 	}
+	private clear_data():void {
+		this._username = null;
+		this._password = null;
+	}
 	public perform_login(): Promise<any> {
 		if (!this.can_connect) {
 			return Promise.resolve(false);
 		}
+		this.is_busy = true;
 		this.clear_error();
 		return this.userInfo.login(this.username, this.password).then((bRet) => {
-			this._username = null;
-			this._password = null;
+			this.clear_data();
 			let pPers = this.person;
 			if ((pPers !== null) && (pPers.id !== null)) {
 				this.splash_image = this.home_image();
+				this.is_busy = false;
 				if ((this.is_super || this.is_admin)) {
 					return this.navigate_to(ADMIN_ROUTE);
 				} else {
@@ -93,45 +87,17 @@ export class HomeModel extends BaseView {
 				this.error_message = 'Identifiant et(ou) mot de passe non-reconnu(s)...';
 				return false;
 			}
+		}).then((xx)=>{
+			this.is_busy = false;
+			return false;
 		}).catch((err) => {
-			this._username = null;
-			this._password = null;
+			this.clear_data();
 			this.set_error(err);
+			this.is_busy = false;
 			return false;
 		});
 	}// login
-	private init_database():Promise<boolean> {
-		if (this._bInitialized){
-			return Promise.resolve(true);
-		}
-		let bRet:boolean = false;
-		let service = this.dataService;
-		let fact = this.itemFactory;
-		let pPersist = (service !== null) ? service.service : null;
-		if ((pPersist === null) || (fact === null)){
-			return Promise.resolve(bRet);
-		}
-		let pPers:IPerson = null;
-		return pPersist.create_indexes(INDEXED_FIELDS).then((bb)=>{
-			pPers = fact.create_super_administrator();
-			pPers.check_id();
-			return service.find_item_by_id(pPers.id);
-		}).then((xPers:IPerson)=>{
-			if ((xPers === undefined)|| (xPers === null)){
-				pPers.reset_password();
-				return service.save_item(pPers);
-			} else {
-				return Promise.resolve(true);
-			}
-		}).then((xRet)=>{
-			bRet = ((xRet !== undefined) && (xRet !== null));
-			this._bInitialized = bRet;
-			return bRet;
-		}).catch((err)=>{
-			this.set_error(err);
-			return false;
-		})
-	}// init_database
+	
 	public deactivate(): any {
 		this._username = null;
 		this._password = null;
@@ -140,16 +106,6 @@ export class HomeModel extends BaseView {
 		this.splash_image = this.home_image();
 		this._username = null;
 		this._password = null;
-		if (!this._bInitialized) {
-			return this.init_database().then((b) => {
-				this._bInitialized = true;
-				return true;
-			}).catch((err)=>{
-				this._bInitialized = false;
-				return false;
-			})
-		} else {
-			return Promise.resolve(true);
-		}
+		return this.dataService.init_database();
 	}// activate
 }// class Home

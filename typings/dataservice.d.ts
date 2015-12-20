@@ -32,9 +32,25 @@ declare module 'infodata' {
         replicate_from: (from: string) => Promise<any>;
         replicate_person_from: (pPers: IPerson, from: string) => Promise<any>;
         //
-        query_items: (type: string, selector?: any, skip?: number, limit?: number) => Promise<IBaseItem[]>;
-        query_by_template: (temp: IBaseItem, skip?: number, limit?: number) => Promise<IBaseItem[]>;
+        query_items: (type: string, selector?: any, skip?: number, limit?: number,fields?: string[]) => Promise<IBaseItem[]>;
+        query_by_template: (temp: IBaseItem, skip?: number, limit?: number,fields?: string[]) => Promise<IBaseItem[]>;
         query_ids: (selector?: any, skip?: number, limit?: number) => Promise<string[]>;
     }// interface IDataService
+	//
+	export interface IDataManager extends IDataService {
+		init_database: () => Promise<boolean>; 
+		retrieve_one_avatar: (item: IBaseItem,man:IUIManager) => Promise<IBaseItem>;
+		retrieve_avatars : (items: IBaseItem[],man:IUIManager) => Promise<IBaseItem[]>;
+		sync_person_avatars: (pPers:IPerson) => Promise<boolean> ;
+		remove_groupeevent: (item:IGroupeEvent) =>Promise<boolean>;
+		remove_profaffectation: (aff:IEnseignantAffectation) => Promise<boolean>;
+		remove_etudaffectation: (aff:IEtudiantAffectation) =>Promise<boolean>;
+		save_person_avatar: (pPers: IPerson, avatarid: string,
+		avatarType: string, data: Blob, man:IUIManager) => Promise<boolean>;
+		save_item_avatar: (pPers: IBaseItem, avatarid: string,
+		avatarType: string, data: Blob, man:IUIManager) => Promise<boolean>;
+		remove_item_avatar: (p: IBaseItem, man: IUIManager) => Promise<boolean> ; 
+		remove_person_avatar: (pPers:IPerson, man: IUIManager) => Promise<boolean>; 
+	}// IDataManager
 }
 //

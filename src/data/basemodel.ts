@@ -3,7 +3,7 @@ import {InfoElement} from './infoelement';
 import {LoginInfo} from './logininfo';
 import {UserInfo} from './userinfo';
 import {UIManager} from './uimanager';
-import {IDataService, IUIManager, IItemFactory, ISemestre, IBaseItem,
+import {IDataManager, IUIManager, IItemFactory, ISemestre, IBaseItem,
 IDepartement, IGroupe, IUnite, IAnnee, IMatiere, IPerson, IInfoRouter} from 'infodata';
 import {GENRE_TP} from './infoconstants';
 //
@@ -161,7 +161,7 @@ export class BaseModel extends InfoElement {
 	public get uiManager(): IUIManager {
 		return this.userInfo.uiManager;
 	}
-	public get dataService(): IDataService {
+	public get dataService(): IDataManager {
 		return this.loginInfo.dataService;
 	}
 	public get itemFactory(): IItemFactory {
@@ -371,45 +371,10 @@ export class BaseModel extends InfoElement {
     }
     //
 	protected retrieve_one_avatar(item: IBaseItem): Promise<IBaseItem> {
-        if ((item === undefined) || (item === null)) {
-            return Promise.resolve(item);
-        }
-		if ((item.url !== undefined) && (item.url !== null)) {
-			return Promise.resolve(item);
-		}
-		item.url = null;
-		let id = item.avatarid;
-		let docid = item.avatardocid();
-		if ((id === undefined) || (id === null) || (docid === undefined) || (docid === null)) {
-			return Promise.resolve(item);
-		}
-		let service = this.dataService;
-		let man = this.uiManager;
-		if ((service === undefined) || (service === null) || (man === undefined) || (man === null)) {
-			return Promise.resolve(item);
-		}
-        return service.find_attachment(docid, id).then((b) => {
-			if ((b !== undefined) && (b !== null)) {
-				item.url = man.createUrl(b);
-			}
-			return item;
-		}).catch((e) => {
-			return item;
-		});
+		return this.dataService.retrieve_one_avatar(item,this.uiManager);
     }// rerieve_one_avatar
     protected retrieve_avatars(items: IBaseItem[]): Promise<IBaseItem[]> {
-        if ((items === undefined) || (items === null)) {
-            return Promise.resolve([]);
-        }
-        if (items.length < 1) {
-            return Promise.resolve([]);
-        }
-        let pp: Promise<IBaseItem>[] = [];
-        for (let p of items) {
-            let x = this.retrieve_one_avatar(p);
-            pp.push(x);
-        }// p
-        return Promise.all(pp);
+		return this.dataService.retrieve_avatars(items,this.uiManager);
     }// retrive_avatars
 	protected initialize_activate_params(params?:any) : Promise<boolean> {
 		return Promise.resolve(true);
@@ -456,59 +421,6 @@ export class BaseModel extends InfoElement {
 		return Promise.resolve(true);
 	}
 	protected sync_person_avatars(pPers:IPerson): Promise<boolean> {
-		if ((pPers === undefined) || (pPers === null)){
-			return Promise.resolve(false);
-		}
-		if ((pPers.id === null) || (pPers.rev === null)){
-			return Promise.resolve(false);
-		}
-		let items:IBaseItem[] = [];
-		let avatarid = pPers.avatarid;
-		let service = this.dataService;
-		return service.get_items_array(pPers.administratorids).then((pp1:IBaseItem[])=>{
-			if ((pp1 !== undefined) && (pp1 !== null) && (pp1.length > 0)){
-				for (let x of pp1){
-					x.avatarid = avatarid;
-					items.push(x);
-				}
-			}
-			return service.get_items_array(pPers.enseignantids);
-		}).then((pp2)=>{
-			if ((pp2 !== undefined) && (pp2 !== null) && (pp2.length > 0)){
-				for (let x of pp2){
-					x.avatarid = avatarid;
-					items.push(x);
-				}
-			}
-			return service.get_items_array(pPers.etudiantids);
-		}).then((pp3)=>{
-			if ((pp3 !== undefined) && (pp3 !== null) && (pp3.length > 0)){
-				for (let x of pp3){
-					x.avatarid = avatarid;
-					items.push(x);
-				}
-			}
-			return service.get_items_array(pPers.affectationids);
-		}).then((pp4)=>{
-			if ((pp4 !== undefined) && (pp4 !== null) && (pp4.length > 0)){
-				for (let x of pp4){
-					x.avatarid = avatarid;
-					items.push(x);
-				}
-			}
-			return service.get_items_array(pPers.eventids);
-		}).then((pp5)=>{
-			if ((pp5 !== undefined) && (pp5 !== null) && (pp5.length > 0)){
-				for (let x of pp5){
-					x.avatarid = avatarid;
-					items.push(x);
-				}
-			}
-			return service.maintains_items(items);
-		}).then((xx)=>{
-			return true;
-		}).catch((e)=>{
-			return false;
-		});
+		return this.dataService.sync_person_avatars(pPers);
 	}// sync_avatars;
 }// class BaseModel

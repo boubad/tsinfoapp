@@ -1,6 +1,6 @@
 //userinfo.ts
 //
-import {IItemFactory, IDataService, IPerson, IDepartement, IAnnee, IUnite, IGroupe, ISemestre,
+import {IItemFactory, IDataManager, IPerson, IDepartement, IAnnee, IUnite, IGroupe, ISemestre,
 IMatiere, IUIManager, IInfoRouter} from 'infodata';
 import {LoginInfo} from './logininfo';
 import {InfoElement} from './infoelement';
@@ -87,7 +87,7 @@ export class UserInfo extends InfoElement {
 			this.router.navigate_to(route, args);
 		}
 	}
-	public get dataService(): IDataService {
+	public get dataService(): IDataManager {
 		return this.loginInfo.dataService;
 	}
 	public get itemFactory(): IItemFactory {
