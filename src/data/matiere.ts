@@ -1,8 +1,10 @@
 //
-import {SigleNamedItem} from './siglenameditem';
+import {IMatiere} from 'infodata';
+import { DepartementSigleNamedItem} from './departementsiglenameditem';
 import {MATIERE_TYPE, MATIERE_PREFIX} from './infoconstants';
 //
-export class Matiere extends SigleNamedItem {
+export class Matiere extends  DepartementSigleNamedItem 
+implements IMatiere{
     //
     private _uniteid: string = null;
     private _genre: string = null;

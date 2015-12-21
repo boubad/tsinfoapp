@@ -57,6 +57,7 @@ declare module 'infodata' {
 		find_user: (username: string, password: string) => Promise<IPerson>; 
 		refresh_person_docids: (pPers:IPerson) =>Promise<boolean>;
 		get_all_departements: () => Promise<IDepartement[]>;
+		remove_all_persons(): Promise<boolean>; 
 	}// IDataManager
 }
 //

@@ -25,7 +25,7 @@ export class ElementDesc extends InfoElement implements IElementDesc {
 		}
 	}
 	//
-	public avardocid():string {
+	public avatardocid():string {
 		return this.id;
 	}
 	public to_map(oMap: any): void {

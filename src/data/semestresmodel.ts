@@ -12,7 +12,10 @@ export class SemestresModel extends IntervalledViewModel<ISemestre> {
     }// constructor
 	protected create_item(): ISemestre {
         return this.itemFactory.create_semestre({
-			anneeid:this.anneeid
+			departementid:this.departementid,
+			anneeid:this.anneeid,
+			startDate: (this.annee !== null) ? this.annee.startDate : null,
+			endDate: (this.annee !== null) ? this.annee.endDate : null
 		});
     }
 	protected prepare_model(): any {
@@ -20,9 +23,13 @@ export class SemestresModel extends IntervalledViewModel<ISemestre> {
 			anneeid:this.anneeid};
 	}// prepare_model
 	protected is_storeable():boolean{
+		if (this.annee == null){
+			return false;
+		}
 		if ((this.currentItem !== null) && (this.currentItem.anneeid == null)){
 			this.currentItem.anneeid = this.anneeid;
 		}
+		
 		return super.is_storeable();
 	}
 	 protected is_refresh(): boolean {

@@ -151,7 +151,7 @@ export class InfoElement implements IInfoElement {
 				}
 			}
 		}
-		return ((sRet !== undefined) && (sRet !== null) && (sRet.length > 1)) ? sRet : null;
+		return ((sRet !== undefined) && (sRet !== null) && (sRet.length > 0)) ? sRet : null;
 	}// prepare_string
 	protected create_username(slast: string, sfirst: string): string {
         let sRet: string = null;

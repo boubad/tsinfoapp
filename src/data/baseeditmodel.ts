@@ -201,6 +201,7 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 			return Promise.resolve(false);
 		}
 		this.is_busy = true;
+		item.check_id();
 		let bNew: boolean = !item.has_rev;
 		this.clear_error();
 		return this.dataService.save_item(item).then((r) => {
