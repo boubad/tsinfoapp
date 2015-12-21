@@ -38,6 +38,15 @@ export class AffectationViewModel<T extends IAffectation, P extends IDepartement
 			&& (this.modelItem.groupeid !== null);
     }
     protected is_storeable(): boolean {
+		if (this.semestre == null){
+			return false;
+		}
+		if (this._start == null){
+			this._start = this.semestre.startDate;
+		}
+		if (this._end ==null){
+			this._end = this.semestre.endDate;
+		}
         let bRet = (this.semestreid !== null) && (this.groupeid !== null) &&
             (this._start !== null) && (this._end !== null);
         if (!bRet) {

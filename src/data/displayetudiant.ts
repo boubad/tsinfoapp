@@ -6,30 +6,30 @@ import {EVT_NOTE, EVT_ABSENCE, EVT_MISC, EVT_RETARD} from './infoconstants';
 //
 export class DisplayEtudiant extends BaseItem implements IDisplayEtudiant {
     //
-    private _personid: string;
-    private _etudiantid: string;
-    private _uniteid: string;
-    private _matiereid: string;
-    private _groupeid: string;
-    private _firstname: string;
-    private _lastname: string;
-    private _coefficient: number;
-    private _note: number;
-    private _groupeName: string;
-    private _matiereName: string;
-    private _uniteName: string;
-    private _matiereCoefficient: number;
-    private _uniteCoefficient: number;
-    private _order: number;
+    private _personid: string = null;
+    private _etudiantid: string = null;
+    private _uniteid: string = null;
+    private _matiereid: string = null;
+    private _groupeid: string = null;
+    private _firstname: string = null;
+    private _lastname: string = null;
+    private _coefficient: number = null;
+    private _note: number = null;
+    private _groupeName: string = null;
+    private _matiereName: string = null;
+    private _uniteName: string = null;
+    private _matiereCoefficient: number = null;
+    private _uniteCoefficient: number = null;
+    private _order: number = null;
     //
-    private _absencesCount: number;
-    private _retardsCount: number;
-    private _miscCount: number;
+    private _absencesCount: number = null;
+    private _retardsCount: number = null;
+    private _miscCount: number = null;
     //
-    private _count: number;
-    private _sumcoefs: number;
-    private _sumdata: number;
-	private _descriptions: string[];
+    private _count: number = null;
+    private _sumcoefs: number = null;
+    private _sumdata: number = null;
+	private _descriptions: string[] = [];
     //
     constructor(oMap?: any) {
         super(oMap);
@@ -87,116 +87,110 @@ export class DisplayEtudiant extends BaseItem implements IDisplayEtudiant {
         }
     }// fillEvent
 	public get uniteCoefficient(): number {
-		return ((this._uniteCoefficient !== undefined) && (this._uniteCoefficient !== null) &&
-			(this._uniteCoefficient > 0.0)) ? this._uniteCoefficient : 1.0;
+		return this._uniteCoefficient;
 	}
 	public set uniteCoefficient(s: number) {
 		this._uniteCoefficient = this.check_number(s);
 	}
 	public get matiereCoefficient(): number {
-		return ((this._matiereCoefficient !== undefined) && (this._matiereCoefficient !== null) &&
-			(this._matiereCoefficient > 0.0)) ? this._matiereCoefficient : 1.0;
+		return this._matiereCoefficient;
 	}
 	public set matiereCoefficient(s: number) {
 		this._matiereCoefficient = this.check_number(s);
 	}
 	public get order(): number {
-		return ((this._order !== undefined) && (this._order !== null)) ? this._order : null;
+		return this._order;
 	}
 	public set order(s: number) {
 		this._order = this.check_number(s);
 	}
 	public get uniteName(): string {
-		return (this._uniteName !== undefined) ? this._uniteName : null;
+		return this._uniteName;
 	}
 	public set uniteName(s: string) {
 		this._uniteName = this.check_string(s);
 	}
 	public get matiereid(): string {
-		return (this._matiereid !== undefined) ? this._matiereid : null;
+		return this._matiereid;
 	}
 	public set matiereid(s: string) {
 		this._matiereid = this.check_string(s);
 	}
 	public get uniteid(): string {
-		return (this._uniteid !== undefined) ? this._uniteid : null;
+		return this._uniteid;
 	}
 	public set uniteid(s: string) {
 		this._uniteid = this.check_string(s);
 	}
 	public get miscCount(): number {
-		return ((this._miscCount !== undefined) && (this._miscCount !== null)
-			&& (this._miscCount > 0)) ? this._miscCount : null;
+		return this._miscCount;
 	}
 	public set miscCount(s: number) {
 		this._miscCount = this.check_number(s);
 	}
 	public get retardsCount(): number {
-		return ((this._retardsCount !== undefined) && (this._retardsCount !== null)
-			&& (this._retardsCount > 0)) ? this._retardsCount : null;
+		return this._retardsCount;
 	}
 	public set retardsCount(s: number) {
 		this._retardsCount = this.check_number(s);
 	}
 	public get absencesCount(): number {
-		return ((this._absencesCount !== undefined) && (this._absencesCount !== null)
-			&& (this._absencesCount > 0)) ? this._absencesCount : null;
+		return this._absencesCount;
 	}
 	public set absencesCount(s: number) {
 		this._absencesCount = this.check_number(s);
 	}
 	public get note(): number {
-		return ((this._note !== undefined) && (this._note !== null)) ? this._note : null;
+		return this._note;
 	}
 	public set note(s: number) {
 		this._note = this.check_number(s);
 	}
 	public get coefficient(): number {
-		return ((this._coefficient !== undefined) && (this._coefficient !== null) &&
-			(this._coefficient > 0.0)) ? this._coefficient : 1.0;
+		return this._coefficient;
 	}
 	public set coefficient(s: number) {
 		this._coefficient = this.check_number(s);
 	}
 	public get groupeName(): string {
-		return (this._groupeName !== undefined) ? this._groupeName : null;
+		return this._groupeName;
 	}
 	public set groupeName(s: string) {
 		this._groupeName = this.check_string(s);
 	}
 	public get matiereName(): string {
-		return (this._matiereName !== undefined) ? this._matiereName : null;
+		return this._matiereName;
 	}
 	public set matiereName(s: string) {
 		this._matiereName = this.check_string(s);
 	}
 	public get lastname(): string {
-		return (this._lastname !== undefined) ? this._lastname : null;
+		return this._lastname;
 	}
 	public set lastname(s: string) {
 		this._lastname = this.check_upper_string(s);
 	}
 	public get firstname(): string {
-		return (this._firstname !== undefined) ? this._firstname : null;
+		return this._firstname;
 	}
 	public set firstname(s: string) {
 		this._firstname = this.format_name(s);
 	}
 	public get groupeid(): string {
-		return (this._groupeid !== undefined) ? this._groupeid : null;
+		return this._groupeid;
 	}
 	public set groupeid(s: string) {
 		this._groupeid = this.check_string(s);
 	}
 	public get etudiantid(): string {
-		return (this._etudiantid !== undefined) ? this._etudiantid : null;
+		return this._etudiantid;
 	}
 	public set etudiantid(s: string) {
 		this._etudiantid = this.check_string(s);
 		this.id = this._etudiantid;
 	}
 	public get personid(): string {
-		return (this._personid !== undefined) ? this._personid : null;
+		return this._personid;
 	}
 	public set personid(s: string) {
 		this._personid = this.check_string(s);
@@ -207,8 +201,7 @@ export class DisplayEtudiant extends BaseItem implements IDisplayEtudiant {
             (10.0 * this.retardsCount));
     }
 	public get descriptions():string[] {
-		return ((this._descriptions !== undefined) && (this._descriptions !== null)) ?
-		this._descriptions : [];
+		return this._descriptions;
 	}
 	public get has_descriptions():boolean {
 		return (this.descriptions.length > 0);

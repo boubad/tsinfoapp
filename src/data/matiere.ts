@@ -4,17 +4,17 @@ import {MATIERE_TYPE, MATIERE_PREFIX} from './infoconstants';
 //
 export class Matiere extends SigleNamedItem {
     //
-    private _uniteid: string;
-    private _genre: string;
-    private _matmodule: string;
-    private _coef: number;
-    private _ecs: number;
-	private _order: number;
+    private _uniteid: string = null;
+    private _genre: string = null;
+    private _matmodule: string = null;
+    private _coef: number = null;
+    private _ecs: number = null;
+	private _order: number = null;
     //
     constructor(oMap?: any) {
         super(oMap);
         if ((oMap !== undefined) && (oMap !== null)) {
-			if (oMap.uniteid !== undefined){
+			if (oMap.uniteid !== undefined) {
 				this.uniteid = oMap.uniteid;
 			}
             if (oMap.coefficient !== undefined) {
@@ -36,25 +36,25 @@ export class Matiere extends SigleNamedItem {
     } // constructor
 	//
 	public get uniteid(): string {
-        return (this._uniteid !== undefined) ? this._uniteid : null;
+        return this._uniteid;
     }
     public set uniteid(s: string) {
         this._uniteid = this.check_string(s);
     }
     public get genre(): string {
-        return (this._genre !== undefined) ? this._genre : null;
+        return this._genre;
     }
     public set genre(s: string) {
         this._genre = this.check_upper_string(s);
     }
     public get matmodule(): string {
-        return (this._matmodule !== undefined) ? this._matmodule : null;
+        return this._matmodule;
     }
     public set matmodule(s: string) {
         this._matmodule = this.check_upper_string(s);
     }
 	public get order(): number {
-        return ((this._order !== undefined) && (this._order !== null)) ? this._order : 0;
+        return this._order;
     }
     public set order(d: number) {
         let v = this.check_number(d);
@@ -65,8 +65,7 @@ export class Matiere extends SigleNamedItem {
         }
     }
     public get ecs(): number {
-		return ((this._ecs !== undefined) && (this._ecs !== null) && (this._ecs >= 0.0)) ?
-			this._ecs : 1.0;
+		return this._ecs;
     }
     public set ecs(d: number) {
         let v = this.check_number(d);
@@ -77,8 +76,7 @@ export class Matiere extends SigleNamedItem {
         }
     }
     public get coefficient(): number {
-        return ((this._coef !== undefined) && (this._coef !== null) && (this._coef > 0.0)) ?
-			this._coef : 1.0;
+		return this._coef;
     }
     public set coefficient(d: number) {
         let v = this.check_number(d);

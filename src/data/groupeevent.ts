@@ -5,13 +5,13 @@ import {GROUPEEVENT_TYPE, GROUPEEVENT_PREFIX} from './infoconstants';
 //
 //
 export class GroupeEvent extends InfoEvent implements IGroupeEvent {
-	private _profaffectationid: string;
-    private _name: string;
-    private _location: string;
-    private _startTime: string;
-    private _endTime: string;
-	private _minnote: number;
-	private _maxnote: number;
+	private _profaffectationid: string = null;
+    private _name: string = null;
+    private _location: string = null;
+    private _startTime: string = null;
+    private _endTime: string = null;
+	private _minnote: number = null;
+	private _maxnote: number = null;
 	//
 	constructor(oMap?: any) {
 		super(oMap);
@@ -40,31 +40,31 @@ export class GroupeEvent extends InfoEvent implements IGroupeEvent {
         } // oMap
 	}
 	public get endTime(): string {
-		return (this._endTime !== undefined) ? this._endTime : null;
+		return this._endTime;
 	}
 	public set endTime(s: string) {
 		this._endTime = this.check_string(s);
 	}
 	public get startTime(): string {
-		return (this._startTime !== undefined) ? this._startTime : null;
+		return this._startTime;
 	}
 	public set startTime(s: string) {
 		this._startTime = this.check_string(s);
 	}
 	public get name(): string {
-		return (this._name !== undefined) ? this._name : null;
+		return this._name;
 	}
 	public set name(s: string) {
 		this._name = this.format_name(s);
 	}
 	public get location(): string {
-		return (this._location !== undefined) ? this._location : null;
+		return this._location;
 	}
 	public set location(s: string) {
 		this._profaffectationid = this.check_string(s);
 	}
 	public get profaffectationid(): string {
-		return (this._profaffectationid !== undefined) ? this._profaffectationid : null;
+		return this._profaffectationid;
 	}
 	public set profaffectationid(s: string) {
 		this._profaffectationid = this.check_string(s);
@@ -101,7 +101,7 @@ export class GroupeEvent extends InfoEvent implements IGroupeEvent {
     } // to_map
 	//
 	public get minnote(): number {
-        return ((this._minnote !== undefined) && (this._minnote !== null)) ? this._minnote : 0.0;
+        return this._minnote;
     }
     public set minnote(s: number) {
         let d = this.check_number(s);
@@ -112,7 +112,7 @@ export class GroupeEvent extends InfoEvent implements IGroupeEvent {
         }
     }
 	public get maxnote(): number {
-        return ((this._maxnote !== undefined) && (this._maxnote !== null)) ? this._maxnote : 0.0;
+        return this._maxnote;
     }
     public set maxnote(s: number) {
         let d = this.check_number(s);

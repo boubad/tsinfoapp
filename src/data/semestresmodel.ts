@@ -29,6 +29,9 @@ export class SemestresModel extends IntervalledViewModel<ISemestre> {
 		
         return (this.anneeid !== null);
     }
+	protected get_remove_selector(): any {
+		return {semestreid: this.currentItem.id};
+	}
 	protected post_update_annee():Promise<boolean>{
 		return super.post_update_annee().then((r)=>{
 			 this.modelItem.anneeid = this.anneeid;

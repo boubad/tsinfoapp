@@ -1,18 +1,19 @@
 //datamanager.ts
 //
-import {IDocPersist, IItemFactory, IDataManager,
-IPerson, IBaseItem, IUIManager, IGroupeEvent,
+import {IDepartement, IDocPersist, IItemFactory, IDataManager,
+IGroupe, ISemestre, IUnite, IMatiere, IAffectation,
+IPerson, IBaseItem, IUIManager, IGroupeEvent, IDepartementPerson,
 IEtudiantEvent, IEnseignantAffectation, IEtudiantAffectation} from 'infodata';
 import {DataService} from './dataservice';
 import {DEPARTEMENT_TYPE, UNITE_TYPE, GROUPE_TYPE, ANNEE_TYPE, SEMESTRE_TYPE,
 MATIERE_TYPE, PERSON_TYPE, ETUDIANT_TYPE, ENSEIGNANT_TYPE, ADMINISTRATOR_TYPE,
 ETUDAFFECTATION_TYPE, PROFAFFECTATION_TYPE, GROUPEEVENT_TYPE, ETUDEVENT_TYPE, SUPER_FIRSTNAME,
-SUPER_USERNAME, SUPER_LASTNAME} from './infoconstants';
+SUPER_USERNAME, SUPER_LASTNAME, GENRE_TP} from './infoconstants';
 //
 const INDEXED_FIELDS: string[] = ["_id", "type", "status", "dossier", "sexe", "birthDate", "birthYear",
 	"username", "firstname", "lastname", "ville", "etablissement",
 	"serieBac", "optionBac", "mentionBac", "etudesSuperieures", "apb",
-	"sigle", "departementid", "uniteid", "anneeid", "groupeid", "matiereid", "semestreid",
+	"personid","sigle", "departementid", "uniteid", "anneeid", "groupeid", "matiereid", "semestreid",
 	"etudiantid", "enseignantid", "profaffectationid", "groupeeventid", "etudiantaffectationid",
 	"genre", "name", "startDate", "endDate", "eventDate", "note"];
 //
@@ -24,8 +25,188 @@ export class DataManager extends DataService {
 	constructor(serv?: IDocPersist, fact?: IItemFactory) {
 		super(serv, fact);
 	}// constructor
-	public remove_person_avatar(pPers:IPerson, man: IUIManager): Promise<boolean> {
-		return this.remove_item_avatar(pPers,man).then((b)=>{
+	public get_all_departements(): Promise<IDepartement[]> {
+		let oRet: IDepartement[] = [];
+		return this.query_items(DEPARTEMENT_TYPE).then((dd: IDepartement[]) => {
+			oRet = ((dd !== undefined) && (dd !== null)) ? dd : [];
+			return oRet;
+		}).catch((e) => {
+			return oRet;
+		});
+	}//get_all_departements
+	public refresh_person_docids(pPers: IPerson): Promise<boolean> {
+		if ((pPers === undefined) || (pPers === null)) {
+			return Promise.resolve(false);
+		}
+		if (pPers.id === null) {
+			return Promise.resolve(false);
+		}
+		pPers.departementids = [];
+		pPers.anneeids = [];
+		pPers.semestreids = [];
+		pPers.groupeids = [];
+		pPers.uniteids = [];
+		pPers.matiereids = [];
+		pPers.affectationids = [];
+		pPers.eventids = [];
+		pPers.etudiantids = [];
+		pPers.enseignantids = [];
+		pPers.administratorids = [];
+		if (pPers.is_super) {
+			return Promise.resolve(true);
+		}
+		let sel: any = { personid: pPers.id };
+		let fields: string[] = ["_id", "type"];
+		let docs: any[] = [];
+		let oAr: string[] = [];
+		let oAf: string[] = [];
+		let oAv: string[] = [];
+		return this.service.query_docs(sel, null, null, fields).then((dd) => {
+			docs = ((dd !== undefined) && (dd !== null)) ? dd : [];
+			for (let doc of docs) {
+				if ((doc._id !== undefined) && (doc._id !== null) &&
+					(doc.type !== undefined) && (doc.type !== null)) {
+					let id: string = doc._id;
+					let type: string = doc.type;
+					if (type == ADMINISTRATOR_TYPE) {
+						this.add_id_to_array(pPers.administratorids, id);
+						oAr.push(id);
+					} else if (type == ENSEIGNANT_TYPE) {
+						this.add_id_to_array(pPers.enseignantids, id);
+						oAr.push(id);
+					} else if (type == ETUDIANT_TYPE) {
+						this.add_id_to_array(pPers.etudiantids, id);
+						oAr.push(id);
+					} else if (type == ETUDAFFECTATION_TYPE) {
+						this.add_id_to_array(pPers.affectationids, id);
+						oAf.push(id);
+					} else if (type == PROFAFFECTATION_TYPE) {
+						this.add_id_to_array(pPers.affectationids, id);
+						oAf.push(id);
+					} else if (type == GROUPEEVENT_TYPE) {
+						this.add_id_to_array(pPers.eventids, id);
+					} else if (type == ETUDEVENT_TYPE) {
+						this.add_id_to_array(pPers.eventids, id);
+						oAv.push(id);
+					}
+				}// i
+			}// doc
+			return this.get_items_array(oAr);
+		}).then((dx: IDepartementPerson[]) => {
+			for (let p of dx) {
+				this.add_id_to_array(pPers.departementids, p.departementid);
+			}
+			return this.get_items_array(oAf);
+		}).then((aa: IAffectation[]) => {
+			for (let a of aa) {
+				this.add_id_to_array(pPers.anneeids, a.anneeid);
+				this.add_id_to_array(pPers.semestreids, a.semestreid);
+				this.add_id_to_array(pPers.groupeids, a.groupeid);
+				if (a.type() == PROFAFFECTATION_TYPE) {
+					let pa: IEnseignantAffectation = <IEnseignantAffectation>a;
+					this.add_id_to_array(pPers.uniteids, pa.uniteid);
+					this.add_id_to_array(pPers.matiereids, pa.matiereid);
+				}
+			}// a
+			if (oAv.length > 0) {
+				return this.get_items_array(oAv);
+			} else {
+				return Promise.resolve([]);
+			}
+		}).then((xx: IEtudiantEvent[]) => {
+			for (let x of xx) {
+				this.add_id_to_array(pPers.uniteids, x.uniteid);
+				this.add_id_to_array(pPers.matiereids, x.matiereid);
+			}// x
+			return true;
+		}).catch((e) => {
+			return false;
+		});
+	}//refresh_person_docids
+	public find_user(username: string, password: string): Promise<IPerson> {
+		let model: IPerson = this.itemFactory.create_person({ username: username });
+		model.check_id();
+		return this.find_item_by_id(model.id, true).then((pPers: IPerson) => {
+			let oRet: IPerson = null;
+			if ((pPers !== undefined) && (pPers !== null)) {
+				if (pPers.check_password(password)) {
+					oRet = pPers;
+				}
+			}
+			return oRet;
+		}).catch((e) => {
+			return null;
+		});
+	}// find_user
+	public get_semestre_groupe_etudaffectations(sem: ISemestre, grp: IGroupe): Promise<IEtudiantAffectation[]> {
+		let oRet: IEtudiantAffectation[] = [];
+		if ((sem === undefined) || (sem === null) || (grp === undefined) || (grp === null)) {
+			return Promise.resolve(oRet);
+		}
+		let s1 = sem.id;
+		let s2 = grp.id;
+		let genre = grp.genre;
+		if ((s1 === undefined) || (s2 === undefined) || (s1 === null) || (s2 === null) ||
+			(genre === undefined) || (genre === null)) {
+			return Promise.resolve(oRet);
+		}
+		if (genre == GENRE_TP) {
+			let model = this.itemFactory.create_etudiantaffectation();
+			let sel: any = { groupeid: s2, semestreid: s1 };
+			return this.query_items(model.type(), sel).then((dd: IEtudiantAffectation[]) => {
+				oRet = ((dd !== undefined) && (dd !== null)) ? dd : [];
+				this.sort_array(oRet);
+				return oRet;
+			}).catch((e) => {
+				return oRet;
+			});
+		}
+		let ids: string[] = grp.childrenids;
+		if ((ids === undefined) || (ids === null)) {
+			ids = [];
+		}
+		return this.get_items_array(ids).then((gg: IGroupe[]) => {
+			let oAr: Promise<IEtudiantAffectation[]>[] = [];
+			if ((gg !== undefined) && (gg !== null)) {
+				for (let g of gg) {
+					oAr.push(this.get_semestre_groupe_etudaffectations(sem, g));
+				}
+			}// gg
+			return Promise.all(oAr);
+		}).then((dd) => {
+			if ((dd !== undefined) && (dd !== null)) {
+				for (let xx of dd) {
+					for (let a of xx) {
+						oRet.push(a);
+					}
+				}// xx
+			}// dd
+			this.sort_array(oRet);
+			return oRet;
+		}).catch((e) => {
+			return oRet;
+		});
+	}//get_semestre_groupe_etudaffectations
+	public get_unite_matieres(p: IUnite): Promise<IMatiere[]> {
+		let oRet: IMatiere[] = [];
+		if ((p === undefined) || (p === null)) {
+			return Promise.resolve(oRet);
+		}
+		let uniteid = p.id;
+		if (uniteid == null) {
+			return Promise.resolve(oRet);
+		}
+		let m = this.itemFactory.create_matiere();
+		let sel: any = { uniteid: uniteid };
+		return this.query_items(m.type(), sel).then((gg: IMatiere[]) => {
+			oRet = ((gg !== undefined) && (gg !== null)) ? gg : [];
+			return oRet;
+		}).catch((e) => {
+			return oRet;
+		});
+	}//
+	public remove_person_avatar(pPers: IPerson, man: IUIManager): Promise<boolean> {
+		return this.remove_item_avatar(pPers, man).then((b) => {
 			return this.sync_person_avatars(pPers);
 		});
 	}//remove_person_avatar

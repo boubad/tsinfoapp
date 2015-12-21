@@ -1,7 +1,6 @@
 //geninfo.d.ts
 //
 declare module 'infodata' {
-   
     //
     export interface IInfoElement {
 		id: string;
@@ -17,7 +16,10 @@ declare module 'infodata' {
         avatarid?: string;
         url?: string;
         description?: string;
+		status?: string;
         has_url?: boolean;
+		avatardocid?: () => string;
+		to_map?: (oMap: any) => void;
     }// interface IElementDesc
     //
 	export interface IAttachedDoc extends IElementDesc {
@@ -35,8 +37,7 @@ declare module 'infodata' {
 		rev: string;
 		has_rev: boolean;
 		deleted: boolean;
-		status?: string;
-		avatardocid?: () => string;
+		attachments?: IAttachedDoc[];
 		is_storeable: () => boolean;
         type: () => string;
         store_prefix: () => string;
@@ -44,11 +45,7 @@ declare module 'infodata' {
         end_key: () => string;
         create_id: () => string;
         check_id: () => void;
-		to_map: (oMap: any) => void;
-		get_person_id?: () => string;
-		check_person?: (oPers: IPerson) => boolean;
         //
-        attachments?: IAttachedDoc[];
     }// interface IBaseItem
 	
     export interface ISigleNamedItem extends IBaseItem {

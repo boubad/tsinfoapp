@@ -4,8 +4,8 @@ import {BaseItem} from './baseitem';
 import {ISigleNamedItem} from 'infodata';
 //
 export class SigleNamedItem extends BaseItem implements ISigleNamedItem {
-	private _sigle: string;
-	private _name: string;
+	private _sigle: string = null;
+	private _name: string = null;
 	//
 	constructor(oMap?: any) {
 		super(oMap);
@@ -20,13 +20,13 @@ export class SigleNamedItem extends BaseItem implements ISigleNamedItem {
 	}
 	//
 	public get sigle(): string {
-		return (this._sigle !== undefined) ? this._sigle : null;
+		return this._sigle;
 	}
 	public set sigle(s: string) {
 		this._sigle = this.check_upper_string(s);
 	}
 	public get name(): string {
-		return (this._name !== undefined) ? this._name : null;
+		return this._name;
 	}
 	public set name(s: string) {
 		this._name = this.format_name(s);

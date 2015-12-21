@@ -4,7 +4,7 @@ import {IntervalledSigleItem} from './intervalledsigleitem';
 import {SEMESTRE_TYPE, SEMESTRE_PREFIX} from './infoconstants';
 //
 export class Semestre extends IntervalledSigleItem implements ISemestre {
-	private _anneeid: string;
+	private _anneeid: string = null;
 	//
 	constructor(oMap?: any) {
 		super(oMap);
@@ -21,7 +21,7 @@ export class Semestre extends IntervalledSigleItem implements ISemestre {
 		}
     }// toMap
 	public get anneeid(): string {
-		return (this._anneeid !== undefined) ? this._anneeid : null;
+		return this._anneeid;
 	}
 	public set anneeid(s: string) {
 		this._anneeid = this.check_string(s);

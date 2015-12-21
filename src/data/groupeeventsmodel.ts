@@ -58,6 +58,9 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
         this._noteMode = false;
         this._editMode = true;
     }// constructor
+	protected get_remove_selector(): any {
+		return { groupeeventid: this.currentItem.id };
+	}
 	protected get_groupes(): IGroupe[] {
 		return (this.userInfo !== null) ? this.userInfo.groupes : [];
 	}
@@ -854,37 +857,6 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
             return false;
         });
     }// saveNotes
-    public remove(): Promise<any> {
-		this.is_busy = true;
-        let item = this.currentItem;
-        if (item === null) {
-			this.is_busy = false;
-			return Promise.resolve(false);
-        }
-        if ((item.id === null) || (item.rev === null)) {
-			this.is_busy = false;
-			return Promise.resolve(false);
-        }
-        return this.confirm('Voulez-vous vraiment supprimer ' + item.id + '?').then((b) => {
-			if ((b !== undefined) && (b !== null) && (b == true)) {
-				let service = this.dataService;
-				this.clear_error();
-				return this.remove_groupeevent(item);
-			} else {
-				this.is_busy = false;
-				return Promise.resolve(false);
-			}
-		}).then((r) => {
-            return this.refreshAll();
-		}).then((x) => {
-			this.is_busy = false;
-			return true;
-        }).catch((err) => {
-            this.set_error(err);
-			this.is_busy = false;
-            return false;
-        });
-    }// remove
     public canActivate(params?: any, config?: any, instruction?: any): any {
 		return this.is_connected;
     }// activate
@@ -959,51 +931,6 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 		})
 	}// refresh
 	private get_semestre_groupe_etudaffectations(sem: ISemestre, grp: IGroupe): Promise<IEtudiantAffectation[]> {
-		let oRet: IEtudiantAffectation[] = [];
-		if ((sem === undefined) || (sem === null) || (grp === undefined) || (grp === null)) {
-			return Promise.resolve(oRet);
-		}
-		let s1 = sem.id;
-		let s2 = grp.id;
-		let genre = grp.genre;
-		if ((s1 === undefined) || (s2 === undefined) || (s1 === null) || (s2 === null) ||
-			(genre === undefined) || (genre === null)) {
-			return Promise.resolve(oRet);
-		}
-		if (genre == GENRE_TP) {
-			let sel: any = { groupeid: s2, semestreid: s1 };
-			return this.dataService.query_items(this.etudAffectationModel.type(), sel).then((dd: IEtudiantAffectation[]) => {
-				oRet = ((dd !== undefined) && (dd !== null)) ? dd : [];
-				this.sort_array(oRet);
-				return oRet;
-			}).catch((e) => {
-				return oRet;
-			});
-		}
-		let ids: string[] = grp.childrenids;
-		if ((ids === undefined) || (ids === null)) {
-			ids = [];
-		}
-		return this.dataService.get_items_array(ids).then((gg: IGroupe[]) => {
-			let oAr: Promise<IEtudiantAffectation[]>[] = [];
-			if ((gg !== undefined) && (gg !== null)) {
-				for (let g of gg) {
-					oAr.push(this.get_semestre_groupe_etudaffectations(sem, g));
-				}
-			}// gg
-			return Promise.all(oAr);
-		}).then((dd) => {
-			if ((dd !== undefined) && (dd !== null)) {
-				for (let xx of dd) {
-					for (let a of xx) {
-						oRet.push(a);
-					}
-				}// xx
-			}// dd
-			this.sort_array(oRet);
-			return oRet;
-		}).catch((e) => {
-			return oRet;
-		});
+		return this.dataService.get_semestre_groupe_etudaffectations(sem,grp);
 	}//get_semestre_groupe_etudaffectations
 }// class Profgroupeevents

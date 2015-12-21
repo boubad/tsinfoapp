@@ -4,11 +4,11 @@ import {Affectation} from './affectation';
 import {PROFAFFECTATION_TYPE, PROFAFFECTATION_PREFIX} from './infoconstants';
 //
 export class EnseignantAffectation extends Affectation implements IEnseignantAffectation {
-	private _enseignantid: string;
-	private _uniteid: string;
-	private _matiereid: string;
-	private _matiereName: string;
-	private _uniteName: string;
+	private _enseignantid: string = null;
+	private _uniteid: string = null;
+	private _matiereid: string = null;
+	private _matiereName: string = null;
+	private _uniteName: string = null;
 	//
     constructor(oMap?: any) {
         super(oMap);
@@ -52,19 +52,19 @@ export class EnseignantAffectation extends Affectation implements IEnseignantAff
         }
     }// toMap
 	public get uniteid(): string {
-		return (this._uniteid !== undefined) ? this._uniteid : null;
+		return this._uniteid;
 	}
 	public set uniteid(s: string) {
 		this._uniteid = this.check_string(s);
 	}
 	public get enseignantid(): string {
-		return (this._enseignantid !== undefined) ? this._enseignantid : null;
+		return this._enseignantid;
 	}
 	public set enseignantid(s: string) {
 		this._enseignantid = this.check_string(s);
 	}
 	public get matiereid(): string {
-		return (this._matiereid !== undefined) ? this._matiereid : null;
+		return this._matiereid;
 	}
 	public set matiereid(s: string) {
 		this._matiereid = this.check_string(s);
@@ -76,7 +76,7 @@ export class EnseignantAffectation extends Affectation implements IEnseignantAff
 		this._matiereName = this.check_string(s);
 	}
 	public get uniteName(): string {
-		return (this._uniteName !== undefined) ? this._uniteName : null;
+		return this._uniteName;
 	}
 	public set uniteName(s: string) {
 		this._uniteName = this.check_string(s);
@@ -110,34 +110,5 @@ export class EnseignantAffectation extends Affectation implements IEnseignantAff
 		}
         return (s1 + s2 + s3 + s4);
     }
-	public check_person(oPers: IPerson): boolean {
-		if ((oPers === undefined) || (oPers === null)) {
-            return false;
-        }
-        let bRet: boolean = super.check_person(oPers);
-        let xid: string = this.uniteid;
-        if ((xid !== undefined) && (xid !== null)) {
-            let oAr: string[] = oPers.uniteids;
-            if ((oAr === undefined) || (oAr === null)) {
-                oAr = [];
-            }
-            if (this.add_id_to_array(oAr, xid)) {
-                oPers.uniteids = oAr;
-                bRet = true;
-            }
-        }// xid
-        xid = this.matiereid;
-        if ((xid !== undefined) && (xid !== null)) {
-            let oAr: string[] = oPers.matiereids;
-            if ((oAr === undefined) || (oAr === null)) {
-                oAr = [];
-            }
-            if (this.add_id_to_array(oAr, xid)) {
-                oPers.matiereids = oAr;
-                bRet = true;
-            }
-        }// xid
-        return bRet;
-    }// check_person
 }// class EtudiantAffectation
 //

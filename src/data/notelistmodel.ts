@@ -16,6 +16,9 @@ export class NoteListModel extends BaseConsultViewModel<IDisplayEtudiant> {
         this.title = 'Notes Semestres';
 		this._evtModel = this.itemFactory.create_etudiantevent();
     }// constructor
+	protected get_hasitems():boolean {
+		return (this._all_data.length > 0);
+	}
     protected post_update_semestre(): Promise<boolean> {
 		return super.post_update_semestre().then((r) => {
 			return this.activate_refresh();

@@ -10,12 +10,27 @@ var cc = new MyCrypto();
 //
 export class Person extends BaseItem implements IPerson {
     //
-    private _email: string;
-    private _phone: string;
-    private _password: string;
-    private _username: string;
-    private _firstname: string;
-    private _lastname: string;
+    private _email: string = null;
+    private _phone: string = null;
+    private _password: string = null;
+    private _username: string = null;
+    private _firstname: string = null;
+    private _lastname: string = null;
+	//
+	private _dossier: string;
+	private _sexe: string ;
+	private _date: Date;
+	private _birthYear:number;
+	private _ville: string;
+	private _etablissement: string;
+	private _serieBac: string;
+	private _optionBac: string;
+	private _mentionBac: string;
+	private _etudesSuperieures: string;
+	private _apb: string;
+	//
+	private _groupeSigle:string;
+	private _groupeid:string;
     //
     private _departementids: string[];
     private _anneeids: string[];
@@ -29,20 +44,7 @@ export class Person extends BaseItem implements IPerson {
 	private _enseignantids: string[];
 	private _administratorids: string[];
 	//
-	private _dossier: string;
-	private _sexe: string;
-	private _date: Date;
-	private _birthYear:number;
-	private _ville: string;
-	private _etablissement: string;
-	private _serieBac: string;
-	private _optionBac: string;
-	private _mentionBac: string;
-	private _etudesSuperieures: string;
-	private _apb: string;
-	//
-	private _groupeSigle:string;
-	private _groupeid:string;
+	
     //
     constructor(oMap?: any) {
         super(oMap);
@@ -65,33 +67,6 @@ export class Person extends BaseItem implements IPerson {
             if (oMap.phone !== undefined) {
                 this.phone = oMap.phone;
             }
-            if (oMap.departementids !== undefined) {
-                this.departementids = oMap.departementids;
-            } //
-            if (oMap.anneeids !== undefined) {
-                this.anneeids = oMap.anneeids;
-            } //
-            if (oMap.semestreids !== undefined) {
-                this.semestreids = oMap.semestreids;
-            } //
-            if (oMap.uniteids !== undefined) {
-                this.uniteids = oMap.uniteids;
-            } //
-            if (oMap.matiereids !== undefined) {
-                this.matiereids = oMap.matiereids;
-            } //
-            if (oMap.groupeids !== undefined) {
-                this.groupeids = oMap.groupeids;
-            } //
-			if (oMap.etudiantids !== undefined) {
-				this.etudiantids = oMap.etudiantids;
-			}
-			if (oMap.enseignantids !== undefined) {
-				this.enseignantids = oMap.enseignantids;
-			}
-			if (oMap.administratorids !== undefined) {
-				this.administratorids = oMap.administratorids;
-			}
 			if (oMap.dossier !== undefined) {
 				this.dossier = oMap.dossier;
 			}
@@ -125,13 +100,6 @@ export class Person extends BaseItem implements IPerson {
 			if (oMap.apb !== undefined) {
 				this.apb = oMap.apb;
 			}
-			if (oMap.affectationids !== undefined){
-				this.affectationids = oMap.affectationids;
-			}
-			if (oMap.eventids !== undefined){
-				this.eventids = oMap.eventids;
-			}
-			//
 			if (oMap.groupeSigle !== undefined){
 				this.groupeSigle = oMap.groupeSigle;
 			}
@@ -223,22 +191,20 @@ export class Person extends BaseItem implements IPerson {
 		this._apb =  this.check_upper_string(s);
 	}
 	public get username(): string {
-		return ((this._username !== undefined) && (this._username !== null) && (this._username.length > 0)) ?
-			this._username : null;
+		return this._username;
 	}
 	public set username(s: string) {
 		this._username = ((s !== undefined) && (s !== null) && (s.trim().length > 0)) ?
 			s.trim().toLowerCase() : null;
 	}
 	public get password(): string {
-		return (this._password !== undefined)  ? this._password : null;
+		return this._password;
 	}
 	public set password(s: string) {
-		this._password = s;
+		this._password = (s !== undefined) ? s : null;
 	}
 	public get firstname(): string {
-		return ((this._firstname !== undefined) && (this._firstname !== null) && (this._firstname.length > 0)) ?
-			this._firstname : null;
+		return this._firstname;
 	}
 	public set firstname(s: string) {
     this._firstname = this.format_name(s);
@@ -251,15 +217,13 @@ export class Person extends BaseItem implements IPerson {
 		this._lastname = this.check_upper_string(s);
 	}
 	public get email(): string {
-		return ((this._email !== undefined) && (this._email !== null) && (this._email.length > 0)) ?
-			this._email : null;
+		return this._email;
 	}
 	public set email(s: string) {
 		this._email = this.check_string(s);
 	}
 	public get phone(): string {
-		return ((this._phone !== undefined) && (this._phone !== null) && (this._phone.length > 0)) ?
-			this._phone : null;
+		return this._phone;
 	}
 	public set phone(s: string) {
 		this._phone = this.check_string(s);
@@ -363,42 +327,6 @@ export class Person extends BaseItem implements IPerson {
 			if (this.phone !== null) {
 				oMap.phone = this.phone;
 			}
-			if ((this.departementids !== undefined) && (this.departementids !== null)
-				&& (this.departementids.length > 0)) {
-				oMap.departementids = this.departementids;
-			}
-			if ((this.uniteids !== undefined) && (this.uniteids !== null) &&
-				(this.uniteids.length > 0)) {
-				oMap.uniteids = this.uniteids;
-			}
-			if ((this.matiereids !== undefined) && (this.matiereids !== null) &&
-				(this.matiereids.length > 0)) {
-				oMap.matiereids = this.matiereids;
-			}
-			if ((this.anneeids !== undefined) && (this.anneeids !== null) &&
-				(this.anneeids.length > 0)) {
-				oMap.anneeids = this.anneeids;
-			}
-			if ((this.semestreids !== undefined) && (this.semestreids !== null) &&
-				(this.semestreids.length > 0)) {
-				oMap.semestreids = this.semestreids;
-			}
-			if ((this.groupeids !== undefined) && (this.groupeids !== null) &&
-				(this.groupeids.length > 0)) {
-				oMap.groupeids = this.groupeids;
-			}
-			if ((this.etudiantids !== undefined) && (this.etudiantids !== null) &&
-				(this.etudiantids.length > 0)) {
-				oMap.etudiantids = this.etudiantids;
-			}
-			if ((this.enseignantids !== undefined) && (this.enseignantids !== null) &&
-				(this.enseignantids.length > 0)) {
-				oMap.enseignantids = this.enseignantids;
-			}
-			if ((this.administratorids !== undefined) && (this.administratorids !== null) &&
-				(this.administratorids.length > 0)) {
-				oMap.administratorids = this.administratorids;
-			}
 			if (this.dossier !== null) {
 				oMap.dossier = this.dossier;
 			}
@@ -432,14 +360,6 @@ export class Person extends BaseItem implements IPerson {
 			if (this.apb !== null) {
 				oMap.apb = this.apb;
 			}
-			if ((this.affectationids !== undefined) && (this.affectationids !== null) &&
-				(this.affectationids.length > 0)) {
-				oMap.affectationids = this.affectationids;
-			}
-			if ((this.eventids !== undefined) && (this.eventids !== null) &&
-				(this.eventids.length > 0)) {
-				oMap.eventids = this.eventids;
-			}
 		}// oMap
     } // to_map
     //
@@ -449,13 +369,10 @@ export class Person extends BaseItem implements IPerson {
     public create_id(): string {
         let s = this.start_key();
         if ((s !== null) && (this.username !== null)) {
-            s = s + this.username.trim().toUpperCase();
+            s = s + this.prepare_string(this.username,true);
         }
         return s;
     }// create_id
-	public get_person_id():string {
-		return this.id;
-	}
     //
     public reset_password(): void {
         if (this.username !== null) {

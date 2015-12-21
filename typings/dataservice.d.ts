@@ -35,6 +35,7 @@ declare module 'infodata' {
         query_items: (type: string, selector?: any, skip?: number, limit?: number,fields?: string[]) => Promise<IBaseItem[]>;
         query_by_template: (temp: IBaseItem, skip?: number, limit?: number,fields?: string[]) => Promise<IBaseItem[]>;
         query_ids: (selector?: any, skip?: number, limit?: number) => Promise<string[]>;
+		remove_query_item: (p:IBaseItem,sel?:any) => Promise<boolean>;
     }// interface IDataService
 	//
 	export interface IDataManager extends IDataService {
@@ -50,7 +51,12 @@ declare module 'infodata' {
 		save_item_avatar: (pPers: IBaseItem, avatarid: string,
 		avatarType: string, data: Blob, man:IUIManager) => Promise<boolean>;
 		remove_item_avatar: (p: IBaseItem, man: IUIManager) => Promise<boolean> ; 
-		remove_person_avatar: (pPers:IPerson, man: IUIManager) => Promise<boolean>; 
+		remove_person_avatar: (pPers:IPerson, man: IUIManager) => Promise<boolean>;
+		get_unite_matieres: (p:IUnite) => Promise<IMatiere[]>;
+		get_semestre_groupe_etudaffectations: (sem: ISemestre, grp: IGroupe) => Promise<IEtudiantAffectation[]>;
+		find_user: (username: string, password: string) => Promise<IPerson>; 
+		refresh_person_docids: (pPers:IPerson) =>Promise<boolean>;
+		get_all_departements: () => Promise<IDepartement[]>;
 	}// IDataManager
 }
 //

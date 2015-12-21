@@ -3,7 +3,7 @@ import {SigleNamedItem} from './siglenameditem';
 import {IDepartementSigleNamedItem} from 'infodata';
 //
 export class DepartementSigleNamedItem extends SigleNamedItem implements IDepartementSigleNamedItem {
-	private _departementid: string;
+	private _departementid: string = null;
 	//
 	constructor(oMap?: any) {
 		super(oMap);
@@ -15,7 +15,7 @@ export class DepartementSigleNamedItem extends SigleNamedItem implements IDepart
 	}	
 	//
 	public get departementid(): string {
-		return (this._departementid !== undefined) ? this._departementid : null;
+		return this._departementid;
 	}
 	public set departementid(s: string) {
 		this._departementid = this.check_string(s);

@@ -5,22 +5,18 @@ import {IAttachedDoc, IBaseItem,IPerson} from 'infodata';
 //
 export class BaseItem extends ElementDesc implements IBaseItem {
 	//
-	private _rev: string;
-	private _deleted: boolean;
-	private _status: string;
-	private _attachments: IAttachedDoc[];
+	private _rev: string = null;
+	private _deleted: boolean = false;
+	private _attachments: IAttachedDoc[] = [];
 	//
 	constructor(oMap?: any) {
 		super(oMap);
 		if ((oMap !== undefined) && (oMap !== null)) {
 			if (oMap._rev !== undefined) {
-				this._rev = oMap._rev;
+				this.rev = oMap._rev;
 			}
 			if (oMap._deleted !== undefined) {
 				this._deleted = oMap._deleted;
-			}
-			if (oMap.status !== undefined) {
-				this.status = oMap.status;
 			}
 			if (oMap.docs !== undefined) {
 				this._attachments = this.read_attached_docs(oMap.docs);
@@ -55,46 +51,29 @@ export class BaseItem extends ElementDesc implements IBaseItem {
 			this.id = this.create_id();
 		}
 	}
-	public avatardocid(): string {
-		return this.id;
-	}
-	public get_person_id():string {
-		return null;
-	}
-	public check_person(oPers: IPerson) : boolean {
-		return false;
-	}
-	//
 	public get rev(): string {
-		return (this._rev !== undefined) ? this._rev : null;
+		return this._rev;
 	}
 	public set rev(s: string) {
-		this._rev = s;
+		this._rev = this.check_string(s);
 	}
 	public get has_rev(): boolean {
 		return (this.rev !== null);
 	}
 	public get deleted(): boolean {
-		return ((this._deleted !== undefined) && (this._deleted !== null)) ? this._deleted : false;
+		return this._deleted !== null;
 	}
 	public set deleted(s:boolean){
-		this._deleted = s;
+		this._deleted = ((s !== undefined) && (s !== null)) ? s : false;
 	}
-	public get status(): string {
-		return (this._status !== undefined) ? this._status : null;
-	}
-	public set status(s: string) {
-		this._status = this.check_upper_string(s);
-	}
+	
 	public get attachments(): IAttachedDoc[] {
-		return ((this._attachments !== undefined) && (this._attachments !== null)) ? this._attachments : [];
+		return this._attachments;
 	}
 	//
 	public to_map(oMap: any): void {
+		super.to_map(oMap);
 		oMap.type = this.type();
-		if (this.id !== null) {
-			oMap._id = this.id;
-		}
 		if (this.rev !== null) {
 			oMap._rev = this._rev;
 		}
@@ -107,12 +86,6 @@ export class BaseItem extends ElementDesc implements IBaseItem {
 		}
 		if (this.status !== null) {
 			oMap.status = this.status;
-		}
-		if (this.description !== null) {
-			oMap.description = this.description;
-		}
-		if (this.avatarid !== null){
-			oMap.avatarid = this.avatarid;
 		}
 	}// to_map
 	//

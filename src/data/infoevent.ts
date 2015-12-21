@@ -3,23 +3,23 @@ import {IInfoEvent, IPerson} from 'infodata';
 import {PersonItem} from './personitem';
 //
 export class InfoEvent extends PersonItem implements IInfoEvent {
-	private _semestreid: string;
-	private _matiereid: string;
-	private _groupeid: string;
-	private _genre: string;
-	private _matiereName: string;
-	private _groupeName: string;
+	private _semestreid: string = null;
+	private _matiereid: string = null;
+	private _groupeid: string = null;
+	private _genre: string = null;
+	private _matiereName: string = null;
+	private _groupeName: string = null;
 	private _date: Date = null;
-	private _coef: number;
-	private _semestreName: string;
-	private _anneeid: string;
-	private _anneeName: string;
-	private _matiereCoefficient;
-	private _uniteid: string;
-	private _uniteCoefficient: number;
-	private _uniteName: string;
-	private _semestreMinDate: Date;
-	private _semestreMaxDate: Date;
+	private _coef: number = null;
+	private _semestreName: string = null;
+	private _anneeid: string = null;
+	private _anneeName: string = null;
+	private _matiereCoefficient = null;
+	private _uniteid: string = null;
+	private _uniteCoefficient: number = null;
+	private _uniteName: string = null;
+	private _semestreMinDate: Date = null;
+	private _semestreMaxDate: Date = null;
 	//
 	constructor(oMap?: any) {
 		super(oMap);
@@ -78,107 +78,103 @@ export class InfoEvent extends PersonItem implements IInfoEvent {
 		} // oMap
 	}
 	public get semestreMaxDate(): Date {
-		return (this._semestreMaxDate !== undefined) ? this._semestreMaxDate : null;
+		return this._semestreMaxDate;
 	}
 	public set semestreMaxDate(s: Date) {
 		this._semestreMaxDate = this.check_date(s);
 	}
 	public get semestreMinDate(): Date {
-		return (this._semestreMinDate !== undefined) ? this._semestreMinDate : null;
+		return this._semestreMinDate;
 	}
 	public set semestreMinDate(s: Date) {
 		this._semestreMinDate = this.check_date(s);
 	}
 	public get uniteName(): string {
-		return (this._uniteName !== undefined) ? this._uniteName : null;
+		return this._uniteName;
 	}
 	public set uniteName(s: string) {
 		this._uniteName = this.check_string(s);
 	}
 	public get uniteid(): string {
-		return (this._uniteid !== undefined) ? this._uniteid : null;
+		return this._uniteid;
 	}
 	public set uniteid(s: string) {
 		this._uniteid = this.check_string(s);
 	}
 	public get uniteCoefficient(): number {
-		return ((this._uniteCoefficient !== undefined) &&
-			(this._uniteCoefficient !== null) && (this._uniteCoefficient > 0.0)) ?
-			this._uniteCoefficient : 1.0;
+		return this._uniteCoefficient;
 	}
 	public set uniteCoefficient(s: number) {
 		this._uniteCoefficient = this.check_number(s);
 	}
 	public get matiereCoefficient(): number {
-		return ((this._matiereCoefficient !== undefined) &&
-			(this._matiereCoefficient !== null) && (this._matiereCoefficient > 0.0)) ?
-			this._matiereCoefficient : 1.0;
+		return this._matiereCoefficient;
 	}
 	public set matiereCoefficient(s: number) {
 		this._matiereCoefficient = this.check_number(s);
 	}
 	public get anneeName(): string {
-		return (this._anneeName !== undefined) ? this._anneeName : null;
+		return this._anneeName;
 	}
 	public set anneeName(s: string) {
 		this._anneeName = this.check_string(s);
 	}
 	public get anneeid(): string {
-		return (this._anneeid !== undefined) ? this._anneeid : null;
+		return this._anneeid;
 	}
 	public set anneeid(s: string) {
 		this._anneeid = this.check_string(s);
 	}
 	public get semestreName(): string {
-		return (this._semestreName !== undefined) ? this._semestreName : null;
+		return this._semestreName;
 	}
 	public set semestreName(s: string) {
 		this._semestreName = this.check_string(s);
 	}
 	public get groupeName(): string {
-		return (this._groupeName !== undefined) ? this._groupeName : null;
+		return this._groupeName;
 	}
 	public set groupeName(s: string) {
 		this._groupeName = this.check_string(s);
 	}
 	public get matiereName(): string {
-		return (this._matiereName !== undefined) ? this._matiereName : null;
+		return this._matiereName;
 	}
 	public set matiereName(s: string) {
 		this._matiereName = this.check_string(s);
 	}
 	public get genre(): string {
-		return (this._genre !== undefined) ? this._genre : null;
+		return this._genre;
 	}
 	public set genre(s: string) {
 		this._genre = this.check_upper_string(s);
 	}
 	public get groupeid(): string {
-		return (this._groupeid !== undefined) ? this._groupeid : null;
+		return this._groupeid;
 	}
 	public set groupeid(s: string) {
 		this._groupeid = this.check_string(s);
 	}
 	public get matiereid(): string {
-		return (this._matiereid !== undefined) ? this._matiereid : null;
+		return this._matiereid;
 	}
 	public set matiereid(s: string) {
 		this._matiereid = this.check_string(s);
 	}
 	public get semestreid(): string {
-		return (this._semestreid !== undefined) ? this._semestreid : null;
+		return this._semestreid;
 	}
 	public set semestreid(s: string) {
 		this._semestreid = this.check_string(s);
 	}
 	public get eventDate(): Date {
-        return (this._date !== undefined) ? this._date : null;
+        return this._date;
     }
     public set eventDate(d: Date) {
         this._date = this.check_date(d);
     }
 	public get coefficient(): number {
-        return ((this._coef !== undefined) && (this._coef !== null) && (this._coef > 0)) ? this._coef : 1.0;
+        return this._coef;
     }
 	public get dateString(): string {
 		return this.date_to_string(this.eventDate);
@@ -266,24 +262,6 @@ export class InfoEvent extends PersonItem implements IInfoEvent {
         }
         return s;
     }
-	public check_person(oPers: IPerson): boolean {
-		if ((oPers === undefined) || (oPers === null)) {
-            return false;
-        }
-        let bRet: boolean = super.check_person(oPers);
-        let xid: string = this.id;
-        if ((xid !== undefined) && (xid !== null)) {
-            let oAr: string[] = oPers.eventids;
-            if ((oAr === undefined) || (oAr === null)) {
-                oAr = [];
-            }
-            if (this.add_id_to_array(oAr, xid)) {
-                oPers.eventids = oAr;
-                bRet = true;
-            }
-        }// xid
-        return bRet;
-    }// check_person
 	public sort_func(p1: IInfoEvent, p2: IInfoEvent): number {
         let d1 = p1.eventDate;
         let d2 = p2.eventDate;

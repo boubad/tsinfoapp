@@ -4,11 +4,11 @@ import {BaseItem} from './baseitem';
 //
 export class PersonItem extends BaseItem implements IPersonItem {
 	//
-	private _departementid: string;
-	private _departementName: string;
-    private _personid: string;
-    private _firstname: string;
-    private _lastname: string;
+	private _departementid: string = null;
+	private _departementName: string = null;
+    private _personid: string = null;
+    private _firstname: string = null;
+    private _lastname: string = null;
     //
     constructor(oMap?: any) {
         super(oMap);
@@ -50,19 +50,19 @@ export class PersonItem extends BaseItem implements IPersonItem {
 		}
     }// to_map
 	public get departementName(): string {
-		return (this._departementName !== undefined) ? this._departementName : null;
+		return this._departementName;
     }
     public set departementName(s: string) {
 		this._departementName = this.check_string(s);
     }
 	public get departementid(): string {
-		return (this._departementid !== undefined) ? this._departementid : null;
+		return this._departementid;
     }
     public set departementid(s: string) {
 		this._departementid = this.check_string(s);
     }
     public get personid(): string {
-		return (this._personid !== undefined) ? this._personid : null;
+		return this._personid;
     }
     public set personid(s: string) {
 		this._personid = this.check_string(s);
@@ -74,7 +74,7 @@ export class PersonItem extends BaseItem implements IPersonItem {
 		this._firstname = this.format_name(s);
     }
     public get lastname(): string {
-		return (this._lastname !== undefined) ? this._lastname : null;
+		return this._lastname;
     }
     public set lastname(s: string) {
 		this._lastname = this.check_upper_string(s);
@@ -87,9 +87,6 @@ export class PersonItem extends BaseItem implements IPersonItem {
     public avatardocid(): string {
         return this.personid;
     }
-	public get_person_id():string {
-		return this.personid;
-	}
     public get fullname(): string {
         return ((this.lastname !== null) && (this.firstname !== null)) ?
             (this.lastname + ' ' + this.firstname) : '';
@@ -110,36 +107,4 @@ export class PersonItem extends BaseItem implements IPersonItem {
             return 0;
         }
     } // sort_func
-    //
-    public check_person(oPers: IPerson): boolean {
-		this.check_id();
-        if ((oPers === undefined) || (oPers === null)) {
-            return false;
-        }
-		let xid: string = oPers.id;
-		if (xid === null) {
-			return false;
-		}
-        if (this.personid != xid) {
-            this.personid = xid;
-        }
-        if (this.lastname != oPers.lastname) {
-            this.lastname = oPers.lastname;
-        }
-        if (this.firstname != oPers.firstname) {
-            this.firstname = oPers.firstname;
-        }
-		if ((oPers.avatarid !== undefined) && (oPers.avatarid !== null)) {
-			if ((this.avatarid === undefined) || (this.avatarid === null)) {
-				this.avatarid = oPers.avatarid;
-			}
-		}
-		let xx:string[] = oPers.departementids;
-		if (this.add_id_to_array(xx,this.departementid)) {
-			oPers.departementids = xx;
-			return true;
-		}
-		return false;
-    }// check_person
-    //
 }// class PersonItem

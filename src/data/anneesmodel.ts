@@ -24,6 +24,9 @@ export class AnneesModel extends IntervalledViewModel<IAnnee> {
 			departementid:this.departementid
 		});
     }
+	protected get_remove_selector(): any {
+		return {anneeid: this.currentItem.id};
+	}
 	protected prepare_model(): any {
 		return {type: this.modelItem.type(),
 			departementid:this.departementid};

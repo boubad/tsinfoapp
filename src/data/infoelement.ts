@@ -3,7 +3,7 @@
 import {IInfoElement} from 'infodata';
 //
 export class InfoElement implements IInfoElement {
-	private _id: string;
+	private _id: string = null;
 	//
 	constructor(oMap?: any) {
 		if ((oMap !== undefined) && (oMap !== null)) {
@@ -16,7 +16,7 @@ export class InfoElement implements IInfoElement {
 		}
 	}
 	public get id(): string {
-		return (this._id !== undefined) ? this._id : null;
+		return this._id;
 	}
 	public set id(s: string) {
 		this._id = this.check_string(s);
@@ -135,6 +135,7 @@ export class InfoElement implements IInfoElement {
 				sRet = null;
 			} else {
 				sRet = sRet.toLowerCase();
+				sRet = sRet.replace("'", "");
 				sRet = sRet.replace(" ", "");
 				sRet = sRet.replace("'", "");
 				sRet = sRet.replace("é", "e");

@@ -4,8 +4,8 @@ import {DepartementSigleNamedItem} from './departementsiglenameditem';
 import {UNITE_TYPE, UNITE_PREFIX} from './infoconstants';
 //
 export class Unite extends DepartementSigleNamedItem {
-    private _order: number;
-    private _coefficient: number;
+    private _order: number = null;
+    private _coefficient: number = null;
     //
     constructor(oMap?: any) {
         super(oMap);
@@ -28,14 +28,13 @@ export class Unite extends DepartementSigleNamedItem {
 		}
     }// toMap
     public get order(): number {
-        return ((this._order !== undefined) && (this._order !== null)) ? this._order : 0;
+        return this._order;
     }
     public set order(n: number) {
         this._order = this.check_number(n);
     }
     public get coefficient(): number {
-        return ((this._coefficient !== undefined) && (this._coefficient !== null) &&
-            (this._coefficient > 0.0)) ? this._coefficient : 1.0;
+        return this._coefficient;
     }
     public set coefficient(n: number) {
         this._coefficient = this.check_number(n);

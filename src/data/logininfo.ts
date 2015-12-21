@@ -1,6 +1,6 @@
 // logininfo.ts
 //
-import {IDataManager,IDocPersist, IPerson, IDepartement, IAnnee, IUnite, IGroupe, ISemestre,
+import {IDataManager, IDocPersist, IPerson, IDepartement, IAnnee, IUnite, IGroupe, ISemestre,
 IMatiere, IEtudiant, IEnseignant, IAdministrator, IItemFactory} from 'infodata';
 import {InfoElement} from './infoelement';
 import {PouchDatabase} from './pouchdatabase';
@@ -24,8 +24,8 @@ export class LoginInfo extends InfoElement {
 	public is_etud: boolean = false;
 	public is_admin: boolean = false;
 	public is_super: boolean = false;
-	public is_connected:boolean = false;
-	public person:IPerson = null;
+	public is_connected: boolean = false;
+	public person: IPerson = null;
 	public dataService: IDataManager = new DataManager();
 	//
 	constructor() {
@@ -87,19 +87,7 @@ export class LoginInfo extends InfoElement {
 		}
 	}
 	private find_user(username: string, password: string): Promise<IPerson> {
-		let model: IPerson = this.dataService.itemFactory.create_person({ username: username });
-		model.check_id();
-		return this.dataService.find_item_by_id(model.id, true).then((pPers: IPerson) => {
-			let oRet: IPerson = null;
-			if ((pPers !== undefined) && (pPers !== null)) {
-				if (pPers.check_password(password)) {
-					oRet = pPers;
-				}
-			}
-			return oRet;
-		}).catch((e) => {
-			return null;
-		});
+		return this.dataService.find_user(username, password);
 	}// find_user
 	public disconnect(): void {
 		this.is_connected = false;
@@ -147,21 +135,28 @@ export class LoginInfo extends InfoElement {
 		this.all_enseignants = [];
 		this.all_administrators = [];
 		if (pPers.is_super) {
-			let model: IDepartement = this.dataService.itemFactory.create_departement();
-			let selector: any = { type: model.type };
-			return service.query_items(model.type()).then((dd: IDepartement[]) => {
+			return this.dataService.get_all_departements().then((dd: IDepartement[]) => {
 				this.all_departements = ((dd !== undefined) && (dd !== null)) ? dd : [];
 				let xold = (old !== null) ? old.id : null;
+				if ((xold == null) && (this.all_departements.length > 0)){
+					let d = this.all_departements[0];
+					xold = d.id;
+				}
 				this._departement = this.sync_array(this.all_departements, xold);
 				return true;
 			}).catch((e) => {
 				return false;
 			});
 		} else {
-			let dids = pPers.departementids;
-			return service.get_items_array(dids).then((dd: IDepartement[]) => {
+			return this.dataService.refresh_person_docids(pPers).then((bx) => {
+				return service.get_items_array(pPers.departementids);
+			}).then((dd: IDepartement[]) => {
 				this.all_departements = ((dd !== undefined) && (dd !== null)) ? dd : [];
 				let xold = (old !== null) ? old.id : null;
+				if ((xold == null) && (this.all_departements.length > 0)){
+					let d = this.all_departements[0];
+					xold = d.id;
+				}
 				this._departement = this.sync_array(this.all_departements, xold);
 				return service.get_items_array(pPers.anneeids);
 			}).then((aa: IAnnee[]) => {
@@ -200,6 +195,8 @@ export class LoginInfo extends InfoElement {
 			return this.refresh_data();
 		}).then((b) => {
 			return (this.person !== null);
-		})
+		}).catch((e) => {
+			return false;
+		});
 	}// login
 }// class LoginInfo

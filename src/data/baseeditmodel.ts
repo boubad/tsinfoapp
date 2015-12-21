@@ -2,7 +2,7 @@
 //
 import {UserInfo} from './userinfo';
 import {BaseConsultViewModel} from './baseconsultmodel';
-import {IBaseItem, IFileDesc, IUIManager,IEtudiantEvent,IGroupeEvent} from 'infodata';
+import {IBaseItem, IFileDesc, IUIManager, IEtudiantEvent, IGroupeEvent} from 'infodata';
 //
 export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel<T> {
 	private _add_mode: boolean = false;
@@ -49,7 +49,7 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 		return (this.workingUrl !== null);
 	}
 	public get isEditItem(): boolean {
-		return (this.currentItem !== null)  && (this.currentItem.id !== null) && (this.currentItem.rev !== null);
+		return (this.currentItem !== null) && (this.currentItem.id !== null) && (this.currentItem.rev !== null);
 	}
 	public get isNotEditItem(): boolean {
 		return (!this.isEditItem);
@@ -187,10 +187,10 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 			this.currentItem = p;
 			this.is_busy = false;
 			return true;
-		}).then((x)=>{
+		}).then((x) => {
 			this.is_busy = false;
 			return true;
-		}).catch((e)=>{
+		}).catch((e) => {
 			this.is_busy = false;
 			return false;
 		});
@@ -201,10 +201,21 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 			return Promise.resolve(false);
 		}
 		this.is_busy = true;
+		let bNew: boolean = !item.has_rev;
 		this.clear_error();
 		return this.dataService.save_item(item).then((r) => {
-			return this.refreshAll();
-		}).then((x)=>{
+			if (bNew) {
+				return this.loginInfo.refresh_data();
+			} else {
+				return Promise.resolve(true);
+			}
+		}).then((xx) => {
+			if (bNew) {
+				return this.refreshAll();
+			} else {
+				return this.refresh();
+			}
+		}).then((x) => {
 			this.is_busy = false;
 			return true;
 		}).catch((err) => {
@@ -213,6 +224,19 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 			return false;
 		});
 	}// save
+	protected get_remove_selector(): any {
+		return null;
+	}
+	protected perform_remove(): Promise<boolean> {
+		let item = this.currentItem;
+		if ((item.id === null) || (item.rev === null)) {
+			return Promise.resolve(false);
+		}
+		let sel: any = this.get_remove_selector();
+		return this.dataService.remove_query_item(item, sel).then((b) => {
+			return this.loginInfo.refresh_data();
+		});
+	}// perform_remove
 	public remove(): Promise<any> {
 		let item = this.currentItem;
 		if ((item.id === null) || (item.rev === null)) {
@@ -221,10 +245,10 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 		this.is_busy = true;
 		return this.confirm('Voulez-vous vraiment supprimer ' + item.id + '?').then((b) => {
 			this.clear_error();
-			return this.dataService.remove_item(item);
+			return this.perform_remove();
 		}).then((r) => {
 			return this.refreshAll();
-		}).then((x)=>{
+		}).then((x) => {
 			this.is_busy = false;
 			return true;
 		}).catch((err) => {
@@ -245,7 +269,7 @@ export class BaseEditViewModel<T extends IBaseItem> extends BaseConsultViewModel
 	public set status(s: string) {
 		this.currentItem.status = s;
 	}
-	protected remove_groupeevent(item:IGroupeEvent):Promise<boolean>{
+	protected remove_groupeevent(item: IGroupeEvent): Promise<boolean> {
 		return this.dataService.remove_groupeevent(item);
 	}//remove_groupeevent
 }// class BaseEditViewModel
