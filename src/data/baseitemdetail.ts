@@ -54,6 +54,9 @@ export class BaseDetailModel<T extends IPersonItem> extends BaseView {
 	public get isReadOnly(): boolean {
 		return (!this.canEdit);
 	}
+	public get cannotEdit():boolean {
+		return (!this.canEdit);
+	}
 	protected initialize_item(evtid: string): Promise<boolean> {
 		this.clear_error();
 		this._item = null;
@@ -82,6 +85,7 @@ export class BaseDetailModel<T extends IPersonItem> extends BaseView {
 		if (!p.is_storeable()) {
 			return Promise.resolve(false);
 		}
+		this.is_busy = true;
 		this.clear_error();
 		return this.dataService.save_item(p).then((b) => {
 			if ((b !== undefined) && (b !== null) && (b == true)) {
@@ -89,8 +93,10 @@ export class BaseDetailModel<T extends IPersonItem> extends BaseView {
 			} else {
 				this.error_message = "Erreur enregistrement...";
 			}
+			this.is_busy = false;
 		}).catch((e) => {
 			this.set_error(e);
+			this.is_busy = false;
 		})
 	}// save
 	public activate(params?: any, config?: any, instruction?: any): any {
