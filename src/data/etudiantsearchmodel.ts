@@ -360,4 +360,7 @@ export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
 			return false;
 		});
 	}// activate
+	public canDeactivate(): any {
+		return this.canFetch;
+	}
 }// class EtudiantSearchModel
