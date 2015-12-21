@@ -1,8 +1,8 @@
 //intervalledsigleitem.ts
-import {SigleNamedItem} from'./siglenameditem';
+import { DepartementSigleNamedItem} from './departementsiglenameditem';
 import {IIntervalledSigleItem} from 'infodata';
 //
-export class IntervalledSigleItem extends SigleNamedItem implements IIntervalledSigleItem {
+export class IntervalledSigleItem extends  DepartementSigleNamedItem  implements IIntervalledSigleItem {
     private _start: Date = null;
     private _end: Date = null;
     constructor(oMap?: any) {

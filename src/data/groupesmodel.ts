@@ -52,6 +52,7 @@ export class GroupesModel extends DepSigleNameViewModel<IGroupe> {
 		return ((this.selectedRight !== undefined) && (this.selectedRight !== null) && (this.selectedRight.length > 0));
 	}
 	public add_children(): any {
+		
 		if (!this.canAddChildren) {
 			return;
 		}
@@ -112,7 +113,6 @@ export class GroupesModel extends DepSigleNameViewModel<IGroupe> {
 		});
     }
 	public save(): Promise<any> {
-		let self = this;
 		let service = this.dataService;
 		let gitems: IGroupe[] = [];
 		for (let x of this.all_children) {
@@ -130,19 +130,18 @@ export class GroupesModel extends DepSigleNameViewModel<IGroupe> {
 		}).then((xx) => {
 			return this.get_departement_groupes();
 		}).then((gg: IGroupe[]) => {
-			self.all_children = ((gg !== undefined) && (gg !== null)) ? gg : [];
-			self.check_groupes();
+			this.all_children = ((gg !== undefined) && (gg !== null)) ? gg : [];
+			this.check_groupes();
 			return true;
 		});
 	}// save
 	public remove(): Promise<any> {
-		let self = this;
 		let service = this.dataService;
 		return super.remove().then((b) => {
 			return this.get_departement_groupes();
 		}).then((gg: IGroupe[]) => {
-			self.all_children = ((gg !== undefined) && (gg !== null)) ? gg : [];
-			self.check_groupes();
+			this.all_children = ((gg !== undefined) && (gg !== null)) ? gg : [];
+			this.check_groupes();
 			return true;
 		});
 	}// save
@@ -188,17 +187,16 @@ export class GroupesModel extends DepSigleNameViewModel<IGroupe> {
 		}// gx
 	}// check_groupes
 	protected post_change_item(): Promise<any> {
-		let self = this;
 		return super.post_change_item().then((b) => {
-			self.check_groupes();
-			self._xgenre = null;
-			let p = self.currentItem;
+			this.check_groupes();
+			this._xgenre = null;
+			let p = this.currentItem;
 			if (p !== null) {
 				let xs: string = p.genre;
 				if (xs !== null) {
-					for (let x of self.allGenres) {
+					for (let x of this.allGenres) {
 						if (x.id == xs) {
-							self._xgenre = x;
+							this._xgenre = x;
 							break;
 						}
 					}// x

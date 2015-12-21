@@ -61,7 +61,7 @@ export class BaseItem extends ElementDesc implements IBaseItem {
 		return (this.rev !== null);
 	}
 	public get deleted(): boolean {
-		return this._deleted !== null;
+		return this._deleted;
 	}
 	public set deleted(s:boolean){
 		this._deleted = ((s !== undefined) && (s !== null)) ? s : false;

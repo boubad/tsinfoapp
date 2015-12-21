@@ -4,7 +4,6 @@ import {IntervalledSigleItem} from './intervalledsigleitem';
 import {ANNEE_TYPE, ANNEE_PREFIX} from './infoconstants';
 //
 export class Annee extends IntervalledSigleItem implements IAnnee {
-	private _departementid: string = null;
 	//
 	constructor(oMap?: any) {
 		super(oMap);
@@ -15,12 +14,6 @@ export class Annee extends IntervalledSigleItem implements IAnnee {
 		}// oMap
 	}
 	//
-	public get departementid(): string {
-		return this._departementid;
-	}
-	public set departementid(s: string) {
-		this._departementid = this.check_string(s);
-	}
 	public to_map(oMap: any): void {
 		super.to_map(oMap);
 		if (this.departementid !== null) {

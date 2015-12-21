@@ -13,7 +13,7 @@ SUPER_USERNAME, SUPER_LASTNAME, GENRE_TP} from './infoconstants';
 const INDEXED_FIELDS: string[] = ["_id", "type", "status", "dossier", "sexe", "birthDate", "birthYear",
 	"username", "firstname", "lastname", "ville", "etablissement",
 	"serieBac", "optionBac", "mentionBac", "etudesSuperieures", "apb",
-	"personid","sigle", "departementid", "uniteid", "anneeid", "groupeid", "matiereid", "semestreid",
+	"personid", "sigle", "departementid", "uniteid", "anneeid", "groupeid", "matiereid", "semestreid",
 	"etudiantid", "enseignantid", "profaffectationid", "groupeeventid", "etudiantaffectationid",
 	"genre", "name", "startDate", "endDate", "eventDate", "note"];
 //
@@ -25,6 +25,28 @@ export class DataManager extends DataService {
 	constructor(serv?: IDocPersist, fact?: IItemFactory) {
 		super(serv, fact);
 	}// constructor
+	public remove_all_persons(): Promise<boolean> {
+		return this.service.query_docs({ type: PERSON_TYPE }, null, null, ["_id", "_rev", "type", "username"]).then((dd) => {
+			let pp: Promise<boolean>[] = [];
+			for (let d of dd) {
+				if ((d.username !== undefined) && (d.usename != SUPER_USERNAME)) {
+					let p = this.itemFactory.create_item(d);
+					if (p !== null) {
+						pp.push(this.remove_query_item(p, { personid: p.id }));
+					}
+				}// username
+			}// d	
+			if (pp.length > 0) {
+				return Promise.all(pp);
+			} else {
+				return Promise.resolve([]);
+			}
+		}).then((xx) => {
+			return true;
+		}).catch((e)=>{
+			return false;
+		})
+	}//remove_all_persons
 	public get_all_departements(): Promise<IDepartement[]> {
 		let oRet: IDepartement[] = [];
 		return this.query_items(DEPARTEMENT_TYPE).then((dd: IDepartement[]) => {

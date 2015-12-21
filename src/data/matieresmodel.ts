@@ -12,6 +12,7 @@ export class MatieresModel extends SigleNamedViewModel<IMatiere> {
     }// constructor
 	protected create_item(): IMatiere {
 		return this.itemFactory.create_matiere({
+			departementid:this.departementid,
 			uniteid: this.uniteid,
 			genre: 'PRATIQUE',
 			coefficient: 1.0

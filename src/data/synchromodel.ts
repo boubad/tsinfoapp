@@ -44,7 +44,22 @@ export class SynchroModel extends BaseView {
 			this.syncManager.currentServer = s;
 		}
     }
-
+	public get canRemovePersons():boolean {
+		return this.is_super && this.is_not_busy && this.canImport && this.canExport;
+	}
+    public removeAllPersons():Promise<boolean> {
+		this.is_busy = true;
+		return this.dataService.remove_all_persons().then((b)=>{
+			return this.loginInfo.refresh_data();
+		}).then((bx)=>{
+			this.is_busy = false;
+			return true;
+		}).catch((e)=>{
+			this.set_error(e);
+			this.is_busy = false;
+			return false;
+		})
+	}//remove_all_persons
     public get canRemoveServer(): boolean {
         return (this.currentServer !== null) && (this.currentServer.trim().length > 0) &&
 			this.canImport && this.canExport && this.is_not_busy;

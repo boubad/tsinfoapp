@@ -73,7 +73,7 @@ declare module 'infodata' {
         add_child: (g: IGroupe) => void;
         remove_child: (g: IGroupe) => boolean;
     }
-    export interface IMatiere extends ISigleNamedItem {
+    export interface IMatiere extends IDepartementSigleNamedItem {
         uniteid: string;
         genre: string;
         matmodule?: string;
@@ -81,7 +81,7 @@ declare module 'infodata' {
         ecs?: number;
         coefficient?: number;
     }
-    export interface IIntervalledSigleItem extends ISigleNamedItem {
+    export interface IIntervalledSigleItem extends IDepartementSigleNamedItem {
         startDate: Date;
         endDate: Date;
     }
