@@ -313,7 +313,6 @@ export class PersonViewModel<T extends IDepartementPerson> extends BaseEditViewM
 		item.firstname = pPers.firstname;
 		item.lastname = pPers.lastname;
 		item.avatarid = pPers.avatarid;
-        item.check_person(pPers);
 		let bOld = (item.rev !== null);
 		this.clear_error();
 		return this.dataService.save_item(this.currentPerson).then((b) => {

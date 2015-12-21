@@ -99,23 +99,7 @@ export class EtudaffectationsModel extends AffectationViewModel<IEtudiantAffecta
         return p;
     }
 	private save_affectation(p: IEtudiantAffectation): Promise<boolean> {
-		let oRet: boolean = false;
-		return this.dataService.find_item_by_id(p.personid).then((pPers: IPerson) => {
-			p.check_person(pPers);
-			let oAr: string[] = pPers.groupeids;
-            if ((oAr === undefined) || (oAr === null)) {
-                oAr = [];
-            }
-			for (let x of this._pgroupes) {
-				this.add_id_to_array(oAr, x.id);
-			}// x
-			pPers.groupeids = oAr;
-			return this.dataService.save_item(pPers);
-		}).then((bx) => {
-			return this.dataService.save_item(p);
-		}).catch((e) => {
-			return oRet;
-		});
+		return this.dataService.save_item(p);
 	}// save_affectation
 	protected perform_activate(): Promise<any> {
 		this._groupes = null;

@@ -5,12 +5,12 @@ import {ETUDEVENT_TYPE, ETUDEVENT_PREFIX} from './infoconstants';
 //
 //
 export class EtudiantEvent extends InfoEvent implements IEtudiantEvent {
-	private _groupeeventid: string;
-    private _etudiantaffectationid: string;
-	private _etudiantid: string;
-    private _note: number;
-	private _groupeEventName: string;
-	private _groupeEventGenre: string;
+	private _groupeeventid: string = null;
+    private _etudiantaffectationid: string = null;
+	private _etudiantid: string = null;
+    private _note: number = null;
+	private _groupeEventName: string = null;
+	private _groupeEventGenre: string = null;
 	//
 	constructor(oMap?: any) {
 		super(oMap);
@@ -37,31 +37,31 @@ export class EtudiantEvent extends InfoEvent implements IEtudiantEvent {
         } // oMap
 	}
 	public get etudiantid(): string {
-		return (this._etudiantid !== undefined) ? this._etudiantid : null;
+		return this._etudiantid;
 	}
 	public set etudiantid(s: string) {
 		this._etudiantid = this.check_string(s);
 	}
 	public get groupeEventName(): string {
-		return (this._groupeEventName !== undefined) ? this._groupeEventName : null;
+		return this._groupeEventName;
 	}
 	public set groupeEventName(s: string) {
 		this._groupeEventName = this.format_name(s);
 	}
 	public get groupeEventGenre(): string {
-		return (this._groupeEventGenre !== undefined) ? this._groupeEventGenre : null;
+		return this._groupeEventGenre;
 	}
 	public set groupeEventGenre(s: string) {
 		this._groupeEventGenre = this.format_name(s);
 	}
 	public get etudiantaffectationid(): string {
-		return (this._etudiantaffectationid !== undefined) ? this._etudiantaffectationid : null;
+		return this._etudiantaffectationid;
 	}
 	public set etudiantaffectationid(s: string) {
 		this._etudiantaffectationid = this.check_string(s);
 	}
 	public get groupeeventid(): string {
-		return (this._groupeeventid !== undefined) ? this._groupeeventid : null;
+		return this._groupeeventid;
 	}
 	public set groupeeventid(s: string) {
 		this._groupeeventid = this.check_string(s);
@@ -89,7 +89,7 @@ export class EtudiantEvent extends InfoEvent implements IEtudiantEvent {
     } // to_map
 	//
 	public get note(): number {
-        return ((this._note !== undefined) && (this._note !== null)) ? this._note : null;
+        return this._note;
     }
     public set note(s: number) {
         let d = this.check_number(s);
@@ -126,33 +126,4 @@ export class EtudiantEvent extends InfoEvent implements IEtudiantEvent {
     public store_prefix(): string {
         return ETUDEVENT_PREFIX;
     }
-	public check_person(oPers: IPerson): boolean {
-		if ((oPers === undefined) || (oPers === null)) {
-            return false;
-        }
-        let bRet: boolean = super.check_person(oPers);
-        let xid: string = this.matiereid;
-        if ((xid !== undefined) && (xid !== null)) {
-            let oAr: string[] = oPers.matiereids;
-            if ((oAr === undefined) || (oAr === null)) {
-                oAr = [];
-            }
-            if (this.add_id_to_array(oAr, xid)) {
-                oPers.matiereids = oAr;
-                bRet = true;
-            }
-        }// xid
-		xid = this.uniteid;
-        if ((xid !== undefined) && (xid !== null)) {
-            let oAr: string[] = oPers.uniteids;
-            if ((oAr === undefined) || (oAr === null)) {
-                oAr = [];
-            }
-            if (this.add_id_to_array(oAr, xid)) {
-                oPers.uniteids = oAr;
-                bRet = true;
-            }
-        }// xid
-        return bRet;
-    }// check_person
 }// class 

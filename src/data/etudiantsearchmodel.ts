@@ -2,7 +2,8 @@
 //
 import {BaseConsultViewModel} from './baseconsultmodel';
 import {UserInfo} from './userinfo';
-import {IPerson, IEtudiant, IGroupe} from 'infodata';
+import {ETUDIANT_TYPE, ETUDAFFECTATION_TYPE} from './infoconstants';
+import {IPerson, IEtudiant, IGroupe, IDepartement} from 'infodata';
 //
 export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
 	//
@@ -18,6 +19,34 @@ export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
 		super(info);
 		this.canFetch = true;
 	}// constructor
+	private get_person_deps_groupes(pPers: IPerson): Promise<boolean> {
+		let deps: string[] = [];
+		let grps: string[] = [];
+		let etds: string[] = [];
+		return this.dataService.service.query_docs({ personid: pPers.id, type: ETUDIANT_TYPE }, null, null, ["_id", "departementid"]).then((xx) => {
+			for (let x of xx) {
+				if ((x.departementid !== undefined) && (x.departementid !== null)) {
+					deps.push(x.departementid);
+				}
+				if ((x._id !== undefined) && (x._id !== null)) {
+					etds.push(x._id);
+				}
+			}
+			return this.dataService.service.query_docs({ personid: pPers.id, type: ETUDAFFECTATION_TYPE }, null, null, ["_id", "groupeid"]);
+		}).then((gg) => {
+			for (let g of gg) {
+				if ((g.groupeid !== undefined) && (g.groupeid !== null)) {
+					grps.push(g.groupeid);
+				}
+			}
+			pPers.departementids = deps;
+			pPers.groupeids = grps;
+			pPers.etudiantids = etds;
+			return true;
+		}).catch((e) => {
+			return false;
+		});
+	}//get_person_deps_groupes
 	protected get_groupes(): IGroupe[] {
 		return ((this._groupes !== undefined) && (this._groupes !== null)) ? this._groupes : [];
 	}
@@ -31,15 +60,29 @@ export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
     }
 	protected get_all_ids(): Promise<string[]> {
 		this.canFetch = false;
+		let temp: IPerson[] = [];
 		this._etuds = [];
 		let oRet: string[] = [];
 		let model = this.currentPerson;
 		let selector: any = {};
 		model.to_map(selector);
 		return this.dataService.query_items(model.type(), selector).then((rr: IPerson[]) => {
-			this._etuds = this.filter_persons(rr);
+			temp = ((rr !== undefined) && (rr !== null)) ? rr : [];
+			if ((this.departementid !== null) || (this.groupeid !== null)) {
+				let pp: Promise<boolean>[] = [];
+				for (let p of temp) {
+					pp.push(this.get_person_deps_groupes(p));
+				}
+				return Promise.all(pp);
+			} else {
+				return Promise.resolve([]);
+			}
+		}).then((dd) => {
+			this._etuds = this.filter_persons(temp);
 			for (let p of this._etuds) {
-				oRet.push(p.id);
+				for (let y of p.etudiantids) {
+					oRet.push(y);
+				}
 			}
 			this.canFetch = true;
 			return oRet;
@@ -90,6 +133,7 @@ export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
 		return oRet;
 	}// filter_persons
 	public refreshAll(): Promise<any> {
+		this.canFetch = false;
 		this.prepare_refresh();
 		let nc = this.itemsPerPage;
 		this.clear_error();
@@ -104,6 +148,7 @@ export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
 			}
 			return this.refresh();
 		}).catch((err) => {
+			this.canFetch = true;
 			this.set_error(err);
 			return false;
 		})
@@ -305,6 +350,9 @@ export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
 	public activate(params?: any, config?: any, instruction?: any): any {
 		this.in_activate = true;
 		return this.perform_activate().then((x) => {
+			return this.get_departement_groupetps();
+		}).then((gg) => {
+			this._groupes = gg;
 			this.in_activate = false;
 			return true;
 		}).catch((e) => {

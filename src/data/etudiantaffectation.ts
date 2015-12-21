@@ -5,7 +5,7 @@ import {Affectation} from './affectation';
 import {ETUDAFFECTATION_TYPE, ETUDAFFECTATION_PREFIX} from './infoconstants';
 //
 export class EtudiantAffectation extends Affectation implements IEtudiantAffectation {
-	private _etudiantid: string;
+	private _etudiantid: string = null;
 	//
     constructor(oMap?: any) {
         super(oMap);
@@ -22,7 +22,7 @@ export class EtudiantAffectation extends Affectation implements IEtudiantAffecta
 		}
     }// toMap
 	public get etudiantid(): string {
-		return (this._etudiantid !== undefined) ? this._etudiantid : null;
+		return this._etudiantid;
 	}
 	public set etudiantid(s: string) {
 		this._etudiantid = this.check_string(s);

@@ -385,19 +385,7 @@ export class DataService extends InfoElement implements IDataService {
 			return Promise.resolve(oRet);
 		}
 		p.check_id();
-		let nPersId: string = p.get_person_id();
-		return this.find_item_by_id(nPersId).then((px: IPerson) => {
-			let pPers: IPerson = null;
-			pPers = ((px !== undefined) && (px !== null)) ? px : null;
-			if (pPers !== null) {
-				p.check_person(pPers);
-				return this.perform_save(pPers);
-			} else {
-				return Promise.resolve(true);
-			}
-		}).then((bx) => {
-			return this.perform_save(p);
-		});
+		return this.perform_save(p);
 	}// save_item
 	public find_item_by_id(id: string, bAttach?: boolean, bMeta?: boolean): Promise<IBaseItem> {
 		let oRet: IBaseItem = null;

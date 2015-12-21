@@ -3,8 +3,8 @@ import {SigleNamedItem} from'./siglenameditem';
 import {IIntervalledSigleItem} from 'infodata';
 //
 export class IntervalledSigleItem extends SigleNamedItem implements IIntervalledSigleItem {
-    private _start: Date;
-    private _end: Date;
+    private _start: Date = null;
+    private _end: Date = null;
     constructor(oMap?: any) {
         super(oMap);
         if ((oMap !== undefined) && (oMap !== null)) {
@@ -26,13 +26,13 @@ export class IntervalledSigleItem extends SigleNamedItem implements IIntervalled
 		}
     }// toMap
     public get startDate(): Date {
-        return (this._start !== undefined) ? this._start : null;
+        return this._start;
     }
     public set startDate(d: Date) {
         this._start = this.check_date(d);
     }
     public get endDate(): Date {
-        return (this._end !== undefined) ? this._end : null;
+        return this._end;
     }
     public set endDate(d: Date) {
         this._end = this.check_date(d);
