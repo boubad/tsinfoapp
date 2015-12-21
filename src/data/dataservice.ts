@@ -103,7 +103,29 @@ export class DataService extends InfoElement implements IDataService {
 	}
 	//
 	//
-	public query_items(xtype: string, selector?: any, skip?: number, limit?: number,fields?: string[]): Promise<IBaseItem[]> {
+	public remove_query_item(p: IBaseItem, sel?: any): Promise<boolean> {
+		if (!this.is_valid) {
+			throw new Error("invalid database");
+		}
+		if ((p === undefined) || (p === null)) {
+			throw new Error("invalid args");
+		}
+		let id: string = p.id;
+		let rev: string = p.rev;
+		if ((id == null) || (rev == null)) {
+			throw new Error("invalid args");
+		}
+		let doc: any = {};
+		p.to_map(doc);
+		return this.service.remove_doc(doc).then((r) => {
+			if ((sel !== undefined) && (sel !== null)) {
+				return this.service.remove_query_docs(sel);
+			} else {
+				return Promise.resolve(true);
+			}
+		});
+	}//remove_query_item
+	public query_items(xtype: string, selector?: any, skip?: number, limit?: number, fields?: string[]): Promise<IBaseItem[]> {
 		let oRet: IBaseItem[] = [];
 		if ((xtype === undefined) || (xtype === null)) {
 			return Promise.resolve(oRet);
@@ -125,7 +147,7 @@ export class DataService extends InfoElement implements IDataService {
 				}// skey
 			}// key
 		}
-		return this.service.query_docs(xsel, skip, limit,fields).then((dd) => {
+		return this.service.query_docs(xsel, skip, limit, fields).then((dd) => {
 			if ((dd !== undefined) && (dd !== null)) {
 				for (let doc of dd) {
 					let item = this.itemFactory.create_item(doc);
@@ -140,7 +162,7 @@ export class DataService extends InfoElement implements IDataService {
 			return oRet;
 		});
 	}// query_items
-	public query_by_template(temp: IBaseItem, skip?: number, limit?: number,fields?: string[]): Promise<IBaseItem[]> {
+	public query_by_template(temp: IBaseItem, skip?: number, limit?: number, fields?: string[]): Promise<IBaseItem[]> {
 		let oRet: IBaseItem[] = [];
 		if ((temp === undefined) || (temp === null)) {
 			return Promise.resolve(oRet);
@@ -151,7 +173,7 @@ export class DataService extends InfoElement implements IDataService {
 		}
 		let xsel: any = {};
 		temp.to_map(xsel);
-		return this.query_items(xtype, xsel, skip, limit,fields);
+		return this.query_items(xtype, xsel, skip, limit, fields);
 	}// query_by_template
 	//
 	public query_ids(selector?: any, skip?: number, limit?: number): Promise<string[]> {

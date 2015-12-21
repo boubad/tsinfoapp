@@ -17,6 +17,9 @@ export class MatieresModel extends SigleNamedViewModel<IMatiere> {
 			coefficient: 1.0
 		});
 	}
+	protected get_remove_selector(): any {
+		return { matiereid: this.currentItem.id };
+	}
 	protected prepare_model(): any {
 		return {type: this.modelItem.type(),
 			uniteid:this.uniteid};
@@ -95,12 +98,12 @@ export class MatieresModel extends SigleNamedViewModel<IMatiere> {
 		if (!item.is_storeable()) {
 			return Promise.resolve(false);
 		}
-		var self = this;
+		this.is_busy = true;
 		this.clear_error();
 		item.check_id();
 		let pUnite: IUnite = null;
 		return this.dataService.save_item(item).then((r) => {
-			return self.dataService.find_item_by_id(item.uniteid);
+			return this.dataService.find_item_by_id(item.uniteid);
 		}).then((p: IUnite) => {
 			if ((p !== undefined) && (p !== null)) {
 				pUnite = p;
@@ -117,18 +120,16 @@ export class MatieresModel extends SigleNamedViewModel<IMatiere> {
 			}// mm
 			if (pUnite !== null) {
 				pUnite.coefficient = (sum > 0) ? sum : 1.0;
-				return self.dataService.save_item(pUnite);
+				return super.save();
 			} else {
 				return Promise.resolve(true);
 			}
-		}).then((r) => {
-			if (item.rev !== null) {
-				return self.refresh();
-			} else {
-				return self.refreshAll();
-			}
+		}).then((b)=>{
+			this.is_busy = false;
+			return true;
 		}).catch((err) => {
-			self.set_error(err);
+			this.set_error(err);
+			this.is_busy = false;
 			return false;
 		});
 	}// save

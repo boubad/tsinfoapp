@@ -24,6 +24,9 @@ export class SemestreReportBase extends BaseConsultViewModel<IDisplayEtudiant> {
         super.prepare_refresh();
         this._all_data = [];
     }
+	protected get_hasitems():boolean {
+		return (this._all_data.length > 0);
+	}
     protected transform_data(pp: IEtudiantEvent[]): Promise<IDisplayEtudiant[]> {
         let oRet: IDisplayEtudiant[] = [];
         if ((pp !== undefined) && (pp !== null)) {
@@ -71,9 +74,6 @@ export class SemestreReportBase extends BaseConsultViewModel<IDisplayEtudiant> {
 		});
     }// refreshAll
     public refresh(): Promise<any> {
-		if (this.is_busy){
-			return Promise.resolve(false);
-		}
 		this.is_busy=true;
         this.clear_error();
         this.items = [];

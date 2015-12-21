@@ -28,6 +28,7 @@ declare module 'infodata' {
         create_multi_index: (fields: string[]) => Promise<boolean>;
         create_indexes: (fields: string[]) => Promise<boolean[]>;
         query_docs: (selector: any,  skip?: number, limit?: number,fields?: string[]) => Promise<any[]>;
+		remove_query_docs: (sel: any) => Promise<boolean>;
     }// interface IIDocPersist
     //
 }// module infodata

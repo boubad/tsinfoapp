@@ -7,7 +7,6 @@ import {IEtudiant} from 'infodata';
 export class EtudiantsModel extends PersonViewModel<IEtudiant> {
 	//
     private _date:string = null;
-    //
 	//
     constructor(info: UserInfo) {
         super(info);
@@ -19,6 +18,9 @@ export class EtudiantsModel extends PersonViewModel<IEtudiant> {
 			departementName: this.departementName
 		});
     }
+	protected get_remove_selector(): any {
+		return { etudiantid: this.currentItem.id };
+	}
      protected post_change_item(): Promise<any> {
         return super.post_change_item().then((r) => {
           let pPers = this.currentPerson;

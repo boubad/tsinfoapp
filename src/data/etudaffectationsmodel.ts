@@ -16,8 +16,8 @@ export class EtudaffectationsModel extends AffectationViewModel<IEtudiantAffecta
     }// constructor
 	//
 	private remove_etudaffectation(aff:IEtudiantAffectation):Promise<boolean>{
-		return this.dataService.remove_etudaffectation(aff);
-	}//remove_profaffectation
+		return this.dataService.remove_query_item(aff,{etudiantaffectationid: aff.id});
+	}//remove_etudaffectation
 	protected perform_remove():Promise<boolean>{
 		if (this.currentAffectations === null) {
             return Promise.resolve(false);

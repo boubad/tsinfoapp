@@ -10,9 +10,10 @@ export class EnseignantAffectationsModel extends AffectationViewModel<IEnseignan
         super(info);
         this.title = 'Affectations enseignants';
     }// constructor
+	
 	//
 	private remove_profaffectation(aff:IEnseignantAffectation):Promise<boolean>{
-		return this.dataService.remove_profaffectation(aff);
+		return this.dataService.remove_query_item(aff,{profaffectationid:aff.id});
 	}//remove_profaffectation
 	protected perform_remove():Promise<boolean>{
 		if (this.currentAffectations === null) {

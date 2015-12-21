@@ -10,6 +10,9 @@ export class AdministratorsModel extends PersonViewModel<IAdministrator> {
         super(info);
         this.title = 'Opérateurs';
     }// constructor
+	protected get_remove_selector(): any {
+		return { administratorid: this.currentItem.id };
+	}
     protected create_item(): IAdministrator {
         return this.itemFactory.create_administrator({
 			departementid:this.departementid,

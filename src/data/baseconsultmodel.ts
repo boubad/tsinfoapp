@@ -172,8 +172,11 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 			return false;
 		})
 	}// refreshAll
-	public get hasItems(): boolean {
+	protected get_hasitems():boolean {
 		return (this.allIds.length > 0);
+	}
+	public get hasItems(): boolean {
+		return this.get_hasitems();
 	}
 	public get hasPages(): boolean {
 		return (this.pagesCount > 1);

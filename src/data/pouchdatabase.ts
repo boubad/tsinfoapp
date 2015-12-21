@@ -2,7 +2,7 @@
 //
 //import * as PouchDB from 'pouchdb';
 //import {PouchDB} from 'pouchdb';
-declare var PouchDB:IPouchDB;
+declare var PouchDB: IPouchDB;
 //
 import {IDocPersist} from 'infodata';
 import {DATABASE_NAME} from './infoconstants';
@@ -17,7 +17,7 @@ export class PouchDatabase implements IDocPersist {
 	constructor() {
 		this._db = null;
 		this._url = DATABASE_NAME;
-	 }
+	}
 	//
 	public get name(): string {
 		return ((this._url !== undefined) && (this._url !== null)) ? this._url : DATABASE_NAME;
@@ -452,4 +452,33 @@ export class PouchDatabase implements IDocPersist {
 			return oRet;
 		});
 	}// find_docs
+	public remove_query_docs(sel: any): Promise<boolean> {
+		if ((sel === undefined) || (sel == null)) {
+			return Promise.resolve(false);
+		}
+		let xdb: IPouchDB = null;
+		return this.db.then((td) => {
+			xdb = td;
+			let fields: string[] = ["_id", "_rev"];
+			let options: PouchFindOptions = { selector: sel, fields: fields };
+			return xdb.find(options);
+		}).then((r) => {
+			let docs: any[] = [];
+			if ((r !== undefined) && (r !== null) && (r.docs !== undefined) && (r.docs !== null)) {
+				docs = r.docs;
+			}
+			for (let doc of docs) {
+				doc._deleted = true;
+			}
+			if (docs.length > 0) {
+				return xdb.bulkDocs(docs);
+			} else {
+				return Promise.resolve([]);
+			}
+		}).then((rr) => {
+			return true;
+		}).catch((e) => {
+			return false;
+		});
+	}// remove_query_docs
 }// class PouchDatabase
