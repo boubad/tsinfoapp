@@ -53,7 +53,6 @@ export class LoginInfo extends InfoElement {
 		}
 		this.is_admin = false;
 		this.is_prof = false;
-		this.is_etud = false;
 		if (this.is_super) {
 			this.is_admin = true;
 		} else {
@@ -106,6 +105,7 @@ export class LoginInfo extends InfoElement {
 		this.is_super = false;
 		this.is_prof = false;
 		this.is_super = false;
+		this.is_etud = false;
 	}// disconnect
 	public refresh_data(): Promise<boolean> {
 		this.is_connected = false;
@@ -113,6 +113,7 @@ export class LoginInfo extends InfoElement {
 		this.is_super = false;
 		this.is_prof = false;
 		this.is_super = false;
+		this.is_etud = false;
 		let pPers: IPerson = this.person;
 		if ((pPers === undefined) || (pPers === null)) {
 			return Promise.resolve(false);
@@ -183,6 +184,8 @@ export class LoginInfo extends InfoElement {
 			}).then((gx: IAdministrator[]) => {
 				this.all_administrators = ((gx !== undefined) && (gx !== null)) ? gx : [];
 				return true;
+			}).then((w)=>{
+				this.is_etud = (pPers.etudiantids.length > 0);                 
 			}).catch((err) => {
 				return false;
 			});

@@ -40,5 +40,5 @@ export class AdminRouter extends BaseView {
 			bRet = this.is_admin || this.is_super;
 		}
 		return bRet;
-	}// activate
+	}// canActivate
 }

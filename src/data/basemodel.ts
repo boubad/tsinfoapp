@@ -369,6 +369,9 @@ export class BaseModel extends InfoElement {
     public get is_notconnected(): boolean {
         return this.userInfo.is_notconnected;
     }
+	public get is_not_etud():boolean {
+		return this.userInfo.is_not_etud;
+	}
     //
 	protected retrieve_one_avatar(item: IBaseItem): Promise<IBaseItem> {
 		return this.dataService.retrieve_one_avatar(item,this.uiManager);

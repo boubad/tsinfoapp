@@ -132,12 +132,11 @@ export class SynchroModel extends BaseView {
 	}
 	public canActivate(params?: any, config?: any, instruction?: any): any {
 		let bRet: boolean = false;
-		let userinfo = this.userInfo;
-		if (userinfo !== null) {
-			bRet = userinfo.is_connected && (!userinfo.is_etud);
+		if (this.is_connected) {
+			bRet = this.is_admin || this.is_super || this.is_prof;
 		}
 		return bRet;
-    }// activate
+	}// canActivate
 	public canDeactivate(): any {
 		return this.is_not_busy;
 	}

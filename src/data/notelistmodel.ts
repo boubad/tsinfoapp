@@ -72,6 +72,17 @@ export class NoteListModel extends BaseConsultViewModel<IDisplayEtudiant> {
 				return oRet;
 			});
 	}//get_semestre_matiere_notes
+	public deactivate(): any {
+		if (this._all_data.length > 0) {
+			for (let elem of this._all_data) {
+				let x = elem.url;
+				if (x !== null) {
+					this.revokeUrl(x);
+					elem.url = null;
+				}
+			}// elem
+		}
+	}// deactivate
     public refreshAll(): Promise<any> {
         this.prepare_refresh();
         if (!this.is_refresh()) {

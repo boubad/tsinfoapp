@@ -40,7 +40,7 @@ export class IntervalledSigleItem extends  DepartementSigleNamedItem  implements
     public create_id(): string {
         let s = this.start_key();
         if ((s !== null) && (this.startDate !== null)) {
-            s = s + '-' + this.create_date_key(this.startDate);
+            s = s + this.create_date_key(this.startDate);
         }
         return s;
     } // create_id
@@ -56,7 +56,6 @@ export class IntervalledSigleItem extends  DepartementSigleNamedItem  implements
         }
         return (t1 <= t2);
     }
-
     public sort_func(p1: IntervalledSigleItem, p2: IntervalledSigleItem): number {
         let d1 = p1.startDate;
         let d2 = p2.startDate;

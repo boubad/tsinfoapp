@@ -1,7 +1,7 @@
 //datamanager.ts
 //
 import {IDepartement, IDocPersist, IItemFactory, IDataManager,
-IGroupe, ISemestre, IUnite, IMatiere, IAffectation,
+IGroupe, ISemestre, IUnite, IMatiere, IAffectation, IPersonItem,
 IPerson, IBaseItem, IUIManager, IGroupeEvent, IDepartementPerson,
 IEtudiantEvent, IEnseignantAffectation, IEtudiantAffectation} from 'infodata';
 import {DataService} from './dataservice';
@@ -43,7 +43,7 @@ export class DataManager extends DataService {
 			}
 		}).then((xx) => {
 			return true;
-		}).catch((e)=>{
+		}).catch((e) => {
 			return false;
 		})
 	}//remove_all_persons
@@ -479,6 +479,53 @@ export class DataManager extends DataService {
 			return item;
 		});
 	}//retrieve_one_avatar
+	public check_item_avatar(p: IPersonItem): Promise<boolean> {
+		if ((p === undefined) || (p === null)) {
+			return Promise.resolve(false);
+		}
+		let avatarid = p.avatarid;
+		if ((avatarid !== undefined) && (avatarid !== null)) {
+			return Promise.resolve(true);
+		}
+		let personid = p.personid;
+		if (personid === null) {
+			return Promise.resolve(false);
+		}
+		return this.find_item_by_id(personid).then((pPers: IPerson) => {
+			if ((pPers !== null) && (pPers.avatarid !== null)) {
+				p.avatarid = pPers.avatarid;
+				return this.save_item(p);
+			} else {
+				return Promise.resolve(false);
+			}
+		}).then((b) => {
+			return true;
+		}).catch((e) => {
+			return false;
+		});
+	}//check_item_avatar
+	public check_items_avatars(items: IPersonItem[]): Promise<boolean> {
+        if ((items === undefined) || (items === null)) {
+            return Promise.resolve(false);
+        }
+        if (items.length < 1) {
+            return Promise.resolve(true);
+        }
+        let pp: Promise<boolean>[] = [];
+        for (let p of items) {
+			if (p.avatarid == null) {
+				pp.push(this.check_item_avatar(p));
+			}
+        }// p
+		if (pp.length < 1){
+			return Promise.resolve(true);
+		}
+        return Promise.all(pp).then((xx) => {
+			return true;
+		}).catch((e) => {
+			return false;
+		});
+    }// retrive_avatars
 	public init_database(): Promise<boolean> {
 		if (this._bInitialized) {
 			return Promise.resolve(true);

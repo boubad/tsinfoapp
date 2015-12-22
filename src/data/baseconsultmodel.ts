@@ -48,7 +48,7 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 		return Promise.resolve(true);
 	}// post_change_item
 	public get currentItem(): T {
-		if (this._current_item == null){
+		if (this._current_item == null) {
 			this._current_item = this.create_item();
 		}
 		return this._current_item;
@@ -80,12 +80,23 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 	public get canShowForm(): boolean {
 		return this.is_refresh() && this.is_not_busy;
 	}
-	public get can_show():boolean{
+	public get can_show(): boolean {
 		return this.is_refresh();
 	}
 	protected is_refresh(): boolean {
 		return (!this.get_isbusy_change());
 	}
+	public deactivate(): any {
+		if (this.items.length > 0) {
+			for (let elem of this.items) {
+				let x = elem.url;
+				if (x !== null) {
+					this.revokeUrl(x);
+					elem.url = null;
+				}
+			}// elem
+		}
+	}// deactivate
 	public refresh(): Promise<any> {
 		this.clear_error();
 		if (this.items.length > 0) {
@@ -130,7 +141,7 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 			this.pageStatus = this.get_pageStatus();
 			this.is_busy = false;
 			return true;
-		}).catch((e)=>{
+		}).catch((e) => {
 			this.is_busy = false;
 			return true;
 		});
@@ -163,7 +174,7 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 				this.pagesCount = np;
 			}
 			return this.refresh();
-		}).then((x)=>{
+		}).then((x) => {
 			this.is_busy = false;
 			return true;
 		}).catch((err) => {
@@ -172,7 +183,7 @@ export class BaseConsultViewModel<T extends IBaseItem> extends BaseView {
 			return false;
 		})
 	}// refreshAll
-	protected get_hasitems():boolean {
+	protected get_hasitems(): boolean {
 		return (this.allIds.length > 0);
 	}
 	public get hasItems(): boolean {

@@ -50,29 +50,27 @@ export class InfoElement implements IInfoElement {
 		if ((s === undefined) || (s === null)) {
 			return null;
 		}
-		let ss = s.toString().trim();
-		return ((ss !== null) && (ss.length > 0)) ? ss : null;
+		let ss = s.trim();
+		return (ss.length > 0) ? ss : null;
 	}
 	protected check_upper_string(s: string): string {
 		if ((s === undefined) || (s === null)) {
 			return null;
 		}
-		let ss = s.toString().trim();
-		return ((ss !== null) && (ss.length > 0)) ? ss.toUpperCase() : null;
+		let ss = s.trim();
+		return ((ss.length > 0)) ? ss.toUpperCase() : null;
 	}
 	protected format_name(s: string) {
 		if ((s === undefined) || (s === null)) {
 			return null;
 		}
-		let ss = s.toString().trim();
-        if ((ss !== null) && (ss.length > 0)) {
-            if (ss.length > 1) {
-                ss = ss.substr(0, 1).toUpperCase() + ss.substr(1);
-            } else {
-                ss = ss.toUpperCase();
-            }
-        }// ss
-		return ss;
+		let ss = s.trim();
+		if (ss.length > 1) {
+			ss = ss.substr(0, 1).toUpperCase() + ss.substr(1);
+		} else {
+			ss = ss.toUpperCase();
+		}
+		return (ss.length > 0) ? ss : null;
     }
 	protected string_to_date(s: any): Date {
         let dRet: Date = null;
@@ -125,9 +123,15 @@ export class InfoElement implements IInfoElement {
     }
 	//
     protected format_note(s: number): number {
-        return (Math.floor(s * 100.0 + 0.5)) / 100.0;
+		let nRet: number = null;
+		if ((s !== undefined) && (s !== null)) {
+			try {
+				nRet = (Math.floor(s * 100.0 + 0.5)) / 100.0;
+			} catch (e) { }
+		}
+		return nRet;
     }
-	protected prepare_string(s: string,bUpper?:boolean): string {
+	protected prepare_string(s: string, bUpper?: boolean): string {
 		let sRet: string = null;
 		if ((s !== undefined) && (s !== null)) {
 			sRet = s.trim();
@@ -146,7 +150,7 @@ export class InfoElement implements IInfoElement {
 				sRet = sRet.replace("ô", "o");
 				sRet = sRet.replace("û", "u");
 				sRet = sRet.replace("â", "a");
-				if ((bUpper !== undefined) && (bUpper !== null) && (bUpper == true)){
+				if ((bUpper !== undefined) && (bUpper !== null) && (bUpper == true)) {
 					sRet = sRet.toUpperCase();
 				}
 			}
@@ -175,8 +179,9 @@ export class InfoElement implements IInfoElement {
     }// create_username
 	protected create_date_key(d: Date): string {
 		let sRet: string = null;
-		if ((d !== undefined) && (d !== null)) {
-			let ss = d.toISOString().substr(0, 10);
+		let dx:Date = this.check_date(d);
+		if ((dx !== undefined) && (dx !== null)) {
+			let ss = dx.toISOString().substr(0, 10);
 			sRet = ss.replace("-", "");
 		}
 		return sRet;
@@ -240,8 +245,8 @@ export class InfoElement implements IInfoElement {
         }
         return false;
     }// add_id_to_array
-	 protected remove_id_from_array(cont: string[], id: string): string[] {
-		 let oRet:string[] = [];
+	protected remove_id_from_array(cont: string[], id: string): string[] {
+		let oRet: string[] = [];
 		if ((cont == undefined) || (cont == null)) {
 			return oRet;
 		}
@@ -250,7 +255,7 @@ export class InfoElement implements IInfoElement {
         }
         for (let p of cont) {
             if (p != id) {
-               oRet.push(p);
+				oRet.push(p);
             }
         }// p
         return oRet;
