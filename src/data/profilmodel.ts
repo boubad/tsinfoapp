@@ -29,7 +29,7 @@ export class ProfilModel extends BaseView {
 		this.fileDesc = new FileDesc();
 	}
 	public canActivate(params?: any, config?: any, instruction?: any): any {
-		return (this.is_connected);
+		return this.is_connected;
 	}// canActivate
 	protected perform_activate(): Promise<boolean> {
 		if (this.is_etud) {
@@ -47,7 +47,7 @@ export class ProfilModel extends BaseView {
 		return Promise.resolve(true);
 	}//perform_activate
 	public get can_profil(): boolean {
-		return (!this.profilMode) && (!this.is_etud) && this.is_not_busy;
+		return (!this.profilMode) && this.is_not_busy;
 	}
 	public get can_password(): boolean {
 		return (!this.passwordMode) && this.is_not_busy;
@@ -120,6 +120,16 @@ export class ProfilModel extends BaseView {
 			this.set_error(err);
 			this.is_busy = false;
 		});
+	}
+	public get etudiantid():string {
+		let sRet:string = null;
+		if ((this.person !== null) && (this.person.etudiantids.length > 0)){
+			sRet = this.person.etudiantids[0];
+		}
+		return sRet;
+	}// etudiantid
+	public get isReadOnly():boolean {
+		return this.is_etud;
 	}
 	public get canSaveData(): boolean {
 		return (this.firstname !== null) && (this.firstname.trim().length > 0) &&

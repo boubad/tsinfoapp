@@ -41,6 +41,17 @@ export class SemestreReportBase extends BaseConsultViewModel<IDisplayEtudiant> {
     protected get_initial_events(): Promise<IEtudiantEvent[]> {
         return Promise.resolve([]);
     }
+	public deactivate(): any {
+		if (this._all_data.length > 0) {
+			for (let elem of this._all_data) {
+				let x = elem.url;
+				if (x !== null) {
+					this.revokeUrl(x);
+					elem.url = null;
+				}
+			}// elem
+		}
+	}// deactivate
     public refreshAll(): Promise<any> {
 		if (this.is_busy){
 			return Promise.resolve(false);

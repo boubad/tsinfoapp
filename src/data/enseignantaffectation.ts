@@ -96,6 +96,7 @@ export class EnseignantAffectation extends Affectation implements IEnseignantAff
 		let s3: string = this.groupeid;
 		let s2: string = this.matiereid;
         let s4: string = this.personid;
+		let s5:string = this.create_date_key(this.startDate);
         if (s1 == null) {
             s1 = "";
         }
@@ -108,7 +109,10 @@ export class EnseignantAffectation extends Affectation implements IEnseignantAff
 		if (s4 == null) {
 			s4 = "";
 		}
-        return (s1 + s2 + s3 + s4);
+		if (s5 == null) {
+			s5 = "";
+		}
+        return (s1 + s2 + s3 + s4 + s5);
     }
 }// class EtudiantAffectation
 //

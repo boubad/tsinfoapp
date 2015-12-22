@@ -2,7 +2,7 @@
 import {IPerson} from 'infodata';
 import {BaseView} from './baseview';
 import {UserInfo} from './userinfo';
-import {ADMIN_ROUTE, CONSULT_ROUTE} from './infoconstants';
+import {ADMIN_ROUTE, CONSULT_ROUTE, ETUDDETAIL_ROUTE} from './infoconstants';
 //
 export class HomeModel extends BaseView {
 	private _username: string = null;
@@ -11,25 +11,25 @@ export class HomeModel extends BaseView {
 	//
 	constructor(info: UserInfo) {
 		super(info);
-		this.title= 'Connexion';
+		this.title = 'Connexion';
 	}
 	//
-	public get username():string {
+	public get username(): string {
 		return this._username;
 	}
-	public set username(s:string){
+	public set username(s: string) {
 		this._username = this.check_string(s);
 	}
-	public get password():string {
+	public get password(): string {
 		return this._password;
 	}
-	public set password(s:string){
+	public set password(s: string) {
 		this._password = (s !== undefined) ? s : null;
 	}
-	public get splash_image():string {
+	public get splash_image(): string {
 		return this._splashImage;
 	}
-	public set splash_image(s:string){
+	public set splash_image(s: string) {
 		this._splashImage = this.check_string(s);
 	}
 	//
@@ -46,7 +46,7 @@ export class HomeModel extends BaseView {
 	public get has_splash_image(): boolean {
 		return (this.splash_image !== null);
 	}
-	public get has_login_image():boolean {
+	public get has_login_image(): boolean {
 		return (this.login_image !== null);
 	}
 	private home_image(): string {
@@ -62,7 +62,7 @@ export class HomeModel extends BaseView {
 			return this.login_image;
 		}
 	}
-	private clear_data():void {
+	private clear_data(): void {
 		this._username = null;
 		this._password = null;
 	}
@@ -78,8 +78,10 @@ export class HomeModel extends BaseView {
 			if ((pPers !== null) && (pPers.id !== null)) {
 				this.splash_image = this.home_image();
 				this.is_busy = false;
-				if ((this.is_super || this.is_admin)) {
+				if (this.is_super || this.is_admin) {
 					return this.navigate_to(ADMIN_ROUTE);
+				} else if (pPers.etudiantids.length > 0) {
+					return this.navigate_to(ETUDDETAIL_ROUTE, { id: pPers.etudiantids[0] });
 				} else {
 					return this.navigate_to(CONSULT_ROUTE);
 				}
@@ -87,7 +89,7 @@ export class HomeModel extends BaseView {
 				this.error_message = 'Identifiant et(ou) mot de passe non-reconnu(s)...';
 				return false;
 			}
-		}).then((xx)=>{
+		}).then((xx) => {
 			this.is_busy = false;
 			return false;
 		}).catch((err) => {

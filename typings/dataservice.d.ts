@@ -58,6 +58,8 @@ declare module 'infodata' {
 		refresh_person_docids: (pPers:IPerson) =>Promise<boolean>;
 		get_all_departements: () => Promise<IDepartement[]>;
 		remove_all_persons(): Promise<boolean>; 
+		check_item_avatar: (p: IPersonItem) => Promise<boolean>;
+		check_items_avatars: (items: IPersonItem[]) => Promise<boolean>;
 	}// IDataManager
 }
 //

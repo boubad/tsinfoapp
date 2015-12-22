@@ -10,6 +10,13 @@
 				<sheader-bar></sheader-bar>
 			</td>
 		</tr>
+		<tr if.bind="is_etud">
+			<td style="text-align:center">
+				<a route-href="route: etud; params.bind: { id: etudiantid }">
+					<i class="fa fa-sign-out fa-fw"></i>Retour
+				</a>
+			</td>
+		</tr>
 		<tr>
 			<td style="text-align:center">
 				<ul class="pagination">

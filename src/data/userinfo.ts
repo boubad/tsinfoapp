@@ -291,6 +291,9 @@ export class UserInfo extends InfoElement {
     public get is_notconnected(): boolean {
         return (!this.is_connected);
     }
+	public get is_not_etud():boolean {
+		return  (!this.is_etud);
+	}
     //
     private post_update_departement(): Promise<boolean> {
         let xannees: IAnnee[] = [];

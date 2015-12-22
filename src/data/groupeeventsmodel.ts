@@ -233,11 +233,14 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 			(this.groupeid != this.currentProfAffectation.groupeid)) {
 			return Promise.resolve(true);
 		}
+		let aa: IEtudiantAffectation[] = [];
 		return this.get_semestre_groupe_etudaffectations(this.semestre, this.groupe).then((pp) => {
-			let xx: IEtudiantAffectation[] = ((pp !== undefined) && (pp !== null)) ? pp : [];
-			return this.retrieve_avatars(xx)
-		}).then((aa: IEtudiantAffectation[]) => {
-			this.etudAffectations = ((aa !== undefined) && (aa !== null)) ? aa : [];
+			aa = ((pp !== undefined) && (pp !== null)) ? pp : [];
+			return this.dataService.check_items_avatars(aa);
+		}).then((b) => {
+			return this.retrieve_avatars(aa);
+		}).then((aaa: IEtudiantAffectation[]) => {
+			this.etudAffectations = ((aaa !== undefined) && (aaa !== null)) ? aaa : [];
 			return true;
 		})
     }// fill_etudaffectations
@@ -247,9 +250,12 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
         if (id === null) {
             return Promise.resolve(oRet);
         }
+		let pp: IEtudiantEvent[] = [];
 		return this.dataService.query_items(this.eventModel.type(), { groupeeventid: id }).then((e1: IEtudiantEvent[]) => {
-			let e2: IEtudiantEvent[] = ((e1 !== undefined) && (e1 !== null)) ? e1 : [];
-			return this.retrieve_avatars(e2);
+			pp = ((e1 !== undefined) && (e1 !== null)) ? e1 : [];
+			return this.dataService.check_items_avatars(pp);
+		}).then((x) => {
+			return this.retrieve_avatars(pp);
 		}).catch((xx: IEtudiantEvent[]) => {
 			oRet = xx;
 			return oRet;
@@ -262,9 +268,12 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
         if (id === null) {
             return Promise.resolve(true);
         }
+		let pp: IEtudiantEvent[] = [];
         return this.dataService.query_items(this.eventModel.type(), { groupeeventid: id }).then((e1: IEtudiantEvent[]) => {
-			let e2: IEtudiantEvent[] = ((e1 !== undefined) && (e1 !== null)) ? e1 : [];
-			return this.retrieve_avatars(e2);
+			pp = ((e1 !== undefined) && (e1 !== null)) ? e1 : [];
+			return this.dataService.check_items_avatars(pp);
+		}).then((x) => {
+			return this.retrieve_avatars(pp);
 		}).then((ee: IEtudiantEvent[]) => {
             if ((ee !== undefined) && (ee !== null)) {
                 let oRet1: IEtudiantEvent[] = [];
@@ -826,11 +835,37 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
             return false;
         });
     }// saveEtudEvents
+	private retrieve_save_notes(): IEtudiantEvent[] {
+		let oRet: IEtudiantEvent[] = [];
+		let vMin: number = (this.currentItem !== null) ? this.currentItem.minnote : null;
+		let vMax: number = (this.currentItem !== null) ? this.currentItem.maxnote : null;
+		for (let p of this.allNotes) {
+			let bOk: boolean = true;
+			if (p.selected && p.is_storeable()) {
+				let n = p.note;
+				if ((n !== undefined) && (n !== null)) {
+					if ((vMin !== null) && (n < vMin)) {
+						bOk = false;
+					}
+					if (bOk && (vMax !== null) && (n > vMax)) {
+						bOk = false;
+					}
+					if (bOk) {
+						oRet.push(p);
+					}
+				}// note
+			}// p
+			if (!bOk) {
+				p.selected = false;
+			}
+		}// p
+		return oRet;
+	}//retrieve_save_notes
     public saveNotes(): any {
 		this.is_busy = true;
-        let oRet: IEtudiantEvent[] = [];
+        let oRet: IEtudiantEvent[] = this.retrieve_save_notes();
         for (let n of this.allNotes) {
-            if (n.is_storeable() && n.selected) {
+            if (n.selected && n.is_storeable() && (n.note !== null)) {
                 oRet.push(n);
             }
         }// n
@@ -931,6 +966,6 @@ export class GroupeEventsModel extends BaseEditViewModel<IGroupeEvent> {
 		})
 	}// refresh
 	private get_semestre_groupe_etudaffectations(sem: ISemestre, grp: IGroupe): Promise<IEtudiantAffectation[]> {
-		return this.dataService.get_semestre_groupe_etudaffectations(sem,grp);
+		return this.dataService.get_semestre_groupe_etudaffectations(sem, grp);
 	}//get_semestre_groupe_etudaffectations
 }// class Profgroupeevents

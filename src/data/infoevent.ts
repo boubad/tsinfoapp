@@ -20,6 +20,9 @@ export class InfoEvent extends PersonItem implements IInfoEvent {
 	private _uniteName: string = null;
 	private _semestreMinDate: Date = null;
 	private _semestreMaxDate: Date = null;
+	private _genreString:string = null;
+	//
+	private static _gmap:Map<string,string> =null;
 	//
 	constructor(oMap?: any) {
 		super(oMap);
@@ -77,6 +80,27 @@ export class InfoEvent extends PersonItem implements IInfoEvent {
 			}
 		} // oMap
 	}
+	private static convert_genre(s:string):string {
+		let sRet:string = null;
+		if ((s === undefined) || (s === null)){
+			return sRet;
+		}
+		if (this._gmap == null){
+			this._gmap = new Map<string,string>();
+			this._gmap.set("ABS","Absence");
+			this._gmap.set("RET","Retard");
+			this._gmap.set("MSC","Autre");
+			this._gmap.set("EXAMEN","Examen");
+			this._gmap.set("CONTROL","Contrôle");
+			this._gmap.set("TP","Travaux Pratiques");
+			this._gmap.set("TD","Travaux Dirigés");
+			this._gmap.set("AMPHI","Cours magistral");
+		}
+		if (this._gmap.has(s)){
+			sRet = this._gmap.get((s));
+		}
+		return sRet;
+	}// convert_genre
 	public get semestreMaxDate(): Date {
 		return this._semestreMaxDate;
 	}
@@ -148,6 +172,10 @@ export class InfoEvent extends PersonItem implements IInfoEvent {
 	}
 	public set genre(s: string) {
 		this._genre = this.check_upper_string(s);
+		this._genreString = InfoEvent.convert_genre(this._genre);
+	}
+	public get genreString():string {
+		return this._genreString;
 	}
 	public get groupeid(): string {
 		return this._groupeid;

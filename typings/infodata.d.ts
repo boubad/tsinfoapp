@@ -181,6 +181,7 @@ declare module 'infodata' {
         matiereid: string;
         groupeid: string;
         genre: string;
+		genreString:string;
         matiereName?: string;
         groupeName?: string;
         eventDate: Date;

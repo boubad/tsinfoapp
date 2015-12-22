@@ -56,7 +56,7 @@ export class EtudiantSumaryModel extends BaseDetailModel<IEtudiant> {
 		for (let x of this._notesSum.semestresMenu) {
 			this._xsemestres.push(x);
 		}
-		this.evtsSum.currentAnnee = this._xannee;
+		this.evtsSum.currentAnnee = this.xannee;
 		for (let x of this.evtsSum.semestresMenu) {
 			let bFound: boolean = false;
 			let id = x.id;

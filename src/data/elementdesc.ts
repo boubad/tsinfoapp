@@ -6,8 +6,8 @@ export class ElementDesc extends InfoElement implements IElementDesc {
 	private _selected: boolean = false;
 	private _avatarid: string = null;
 	private _url: string = null;
-	private _display: string;
-	private _status: string;
+	private _display: string = null;
+	private _status: string = null;
 	private _description: string = null;
 	//
 	constructor(oMap?: any) {
@@ -21,6 +21,9 @@ export class ElementDesc extends InfoElement implements IElementDesc {
 			}
 			if (oMap.status !== undefined) {
 				this.status = oMap.status;
+			}
+			if (oMap.display !== undefined) {
+				this._display = oMap.display;
 			}
 		}
 	}
