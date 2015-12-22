@@ -84,10 +84,9 @@ export class HomeModel extends BaseView {
 					return this.navigate_to(ETUDDETAIL_ROUTE, { id: pPers.etudiantids[0] });
 				} else {
 					return this.navigate_to(CONSULT_ROUTE);
-				}
+				} 
 			} else {
 				this.error_message = 'Identifiant et(ou) mot de passe non-reconnu(s)...';
-				return false;
 			}
 		}).then((xx) => {
 			this.is_busy = false;

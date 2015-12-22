@@ -46,7 +46,7 @@ export class BaseDetailModel<T extends IPersonItem> extends BaseView {
 		if ((this._canEdit === undefined) || (this._canEdit === null)) {
 			this._canEdit = false;
 		}
-		return this._canEdit;
+		return this._canEdit && (!this.is_etud);
 	}
 	public set canEdit(s: boolean) {
 		this._canEdit = s;
@@ -72,7 +72,8 @@ export class BaseDetailModel<T extends IPersonItem> extends BaseView {
 		});
 	}// initialize_item
 	public get canSave(): boolean {
-		return (this.currentItem !== null) && this.currentItem.is_storeable();
+		return (this.currentItem !== null) && this.currentItem.is_storeable() &&
+		(!this.is_etud);
 	}
 	public get cannotSave(): boolean {
 		return (!this.canSave);

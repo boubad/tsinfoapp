@@ -2,7 +2,7 @@
 //
 import {UserInfo} from './userinfo';
 import {EventDetailModel} from './eventdetailmodel';
-import {EVT_NOTE} from './infoconstants';
+import {EVT_NOTE,ETUDEVENT_TYPE} from './infoconstants';
 import {IGroupeEvent, IEtudiantEvent, IEnseignantAffectation} from 'infodata';
 
 export class GroupeEventDetailModel extends EventDetailModel<IGroupeEvent> {
@@ -63,7 +63,7 @@ export class GroupeEventDetailModel extends EventDetailModel<IGroupeEvent> {
 		if (id === null) {
 			return Promise.resolve(true);
 		}
-		return this.dataService.query_items(this.evtModel.type(), { groupeeventid: id }).then((xx: IEtudiantEvent[]) => {
+		return this.dataService.query_items(ETUDEVENT_TYPE, { groupeeventid: id }).then((xx: IEtudiantEvent[]) => {
 			return this.retrieve_avatars(xx);
 		}).then((ee: IEtudiantEvent[]) => {
 			if ((ee !== undefined) && (ee !== null)) {

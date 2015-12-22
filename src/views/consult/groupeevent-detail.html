@@ -12,8 +12,8 @@
 				</td>
 			</tr>
 			<tr>
-				<td style="text-align:center">
-					<a route-href="route: attacheddoc; params.bind: { id: groupeEventId }">
+				<td style="text-align:center" if.bind="canDocuments">
+					<a route-href="route: attacheddoc; params.bind: { id: current_id }">
 						<i class="fa fa-database fa-fw"></i> Documents associés
 					</a>
 				</td>

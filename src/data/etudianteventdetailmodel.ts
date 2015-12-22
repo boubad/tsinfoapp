@@ -18,15 +18,16 @@ export class EtudiantEventDetailModel extends EventDetailModel<IEtudiantEvent> {
 		this._sdate = null;
 		return super.initialize_item(evtid).then((b) => {
 			let pp: IEtudiantEvent = this.currentItem;
+			let gvtid:string = null;
 			if (pp === null) {
 				this.currentItem = this.itemFactory.create_etudiantevent();
 				this.title = "Détails Evènement";
 			} else {
-				this.title = this.currentItem.fullname;
+				let gvtid = pp.groupeeventid;
+				this.title = pp.fullname;
 				this._bNote = (pp.genre == EVT_NOTE);
 				this._sdate = pp.dateString;
 			}
-			let gvtid = this.currentItem.groupeeventid;
 			return this.dataService.find_item_by_id(gvtid);
 		}).then((paff: IGroupeEvent) => {
 			if ((paff !== undefined) && (paff !== null)) {

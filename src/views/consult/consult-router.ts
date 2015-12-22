@@ -28,10 +28,6 @@ export class ConsultRouter extends BaseView {
 		this.router = router;
 	}
 	public canActivate(params?: any, config?: any, instruction?: any): any {
-		let bRet: boolean = false;
-		if (this.is_connected) {
-			bRet = this.is_admin || this.is_super || this.is_prof;
-		}
-		return bRet;
+		return this.is_connected && (!this.is_etud);
 	}// canActivate
 }
