@@ -158,7 +158,7 @@ export class AttachedDocModel extends BaseView {
 		this._add_mode = b;
 	}
 	public get canAdd(): boolean {
-		return (!this.addMode) && this.isEditable;
+		return (!this.addMode) && this.isEditable && (!this.is_etud);
 	}
 	public addNew(): any {
 		this.oldDoc = this.currentDoc;
@@ -179,7 +179,7 @@ export class AttachedDocModel extends BaseView {
 		this.cancel_add();
 	}
 	public get canRemove(): boolean {
-		return this.isEditable && (this.currentDoc !== null) &&
+		return (!this.is_etud) && this.isEditable && (this.currentDoc !== null) &&
 			(this.currentDoc.id !== null) && (this.currentDoc.content_type !== null);
 	}
 	public get cannotRemove(): boolean {
@@ -198,6 +198,9 @@ export class AttachedDocModel extends BaseView {
 		return (this.linkRef !== null);
 	}
 	public get canSave(): boolean {
+		if (this.is_etud){
+			return false;
+		}
 		if (!this.isEditable) {
 			return false;
 		}

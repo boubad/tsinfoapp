@@ -2,18 +2,17 @@
 //
 import {BaseView} from './baseview';
 import {UserInfo} from './userinfo';
-import {IInfoEvent} from 'infodata';
+import {IPersonItem} from 'infodata';
 //
-export class BaseDetailModel<T extends IInfoEvent> extends BaseView {
+export class BaseDetailModel<T extends IPersonItem> extends BaseView {
     //
-	private _evt: T;
-	private _start: string;
-	private _end: string;
+	private _item: T = null;
+	public canEdit: boolean = false;
     //
     constructor(userinfo: UserInfo) {
         super(userinfo);
     }
-   protected initialize_activate_params(params?:any) : Promise<boolean> {
+	protected initialize_activate_params(params?: any): Promise<boolean> {
 		let id = ((params !== undefined) && (params !== null) && (params.id !== undefined)) ? params.id : null;
 		return this.initialize_item(id);
 	}// initialize_activate_params
@@ -22,22 +21,29 @@ export class BaseDetailModel<T extends IInfoEvent> extends BaseView {
 	}
 	protected initialize_item(evtid: string): Promise<boolean> {
 		this.clear_error();
-		this._evt = null;
+		this._item = null;
 		return this.dataService.find_item_by_id(evtid).then((p: T) => {
-			this.event = p;
-			return this.retrieve_one_avatar(this.event);
+			this.currentItem = p;
+			return this.retrieve_one_avatar(this.currentItem);
 		}).then((x) => {
 			return true;
 		});
 	}// initialize_item
 	public get canSave(): boolean {
-		return (this.event !== null) && this.event.is_storeable();
+		return (this.currentItem !== null) && this.currentItem.is_storeable() && (!this.is_etud);
 	}
 	public get cannotSave(): boolean {
 		return (!this.canSave);
 	}
+	public get canDocuments(): boolean {
+		if (this.is_etud) {
+			return (this.currentItem !== null) && (this.currentItem.attachments.length > 0);
+		} else {
+			return (this.currentItem !== null);
+		}
+	}
 	public save(): Promise<any> {
-		let p = this.event;
+		let p = this.currentItem;
 		if (p === null) {
 			return Promise.resolve(false);
 		}
@@ -56,99 +62,49 @@ export class BaseDetailModel<T extends IInfoEvent> extends BaseView {
 		})
 	}// save
 	public deactivate(): any {
-		if ((this.event !== null) && (this.event.url !== null)) {
-			this.revokeUrl(this.event.url);
-			this.event.url = null;
+		if ((this.currentItem !== null) && (this.currentItem.url !== null)) {
+			this.revokeUrl(this.currentItem.url);
+			this.currentItem.url = null;
 		}
 	}
-	public get event(): T {
-		return (this._evt !== undefined) ? this._evt : null;
+	protected set_currentitem(s: T): void {
+		this._item = (s !== undefined) ? s : null;
 	}
-	public set event(s: T) {
-		this._evt = (s !== undefined) ? s : null;
-		this._start = null;
-		this._end = null;
-		if (this._evt !== null) {
-			let d = this._evt.semestreMinDate;
-			if ((d !== undefined) && (d !== null)) {
-				this._start = d.toISOString().substr(0, 10);;
-			}
-			d = this._evt.semestreMaxDate;
-			if ((d !== undefined) && (d !== null)) {
-				this._end = d.toISOString().substr(0, 10);;
-			}
-		}// evt
+	public get currentItem(): T {
+		return this._item;
+	}
+	public set currentItem(s: T) {
+		this.set_currentitem(s);
+	}
+	public get current_id(): string {
+		return (this.currentItem !== null) ? this.currentItem.id : null;
 	}
 	public get eventUrl(): string {
-		return (this.event !== null) ? this.event.url : null;
+		return (this.currentItem !== null) ? this.currentItem.url : null;
+	}
+	public get itemUrl(): string {
+		return this.eventUrl;
 	}
 	public get hasEventUrl(): boolean {
-		return (this.eventUrl !== null);
+		return (this.currentItem !== null) && (this.currentItem.url !== null);
 	}// hasUrl
-	public get genre(): string {
-		return (this.event !== null) ? this.event.genre : null;
-	}
-	public set genre(s: string) {
-		if (this.event !== null) {
-			this.event.genre = s;
-		}
+	public get hasItemUrl(): boolean {
+		return (this.eventUrl !== null);
 	}
 	public get description(): string {
-		return (this.event !== null) ? this.event.description : null;
+		return (this.currentItem !== null) ? this.currentItem.description : null;
 	}
 	public set description(s: string) {
-		if (this.event !== null) {
-			this.event.description = s;
+		if (this.currentItem !== null) {
+			this.currentItem.description = s;
 		}
 	}
 	public get status(): string {
-		return (this.event !== null) ? this.event.status : null;
+		return (this.currentItem !== null) ? this.currentItem.status : null;
 	}
 	public set status(s: string) {
-		if (this.event !== null) {
-			this.event.status = s;
+		if (this.currentItem !== null) {
+			this.currentItem.status = s;
 		}
-	}
-	public get eventDate(): string {
-		let d: Date = null;
-		if (this.event !== null) {
-			d = this.event.eventDate;
-		}
-		return this.date_to_string(d);
-	}
-	public set eventDate(s: string) {
-		if (this.event !== null) {
-			this.event.eventDate = this.string_to_date(s);
-		}
-	}
-	public get minDate(): string {
-		return (this._start !== undefined) ? this._start : null;
-	}
-	public set minDate(s: string) {
-		this._start = this.check_string(s);
-	}
-	public get maxDate(): string {
-		return (this._end !== undefined) ? this._end : null;
-	}
-	public set endDate(s: string) {
-		this._end = this.check_string(s);
-	}
-	public get semestreName(): string {
-		return (this.event !== null) ? this.event.semestreName : null;
-	}
-	public get departementName(): string {
-		return (this.event !== null) ? this.event.departementName : null;
-	}
-	public get anneeName(): string {
-		return (this.event !== null) ? this.event.anneeName : null;
-	}
-	public get groupeName(): string {
-		return (this.event !== null) ? this.event.groupeName : null;
-	}
-	public get uniteName(): string {
-		return (this.event !== null) ? this.event.uniteName : null;
-	}
-	public get matiereName(): string {
-		return (this.event !== null) ? this.event.matiereName : null;
 	}
 }
