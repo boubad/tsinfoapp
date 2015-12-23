@@ -88,9 +88,6 @@ export class HomeModel extends BaseView {
 			} else {
 				this.error_message = 'Identifiant et(ou) mot de passe non-reconnu(s)...';
 			}
-		}).then((xx) => {
-			this.is_busy = false;
-			return false;
 		}).catch((err) => {
 			this.clear_data();
 			this.set_error(err);
@@ -98,12 +95,46 @@ export class HomeModel extends BaseView {
 			return false;
 		});
 	}// login
-	
+	/*
+	protected post_login_navigate(): any {
+		let pPers = this.person;
+		if ((pPers !== null) && (pPers.id !== null)) {
+			this.splash_image = this.home_image();
+			if (this.is_super || this.is_admin) {
+				return this.navigate_to(ADMIN_ROUTE);
+			} else if (pPers.etudiantids.length > 0) {
+				return this.navigate_to(ETUDDETAIL_ROUTE, { id: pPers.etudiantids[0] });
+			} else {
+				return this.navigate_to(CONSULT_ROUTE);
+			}
+		} else {
+			this.error_message = 'Identifiant et(ou) mot de passe non-reconnu(s)...';
+		}
+		return true;
+	}//post_login_navigate
+	public perform_login(): Promise<any> {
+		if (!this.can_connect) {
+			return Promise.resolve(false);
+		}
+		this.is_busy = true;
+		this.clear_error();
+		return this.userInfo.login(this.username, this.password).then((bRet) => {
+			this.clear_data();
+			this.is_busy = false;
+			return this.post_login_navigate();
+		}).catch((err) => {
+			this.clear_data();
+			this.set_error(err);
+			this.is_busy = false;
+			return false;
+		});
+	}// login
+	*/
 	public deactivate(): any {
 		this._username = null;
 		this._password = null;
 	}
-	
+
 	public activate(params?: any, config?: any, instruction?: any): any {
 		this.splash_image = this.home_image();
 		this._username = null;
