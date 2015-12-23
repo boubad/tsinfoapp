@@ -3,7 +3,7 @@ import {BaseModel} from './basemodel';
 import {BaseView} from './baseview';
 import {UserInfo} from './userinfo';
 import {HOME_ROUTE} from './infoconstants';
-import {IDepartement, IUnite, IAnnee, IMatiere, ISemestre, IGroupe} from 'infodata';
+import {IDataManager,IDepartement, IUnite, IAnnee, IMatiere, ISemestre, IGroupe} from 'infodata';
 //
 export class BaseComponent<V extends BaseModel> {
 	//
@@ -12,6 +12,7 @@ export class BaseComponent<V extends BaseModel> {
 	//
 	constructor() {
 	}
+	
 	protected post_bind(): any {
 	}
 	protected post_attached(): any {
@@ -41,6 +42,9 @@ export class BaseComponent<V extends BaseModel> {
 	}
 	protected get info(): UserInfo {
 		return this._info;
+	}
+	protected get dataService():IDataManager {
+		return this.parent.dataService;
 	}
 	public get is_connected(): boolean {
 		return this.info.is_connected;

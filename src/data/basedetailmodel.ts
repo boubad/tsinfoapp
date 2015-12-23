@@ -12,6 +12,7 @@ export class BaseDetailModel<T extends IPersonItem> extends BaseView {
     constructor(userinfo: UserInfo) {
         super(userinfo);
     }
+	
 	protected initialize_activate_params(params?: any): Promise<boolean> {
 		let id = ((params !== undefined) && (params !== null) && (params.id !== undefined)) ? params.id : null;
 		return this.initialize_item(id);
