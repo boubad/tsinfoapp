@@ -56,6 +56,7 @@ export class EtudiantNotesSummary extends BaseEtudiantSumary {
 		this._matieresNotes = null;
 		this._unitesNotes = null;
 		this._totalNotes = null;
+		this._devoirNotes = [];
 	}// reset
 	public end_processing(): void {
 		this.compute_total_notes();
