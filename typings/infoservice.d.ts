@@ -28,5 +28,6 @@ declare module 'infodata' {
     }// interface IFileDesc
 	export interface IInfoRouter {
 		navigate_to : (route:string,args?:any) => any;
+		generate: (routeName:string,options?:any) => string;
 	}// interface IInfoRouter
 }// module infodaya

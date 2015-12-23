@@ -21,6 +21,12 @@ class AureliaInfoRouter implements IInfoRouter {
 			}
 		}
 	}// navigate_to
+	public generate(routeName:string,options?:any) :string{
+		if ((this.router !== undefined) && (this.router !== null)) {
+			return this.router.generate(routeName,options);
+		}
+		return null;
+	}
 }// class AureliaInfoRouter
 //
 export class App  extends BaseView {

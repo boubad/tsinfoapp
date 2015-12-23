@@ -50,6 +50,13 @@ export class UserInfo extends InfoElement {
 			this.baseUrl = this.baseUrl + "/";
 		}
 	}// constructor
+	public get etudiant_id():string{
+		let sRet:string = null;
+		if ((this.person !== null) && (this.person.etudiantids.length > 0)){
+			sRet = this.person.etudiantids[0];
+		}
+		return sRet;
+	}//
 	public get_departement_groupetps(): Promise<IGroupe[]> {
 		return Promise.resolve(this._gtps);
 	}//get_departement_groupetps

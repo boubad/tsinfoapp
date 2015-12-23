@@ -10,7 +10,6 @@ import {GENRE_TP} from './infoconstants';
 declare var window;
 //
 export class BaseModel extends InfoElement {
-
 	public userInfo: UserInfo = null;
 	private _bInDep: boolean = false;
 	private _bInAnnee: boolean = false;
@@ -30,6 +29,7 @@ export class BaseModel extends InfoElement {
 			this.userInfo = new UserInfo(new UIManager());
 		}
 	}// constructor
+	//
 	//
 	public get_departement_groupetps(): Promise<IGroupe[]> {
 		return (this.userInfo !== null) ? this.userInfo.get_departement_groupetps() : Promise.resolve([]);

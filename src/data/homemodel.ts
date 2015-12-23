@@ -103,6 +103,7 @@ export class HomeModel extends BaseView {
 		this._username = null;
 		this._password = null;
 	}
+	
 	public activate(params?: any, config?: any, instruction?: any): any {
 		this.splash_image = this.home_image();
 		this._username = null;
