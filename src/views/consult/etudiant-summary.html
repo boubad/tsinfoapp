@@ -177,6 +177,8 @@
 							<h4>Détails</h4>
 							<table id="link-table">
 								<tr>
+									<th>Année</th>
+									<th>Semestre</th>
 									<th>Date</th>
 									<th>Semestre</th>
 									<th>Genre</th>
@@ -186,6 +188,8 @@
 									<th>Observations</th>
 								</tr>
 								<tr repeat.for="evt of allEvts">
+									<td>${evt.anneeName}</td>
+									<td>${evt.semestreName}</td>
 									<td>${evt.dateString}</td>
 									<td>${evt.semestreName}</td>
 									<td>
@@ -269,6 +273,7 @@
 							<table id="link-table">
 								<tr>
 									<th>Année</th>
+									<th>Semestre</th>
 									<th>Unité</th>
 									<th>Matiere</th>
 									<th>Groupe</th>
@@ -281,6 +286,7 @@
 								</tr>
 								<tr repeat.for="nt of devoirsNotes">
 									<td>${nt.anneeName}</td>
+									<td>${nt.semestreName}</td>
 									<td>${nt.uniteName}</td>
 									<td>${nt.matiereName}</td>
 									<td>${nt.groupeName}</td>

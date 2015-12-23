@@ -1,10 +1,10 @@
 //depart-bar.ts
-import {BaseBar} from './basebar';
-import {BaseModel} from '../../data/basemodel'
+import {BaseComponent} from '../../data/basecomponent';
+import {BaseView} from '../../data/baseview';
 import {customElement} from 'aurelia-framework';
 //
 @customElement('depart-bar')
-export class DepartBar  extends BaseBar<BaseModel> {
+export class DepartBar  extends BaseComponent<BaseView> {
     constructor() {
 		super();
     }

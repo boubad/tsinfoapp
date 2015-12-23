@@ -1,43 +1,39 @@
 //intervalbar.ts
 //
 //
-import {BaseBar} from './basebar';
+import {BaseComponent} from '../../data/basecomponent';
 import {IntervalledViewModel} from '../../data/intervalmodel';
 import {IIntervalledSigleItem} from 'infodata';
 import {customElement} from 'aurelia-framework';
 //
 @customElement('interval-bar')
-export class IntervalBar  extends BaseBar<IntervalledViewModel<IIntervalledSigleItem>>  {
+export class IntervalBar extends BaseComponent<IntervalledViewModel<IIntervalledSigleItem>>  {
     //
     constructor() {
         super();
     }
 	public get isEditable(): boolean {
-        return (this.parent !== null) ? this.parent.isEditable : false;
+        return this.parent.isEditable;
     }
     public get isReadOnly(): boolean {
-        return (this.parent !== null) ? this.parent.isReadOnly : true;
+        return this.parent.isReadOnly;
     }
     public get minDate(): string {
-		return (this.parent !== null) ? this.parent.minDate : null;
+		return this.parent.minDate;
     }
     public get maxDate(): string {
-		return (this.parent !== null) ? this.parent.maxDate : null;
+		return this.parent.maxDate;
     }
     public get startDate(): string {
-		return (this.parent !== null) ? this.parent.startDate : null;
+		return this.parent.startDate;
     }
     public set startDate(s: string) {
-		if (this.parent !== null) {
-			this.parent.startDate = s;
-		}
+		this.parent.startDate = s;
     }
     public get endDate(): string {
-		return (this.parent !== null) ? this.parent.endDate : null;
+		return this.parent.endDate;
     }
     public set endDate(s: string) {
-		if (this.parent !== null) {
-			this.parent.endDate = s;
-		}
+		this.parent.endDate = s;
     }
 }// IntervalBar

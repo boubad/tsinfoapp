@@ -1,11 +1,11 @@
 //connect-bar.ts
 //
 import {customElement} from 'aurelia-framework';
-import {BaseBar} from './basebar';
-import {BaseModel} from '../../data/basemodel';
+import {BaseComponent} from '../../data/basecomponent';
+import {BaseView} from '../../data/baseview';
 //
 @customElement('connect-bar')
-export class ConnectBar extends BaseBar<BaseModel>{
+export class ConnectBar extends BaseComponent<BaseView>{
   constructor() {
 	  super();
   }

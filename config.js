@@ -25,7 +25,7 @@ System.config({
     "aurelia-router": "npm:aurelia-router@1.0.0-beta.1",
     "aurelia-templating-binding": "npm:aurelia-templating-binding@1.0.0-beta.1.0.2",
     "aurelia-templating-resources": "npm:aurelia-templating-resources@1.0.0-beta.1.0.3",
-    "aurelia-templating-router": "npm:aurelia-templating-router@1.0.0-beta.1.0.3",
+    "aurelia-templating-router": "npm:aurelia-templating-router@1.0.0-beta.1.0.4",
     "aurelia-validation": "npm:aurelia-validation@0.6.0",
     "babel": "npm:babel-core@5.8.34",
     "babel-runtime": "npm:babel-runtime@5.8.34",
@@ -77,7 +77,7 @@ System.config({
       "aurelia-templating": "npm:aurelia-templating@1.0.0-beta.1.0.2",
       "aurelia-templating-binding": "npm:aurelia-templating-binding@1.0.0-beta.1.0.2",
       "aurelia-templating-resources": "npm:aurelia-templating-resources@1.0.0-beta.1.0.3",
-      "aurelia-templating-router": "npm:aurelia-templating-router@1.0.0-beta.1.0.3",
+      "aurelia-templating-router": "npm:aurelia-templating-router@1.0.0-beta.1.0.4",
       "core-js": "npm:core-js@1.2.6"
     },
     "npm:aurelia-dependency-injection@1.0.0-beta.1": {
@@ -169,7 +169,7 @@ System.config({
       "aurelia-templating": "npm:aurelia-templating@1.0.0-beta.1.0.2",
       "core-js": "npm:core-js@1.2.6"
     },
-    "npm:aurelia-templating-router@1.0.0-beta.1.0.3": {
+    "npm:aurelia-templating-router@1.0.0-beta.1.0.4": {
       "aurelia-dependency-injection": "npm:aurelia-dependency-injection@1.0.0-beta.1",
       "aurelia-logging": "npm:aurelia-logging@1.0.0-beta.1",
       "aurelia-metadata": "npm:aurelia-metadata@1.0.0-beta.1",

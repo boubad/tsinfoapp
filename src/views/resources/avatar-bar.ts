@@ -1,6 +1,6 @@
 //avatar-bar.ts
 //
-import {BaseEditBar} from './baseeditbar';
+import {BaseEditBar} from '../../data/baseeditcomponent';
 import {IBaseItem} from 'infodata';
 import {customElement} from 'aurelia-framework';
 //
@@ -10,38 +10,36 @@ export class AvatarBar extends BaseEditBar<IBaseItem> {
         super();
     }
     public get avatarUrl(): string {
-        return (this.parent != null) ? this.parent.avatarUrl : null;
+        return this.parent.avatarUrl;
     }
     public get hasAvatarUrl(): boolean {
         return (this.avatarUrl !== null);
     }
     public get canRemoveAvatar(): boolean {
-        return (this.parent !== null) ? this.parent.canRemoveAvatar : false;
+        return this.parent.canRemoveAvatar;
     }
     public get cannotRemoveAvatar(): boolean {
         return (!this.canRemoveAvatar);
     }
     public get canSaveAvatar(): boolean {
-        return (this.parent !== null) ? this.parent.canSaveAvatar : false;
+        return this.parent.canSaveAvatar;
     }
     public get cannotSaveAvatar(): boolean {
         return (!this.canSaveAvatar);
     }
     public get workingUrl(): string {
-        return (this.parent !== null) ? this.parent.workingUrl : null;
+        return this.parent.workingUrl;
     }
     public get hasWorkingUrl(): boolean {
         return (this.workingUrl !== null);
     }
     public avatarFileChanged(event: any): any {
-        if (this.parent !== null) {
-            this.parent.avatarFileChanged(event);
-        }
+		this.parent.avatarFileChanged(event);
     }// fileChanged
     public removeAvatar(): any {
-        return (this.parent !== null) ? this.parent.removeAvatar() : Promise.resolve(false);
+        return this.parent.removeAvatar();
     }
     public saveAvatar(): any {
-        return (this.parent !== null) ? this.parent.saveAvatar() : Promise.resolve(false);
+        return this.parent.saveAvatar();
     }// saveAvatar
 }

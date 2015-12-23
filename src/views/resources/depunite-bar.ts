@@ -1,10 +1,10 @@
 //depunite-bar.ts
-import {BaseBar} from './basebar';
-import {BaseModel} from '../../data/basemodel'
+import {BaseComponent} from '../../data/basecomponent';
+import {BaseView} from '../../data/baseview';
 import {customElement} from 'aurelia-framework';
 //
 @customElement('depunite-bar')
-export class DepartBar  extends BaseBar<BaseModel> {
+export class DepuniteBar  extends BaseComponent<BaseView> {
     constructor() {
 		super();
     }

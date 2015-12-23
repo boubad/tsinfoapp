@@ -1,28 +1,26 @@
 //import-bar.ts
 //
 //
-import {BaseBar} from './basebar';
+import {BaseComponent} from '../../data/basecomponent';
 import {PersonViewModel} from '../../data/personmodel';
 import {IDepartementPerson} from 'infodata';
 import {customElement} from 'aurelia-framework';
 //
 @customElement('import-bar')
-export class ImportBar extends BaseBar<PersonViewModel<IDepartementPerson>> {
+export class ImportBar extends BaseComponent<PersonViewModel<IDepartementPerson>> {
 	//
 	constructor() {
 		super();
 	}
 	//
 	public get isEditable(): boolean {
-		return (this.parent !== null) ? this.parent.isEditable : false;
+		return this.parent.isEditable;
     }
     public get canImport(): boolean {
-        return (this.parent !== null) ? this.parent.canImport : false;
+        return this.parent.canImport;
     }
     public importFileChanged(event: any): any {
-        if (this.parent !== null) {
-			this.parent.importFileChanged(event);
-        }
+		this.parent.importFileChanged(event);
 	}
 	//
 }// class ImportBar

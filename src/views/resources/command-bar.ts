@@ -1,6 +1,6 @@
 //command-bar.ts
 //
-import {BaseEditBar} from './baseeditbar';
+import {BaseEditBar} from '../../data/baseeditcomponent';
 import {IBaseItem} from 'infodata';
 import {customElement} from 'aurelia-framework';
 //

@@ -1,6 +1,6 @@
 //elements-bar.ts
 //
-import {BaseConsultBar} from './baseconsultbar';
+import {BaseConsultBar} from '../../data/baseconsultcomponent';
 import {IBaseItem} from 'infodata';
 import {customElement} from 'aurelia-framework';
 //

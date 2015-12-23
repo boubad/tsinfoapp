@@ -2,34 +2,10 @@
 //
 export const EMPTY_STRING: string = '';
 //
-//export const SYNC_CHANNEL: string = 'sync_channel';
-//export const SYNC_OUT: string = 'sync_out';
-//export const SYNC_IN: string = 'sync_in';
-//export const SYNC_DATABASE: string = 'sync_database';
-//export const SYNC_PAUSED: string = 'sync_paused';
-//export const SYNC_COMPLETED: string = 'sync_completed';
-//export const SYNC_ERROR: string = 'sync_error';
-//export const SYNC_CHANGED: string = 'sync_changed';
-//export const SYNC_STARTED: string = 'sync_started';
-//export const SYNC_DENIED: string = 'sync_denied';
-//export const SYNC_RESUMED: string = 'sync_resumed';
-//
-//export const DATABASE_NAME: string = 'http://localhost:5984/geninfo';
 export const REMOTE_DATABASE_NAME: string = 'http://localhost:5984/geninfo';
 export const DATABASE_NAME: string = 'geninfo';
-//export const DATABASE_NAME: string = 'http://localhost:5984/geninfo';
 export const REMOTESERVERSLIST_KEY: string = 'remoteservers';
 export const DEFAULT_SERVERS:string[]=['http://localhost:5984/geninfo'];
-//
-//export const INFO_MESSAGE_CHANNEL: string = 'genmessage';
-//export const INFO_MESSAGE: string = 'infomsg';
-//export const ERROR_MESSAGE: string = 'errormsg';
-//export const MESSAGE_LOGIN: string = 'login';
-//export const MESSAGE_LOGOUT: string = 'logout';
-//export const MESSAGE_DOMAIN: string = 'domain';
-//export const MESSAGE_NAVIGATE: string = 'navigate';
-//export const MESSAGE_REFRESH:string = 'refresh';
-//export const MESSAGE_REFRESHALL:string = 'refreshall';
 //
 export const PERSON_KEY: string = 'person';
 export const ETUDIANTPERSON_KEY: string = 'etudperson';
