@@ -2,6 +2,7 @@
 import {ElementDesc} from './elementdesc';
 import {AttachedDoc} from './attacheddoc';
 import {IAttachedDoc, IBaseItem,IPerson} from 'infodata';
+import {LASTCHAR_STRING} from './infoconstants';
 //
 export class BaseItem extends ElementDesc implements IBaseItem {
 	//
@@ -41,7 +42,7 @@ export class BaseItem extends ElementDesc implements IBaseItem {
 	}
 	public end_key(): string {
 		let s = this.start_key();
-		return (s !== null) ? s + "\uffff" : "\uffff";
+		return (s !== null) ? s + LASTCHAR_STRING : LASTCHAR_STRING;
 	}
 	public create_id(): string {
 		return null;

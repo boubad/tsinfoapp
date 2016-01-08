@@ -5,7 +5,7 @@ import {UserInfo} from './userinfo';
 import {UIManager} from './uimanager';
 import {IDataManager, IUIManager, IItemFactory, ISemestre, IBaseItem,
 IDepartement, IGroupe, IUnite, IAnnee, IMatiere, IPerson, IInfoRouter} from 'infodata';
-import {GENRE_TP} from './infoconstants';
+import {GENRE_TP,IMAGES_ROOT} from './infoconstants';
 //
 declare var window;
 //
@@ -64,7 +64,7 @@ export class BaseModel extends InfoElement {
 		return this.userInfo.baseUrl;
 	}
 	public get images_dir(): string {
-        return this.baseUrl + "images/";
+        return this.baseUrl + IMAGES_ROOT;
 	}
 	//
 	public get is_in_departement_change(): boolean {

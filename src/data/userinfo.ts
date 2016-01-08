@@ -5,12 +5,11 @@ IMatiere, IUIManager, IInfoRouter} from 'infodata';
 import {LoginInfo} from './logininfo';
 import {InfoElement} from './infoelement';
 import {UIManager} from './uimanager';
-import {GENRE_TP} from './infoconstants';
+import {GENRE_TP,START_PAGE} from './infoconstants';
 
 //
 export class UserInfo extends InfoElement {
 	//
-	public baseUrl: string = null;
 	public router: IInfoRouter = null;
 	public loginInfo: LoginInfo = new LoginInfo();
 	public uiManager: IUIManager = null;
@@ -43,13 +42,10 @@ export class UserInfo extends InfoElement {
 		if ((man !== undefined) && (man !== null)) {
 			this.uiManager = man;
 		}
-		let origin = window.location.origin;
-		let pathname = window.location.pathname;
-		this.baseUrl = origin + pathname.toLowerCase().replace("index.html", "");
-		if (!this.baseUrl.endsWith("/")) {
-			this.baseUrl = this.baseUrl + "/";
-		}
 	}// constructor
+	public get baseUrl():string {
+		return InfoElement.st_get_baseurl();
+	}
 	public get etudiant_id():string{
 		let sRet:string = null;
 		if ((this.person !== null) && (this.person.etudiantids.length > 0)){

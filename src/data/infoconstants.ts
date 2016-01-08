@@ -85,3 +85,25 @@ export const GRPEVTDETAIL_ROUTE:string='grpevt';
 export const ETUDEVTDETAIL_ROUTE:string='etudevt';
 export const ETUDNOTES_ROUTE:string='etudnotes';
 export const ATTACHEDDOC_ROUTE:string='attacheddoc';
+//
+export const PROP_ID:string = "_id";
+export const PROP_REV:string = "_rev";
+export const PROP_ATTACHMENTS:string = "_attachments";
+export const PROP_TYPE:string = "type";
+export const PROP_DELETED:string = "_deleted";
+//
+export const CREATED_STRING:string = 'created';
+export const EXISTS_STRING:string = 'exists';
+export const LASTCHAR_STRING:string = "\uffff";
+//
+export const ERR_NULL_DATABASE_NAME:string = "Null Database name";
+export const ERR_DATABASE_BUSY:string = "Database is busy";
+export const ERR_NULL_DATABASE_HANDLE:string = "Null Database handle";
+export const ERR_DOCUMENT_INVALID:string = "Invalid document";
+export const ERR_DOCUMENT_ID:string = "Invalid Document ID";
+export const ERR_ARGUMENTS_INVALID:string = "Invalid argument(s)";
+export const ERR_DATASERVICE_INVALID:string = "Invalid DataService";
+export const ERR_UNKNOWN:string = "Erreur inconue";
+//
+export const START_PAGE:string = "index.html";
+export const IMAGES_ROOT:string = "images/";

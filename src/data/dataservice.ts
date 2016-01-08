@@ -5,6 +5,10 @@ import {InfoElement} from './infoelement';
 import {ItemFactory} from './itemfactory';
 import {PouchDatabase} from './pouchdatabase';
 //
+import {ERR_DATASERVICE_INVALID, ERR_ARGUMENTS_INVALID,
+PROP_ID, PROP_REV, PROP_DELETED, PROP_TYPE, PROP_ATTACHMENTS,
+LASTCHAR_STRING} from './infoconstants';
+//
 export class DataService extends InfoElement implements IDataService {
 	//
 	private _service: IDocPersist;
@@ -12,12 +16,12 @@ export class DataService extends InfoElement implements IDataService {
 	//
 	constructor(serv?: IDocPersist, fact?: IItemFactory) {
 		super();
-		if (serv !== undefined) {
+		if ((serv !== undefined) && (serv !== null)) {
 			this._service = serv;
 		} else {
 			this._service = new PouchDatabase();
 		}
-		if (fact !== undefined) {
+		if ((fact !== undefined) && (fact !== null)) {
 			this._factory = fact;
 		} else {
 			this._factory = new ItemFactory();
@@ -42,78 +46,77 @@ export class DataService extends InfoElement implements IDataService {
 	//
 	public replicate_all(from: string, to: string): Promise<any> {
 		if (!this.is_valid) {
-			throw new Error("invalid database");
+			throw new Error(ERR_DATASERVICE_INVALID);
 		}
 		if ((from === undefined) || (from === null) || (to === undefined) || (to === null)) {
-			throw new Error("invalid args");
+			throw new Error(ERR_ARGUMENTS_INVALID);
 		}
 		let source = from.trim();
 		let dest = to.trim();
 		if ((source.length < 1) || (dest.length < 1) || (source == dest)) {
-			throw new Error("invalid args");
+			throw new Error(ERR_ARGUMENTS_INVALID);
 		}
 		return this.service.replicate(source, dest);
 	}// replicate_all
 	//
 	public replicate_person(pPers: IPerson, from: string, to: string): Promise<any> {
 		if (!this.is_valid) {
-			throw new Error("invalid database");
+			throw new Error(ERR_DATASERVICE_INVALID);
 		}
 		if ((pPers !== undefined) || (pPers === null) || (from === undefined) || (from === null) || (to === undefined) || (to === null)) {
-			throw new Error("invalid args");
+			throw new Error(ERR_ARGUMENTS_INVALID);
 		}
 		let ids = pPers.get_all_ids();
 		let source = from.trim();
 		let dest = to.trim();
 		if ((source.length < 1) || (dest.length < 1) || (source == dest)) {
-			throw new Error("invalid args");
+			throw new Error(ERR_ARGUMENTS_INVALID);
 		}
 		return this.service.replicate(source, dest, ids);
 	}//replicate_person
 	//
 	public replicate_to(to: string): Promise<any> {
 		if (!this.is_valid) {
-			throw new Error("invalid database");
+			throw new Error(ERR_DATASERVICE_INVALID);
 		}
 		return this.service.replicate(this.service.name, to);
 	}
 	public replicate_person_to(pPers: IPerson, to: string): Promise<any> {
 		if (!this.is_valid) {
-			throw new Error("invalid database");
+			throw new Error(ERR_DATASERVICE_INVALID);
 		}
 		if ((pPers === undefined) || (pPers === null)) {
-			throw new Error("invalid args");
+			throw new Error(ERR_ARGUMENTS_INVALID);
 		}
 		return this.replicate_person(pPers, this.service.name, to);
 	}
 	public replicate_from(from: string): Promise<any> {
 		if (!this.is_valid) {
-			throw new Error("invalid database");
+			throw new Error(ERR_DATASERVICE_INVALID);
 		}
 		return this.service.replicate(from, this.service.name);
 	}
 	public replicate_person_from(pPers: IPerson, from: string): Promise<any> {
 		if (!this.is_valid) {
-			throw new Error("invalid database");
+			throw new Error(ERR_DATASERVICE_INVALID);
 		}
 		if ((pPers === undefined) || (pPers === null)) {
-			throw new Error("invalid args");
+			throw new Error(ERR_ARGUMENTS_INVALID);
 		}
 		return this.replicate_person(pPers, from, this.service.name);
 	}
 	//
-	//
 	public remove_query_item(p: IBaseItem, sel?: any): Promise<boolean> {
 		if (!this.is_valid) {
-			throw new Error("invalid database");
+			throw new Error(ERR_DATASERVICE_INVALID);
 		}
 		if ((p === undefined) || (p === null)) {
-			throw new Error("invalid args");
+			throw new Error(ERR_ARGUMENTS_INVALID);
 		}
 		let id: string = p.id;
 		let rev: string = p.rev;
 		if ((id == null) || (rev == null)) {
-			throw new Error("invalid args");
+			throw new Error(ERR_ARGUMENTS_INVALID);
 		}
 		let doc: any = {};
 		p.to_map(doc);
@@ -137,7 +140,9 @@ export class DataService extends InfoElement implements IDataService {
 		if ((selector !== undefined) && (selector !== null)) {
 			for (let key in selector) {
 				let skey = key.toString();
-				if ((skey != "type") && (skey != "_id") && (skey != "_rev") && (skey != "_deleted") && (skey != "_attachments")) {
+				if ((skey != PROP_TYPE) && (skey != PROP_ID) &&
+					(skey != PROP_REV) && (skey != PROP_DELETED)
+					&& (skey != PROP_ATTACHMENTS)) {
 					let val = selector[key];
 					if ((val !== undefined) && (val !== null)) {
 						if (val.toString().length > 0) {
@@ -300,7 +305,7 @@ export class DataService extends InfoElement implements IDataService {
 		if (start.length < 1) {
 			return Promise.resolve(oRet);
 		}
-		let end: string = ((endkey !== undefined) && (endkey !== null) && (endkey.length > 0)) ? endkey : (start + "\uffff");
+		let end: string = ((endkey !== undefined) && (endkey !== null) && (endkey.length > 0)) ? endkey : (start + LASTCHAR_STRING);
 		return this.service.docs_ids_range(start, end, skip, limit).then((dd) => {
 			if ((dd !== undefined) && (dd !== null)) {
 				oRet = dd;
@@ -403,7 +408,7 @@ export class DataService extends InfoElement implements IDataService {
 	}//find_item_by_id
 	public is_online(): Promise<boolean> {
 		if (!this.is_valid) {
-			Promise.reject(new Error("Database invalid error"));
+			Promise.reject(new Error(ERR_DATASERVICE_INVALID));
 		}
 		return this.service.isOnline().then((b) => {
 			let bRet: boolean = (b !== undefined) && (b !== null) && (b == true);

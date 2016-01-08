@@ -1,9 +1,13 @@
 // infoelement.ts
 //
 import {IInfoElement} from 'infodata';
+import {ERR_UNKNOWN, START_PAGE} from './infoconstants';
+//
+declare var window: any;
 //
 export class InfoElement implements IInfoElement {
 	private _id: string = null;
+	private static _baseurl: string = null; 
 	//
 	constructor(oMap?: any) {
 		if ((oMap !== undefined) && (oMap !== null)) {
@@ -14,6 +18,19 @@ export class InfoElement implements IInfoElement {
 				this.id = oMap.id;
 			}
 		}
+	}
+	protected static st_get_baseurl(): string {
+		if (InfoElement._baseurl !== null) {
+			return InfoElement._baseurl;
+		}
+		let origin = window.location.origin;
+		let pathname = window.location.pathname;
+		let sRet = origin + pathname.toLowerCase().replace(START_PAGE, "");
+		if (!sRet.endsWith("/")) {
+			sRet = sRet + "/";
+		}
+		InfoElement._baseurl = sRet;
+		return InfoElement._baseurl;
 	}
 	public get id(): string {
 		return this._id;
@@ -179,7 +196,7 @@ export class InfoElement implements IInfoElement {
     }// create_username
 	protected create_date_key(d: Date): string {
 		let sRet: string = null;
-		let dx:Date = this.check_date(d);
+		let dx: Date = this.check_date(d);
 		if ((dx !== undefined) && (dx !== null)) {
 			let ss = dx.toISOString().substr(0, 10);
 			sRet = ss.replace("-", "");
@@ -301,16 +318,16 @@ export class InfoElement implements IInfoElement {
 		let sRet: string = null;
 		if ((err !== undefined) && (err !== null)) {
             if ((err.message !== undefined) && (err.message !== null)) {
-                sRet = (err.message.length > 0) ? err.message : 'Erreur inconnue...';
+                sRet = (err.message.length > 0) ? err.message : ERR_UNKNOWN;
             } else if ((err.msg !== undefined) && (err.msg !== null)) {
-                sRet = (err.msg.length > 0) ? err.msg : 'Erreur inconnue...';
+                sRet = (err.msg.length > 0) ? err.msg : ERR_UNKNOWN;
             } else if ((err.reason !== undefined) && (err.reason !== null)) {
                 sRet = err.reason;
             } else {
                 sRet = JSON.stringify(err);
             }
         } else {
-            sRet = 'Erreur inconnue...';
+            sRet = ERR_UNKNOWN;
         }
 		return sRet;
 	}
