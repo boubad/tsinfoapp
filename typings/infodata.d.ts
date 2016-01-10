@@ -2,11 +2,10 @@
 //
 declare module 'infodata' {
     //
-    export interface IInfoElement {
+    export interface IInfoElement extends Object {
 		id: string;
 		has_id?: boolean;
 		text?: string;
-		toString?: () => string;
 		sort_func?: (p1: IInfoElement, p2: IInfoElement) => number;
     } // interface IInfoElement
     //

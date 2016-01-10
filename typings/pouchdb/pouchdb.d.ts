@@ -4,18 +4,18 @@
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 //
 /// </// <reference path="../es6.d.ts"/>
-interface IPouchDocument {
+interface IPouchDocument extends Object {
 	_id?:string;
 	_rev?:string;
 	_deleted?:boolean;
 	_attachments?:any;
 }// interface IPouchDocument
-interface PouchError {
+interface PouchError extends Object {
 		status: number;
 		error: string;
 		reason: string;
 }
-interface IPouchAttachment {
+interface IPouchAttachment extends Object {
 		content_type: string;
 		digest?: string;
 		stub?: boolean;
@@ -23,7 +23,7 @@ interface IPouchAttachment {
 		length?: number;
 		revpos?: number;
 }
-interface PouchInfoResponse {
+interface PouchInfoResponse extends Object {
 		db_name: string;
 		doc_count: number;
 		update_seq: string;
@@ -62,7 +62,7 @@ interface PouchGetOptions {
 		limit?: number;
 }
 
-interface PouchGetResponse {
+interface PouchGetResponse extends Object {
 		_id: string;
 		_rev: string;
 		_deleted?: boolean;
@@ -86,7 +86,7 @@ interface PouchAllDocsOptions {
 		inclusive_end?: boolean;
 		attachments?: boolean;
 }
-interface PouchAllDocsItem {
+interface PouchAllDocsItem extends Object {
 		id: string;
 		key: string;
 		value: any;
@@ -94,7 +94,7 @@ interface PouchAllDocsItem {
 		deleted?:boolean;
 		_deleted?:boolean;
 }
-interface PouchAllDocsResponse {
+interface PouchAllDocsResponse extends Object {
 		offset?: number;
 		total_rows: number;
 		rows: PouchAllDocsItem[];
@@ -110,7 +110,7 @@ interface PouchUpdateOptions {
 		new_edits?: boolean;
 }
 
-interface PouchUpdateResponse {
+interface PouchUpdateResponse extends Object {
 		ok: boolean;
 		id?: string;
 		rev?: string;
@@ -139,8 +139,8 @@ interface PouchQueryOptions {
 		stale?: string;
 }
 
-interface PouchQueryResponse {
-		rows: any[];
+interface PouchQueryResponse  extends Object {
+		rows: Object[];
 }
 interface GQLOptions {
 		select: string;
@@ -197,7 +197,7 @@ interface PouchReplicateOptions {
 		complete?: (err: PouchError,res: PouchChanges) => void;
 }
 
-interface PouchReplicateResponse {
+interface PouchReplicateResponse  extends Object {
 		ok: boolean;
 		start_time: Date;
 		end_time: Date;
@@ -247,7 +247,7 @@ interface PouchIndexDefinition {
 	type: string;
 	def: any;
 }
-interface PouchGetIndexResponse {
+interface PouchGetIndexResponse extends Object {
 	indexes: PouchIndexDefinition[];
 }
 interface PouchFindOptions {
@@ -257,8 +257,8 @@ interface PouchFindOptions {
 	limit?: number;
 	skip?: number;
 }
-interface PouchFindResponse {
-	docs: any[];
+interface PouchFindResponse extends Object {
+	docs: Object[];
 }
 // Support AMD require
 //declare module 'pouchdb' {
