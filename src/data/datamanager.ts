@@ -8,7 +8,7 @@ import {DataService} from './dataservice';
 import {DEPARTEMENT_TYPE, UNITE_TYPE, GROUPE_TYPE, ANNEE_TYPE, SEMESTRE_TYPE,
 MATIERE_TYPE, PERSON_TYPE, ETUDIANT_TYPE, ENSEIGNANT_TYPE, ADMINISTRATOR_TYPE,
 ETUDAFFECTATION_TYPE, PROFAFFECTATION_TYPE, GROUPEEVENT_TYPE, ETUDEVENT_TYPE, SUPER_FIRSTNAME,
-SUPER_USERNAME, SUPER_LASTNAME, GENRE_TP} from './infoconstants';
+SUPER_USERNAME, SUPER_LASTNAME, GENRE_TP, PROP_USERNAME} from './infoconstants';
 //
 const INDEXED_FIELDS: string[] = ["_id", "type", "status", "dossier", "sexe", "birthDate", "birthYear",
 	"username", "firstname", "lastname", "ville", "etablissement",
@@ -29,12 +29,14 @@ export class DataManager extends DataService {
 		return this.service.query_docs({ type: PERSON_TYPE }, null, null, ["_id", "_rev", "type", "username"]).then((dd) => {
 			let pp: Promise<boolean>[] = [];
 			for (let d of dd) {
-				if ((d.username !== undefined) && (d.usename != SUPER_USERNAME)) {
-					let p = this.itemFactory.create_item(d);
-					if (p !== null) {
-						pp.push(this.remove_query_item(p, { personid: p.id }));
+				if (d.hasOwnProperty(PROP_USERNAME)) {
+					if (d[PROP_USERNAME] != SUPER_USERNAME) {
+						let p = this.itemFactory.create_item(d);
+						if (p !== null) {
+							pp.push(this.remove_query_item(p, { personid: p.id }));
+						}
 					}
-				}// username
+				}
 			}// d	
 			if (pp.length > 0) {
 				return Promise.all(pp);
@@ -517,7 +519,7 @@ export class DataManager extends DataService {
 				pp.push(this.check_item_avatar(p));
 			}
         }// p
-		if (pp.length < 1){
+		if (pp.length < 1) {
 			return Promise.resolve(true);
 		}
         return Promise.all(pp).then((xx) => {

@@ -91,6 +91,9 @@ export const PROP_REV:string = "_rev";
 export const PROP_ATTACHMENTS:string = "_attachments";
 export const PROP_TYPE:string = "type";
 export const PROP_DELETED:string = "_deleted";
+export const PROP_USERNAME = "username";
+export const PROP_GROUPEID:string = "groupeid";
+export const PROP_DEPARTEMENTID:string = "departementid";
 //
 export const CREATED_STRING:string = 'created';
 export const EXISTS_STRING:string = 'exists';

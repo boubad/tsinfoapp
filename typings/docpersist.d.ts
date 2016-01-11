@@ -5,15 +5,15 @@ declare module 'infodata' {
         name: string;
 		//
         exists_doc: (docid: string) => Promise<string>;
-        read_doc: (docid: string, bAttachments?: boolean, bMeta?: Boolean) => Promise<any>;
-        insert_doc: (doc: any) => Promise<any>;
-        update_doc: (doc: any) => Promise<any>;
-        remove_doc: (doc: any) => Promise<any>;
-        bulk_maintains: (docs: any[]) => Promise<any>;
+        read_doc: (docid: string, bAttachments?: boolean, bMeta?: Boolean) => Promise<IPouchDocument>;
+        insert_doc: (doc: IPouchDocument) => Promise<PouchUpdateResponse>;
+        update_doc: (doc: IPouchDocument) => Promise<PouchUpdateResponse>;
+        remove_doc: (doc: IPouchDocument) => Promise<PouchUpdateResponse>;
+        bulk_maintains: (docs: any[]) => Promise<PouchUpdateOptions[]>;
         docs_ids_range: (startkey: string, endkey: string,skip?: number, limit?: number) => Promise<string[]>;
-        docs_read_range: (startkey: string, endkey: string, skip?: number, limit?: number) => Promise<any[]>;
-        docs_array: (ids: string[]) => Promise<any[]>;
-        remove_all_items: (startKey: string, endKey: string) => Promise<any>;
+        docs_read_range: (startkey: string, endkey: string, skip?: number, limit?: number) => Promise<IPouchDocument[]>;
+        docs_array: (ids: string[]) => Promise<IPouchDocument[]>;
+        remove_all_items: (startKey: string, endKey: string) => Promise<PouchUpdateOptions[]>;
 		//
         isOnline: () => Promise<boolean>;
 		//
@@ -22,13 +22,13 @@ declare module 'infodata' {
             attachmentData: Blob, attachmentType: string) => Promise<any>;
         remove_attachment: (docid: string, attachmentId: string) => Promise<any>;
         //
-        replicate: (from: string, to: string, ids?: string[]) => Promise<boolean>;
-        //
         create_one_index: (field: string) => Promise<boolean>;
         create_multi_index: (fields: string[]) => Promise<boolean>;
         create_indexes: (fields: string[]) => Promise<boolean[]>;
-        query_docs: (selector: any,  skip?: number, limit?: number,fields?: string[]) => Promise<any[]>;
+        query_docs: (selector: any,  skip?: number, limit?: number,fields?: string[]) => Promise<IPouchDocument[]>;
 		remove_query_docs: (sel: any) => Promise<boolean>;
-    }// interface IIDocPersist
+		//
+		replicate: (from: string, to: string, ids?: string[]) => Promise<boolean>;
+    }// interface IDocPersist
     //
 }// module infodata

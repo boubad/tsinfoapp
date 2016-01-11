@@ -1,7 +1,5 @@
 //pouchdatabase.ts
 //
-//import * as PouchDB from 'pouchdb';
-//import {PouchDB} from 'pouchdb';
 declare var PouchDB: IPouchDB;
 //
 import {IDocPersist} from 'infodata';
@@ -9,9 +7,6 @@ import {DATABASE_NAME, PROP_ID, PROP_REV, PROP_ATTACHMENTS,
 CREATED_STRING, EXISTS_STRING,
 ERR_DATABASE_BUSY, ERR_NULL_DATABASE_NAME, ERR_NULL_DATABASE_HANDLE,
 ERR_DOCUMENT_INVALID, ERR_DOCUMENT_ID, ERR_ARGUMENTS_INVALID} from './infoconstants';
-
-//
-//PouchDB.plugin(require('pouchdbfind'));
 //
 export class PouchDatabase implements IDocPersist {
 	//
@@ -78,24 +73,16 @@ export class PouchDatabase implements IDocPersist {
 		});
 	}// db
 	//
-	public replicate(from: string, to: string, ids?: string[]): Promise<boolean> {
-		let oRet: boolean = false;
-		let options: any = {};
-		if ((ids !== undefined) && (ids !== null) && (ids.length > 0)) {
-			options.doc_ids = ids;
-		}
-		return PouchDB.replicate(from, to, options).then((b) => {
-			oRet = ((b !== undefined) && (b !== null));
-			return oRet;
-		});
-	}// replicate_all
-	//
 	public exists_doc(docid: string): Promise<string> {
 		let sRet: string = null;
+		if ((docid === undefined) || (docid === null)) {
+			return Promise.resolve(sRet);
+		}
 		return this.db.then((xdb) => {
 			return xdb.get(docid);
 		}).then((doc) => {
 			if ((doc !== undefined) && (doc !== null) &&
+				(doc._id !== undefined) && (doc._id !== null) &&
 				(doc._rev !== undefined) && (doc._rev !== null)) {
 				sRet = doc._rev;
 			}
@@ -104,7 +91,12 @@ export class PouchDatabase implements IDocPersist {
 			return sRet;
 		})
 	}// exists_doc
+	//
 	public read_doc(docid: string, bAttachments?: boolean, bMeta?: Boolean): Promise<IPouchDocument> {
+		let oRet: IPouchDocument = null;
+		if ((docid === undefined) || (docid === null)) {
+			return Promise.resolve(oRet);
+		}
 		return this.db.then((xdb) => {
 			let options: PouchGetOptions = {};
 			if ((bAttachments !== undefined) && (bAttachments !== null) && (bAttachments == true)) {
@@ -115,31 +107,43 @@ export class PouchDatabase implements IDocPersist {
 			}
 			return xdb.get(docid, options);
 		}).then((doc) => {
-			if (doc == undefined) {
-				doc = null;
+			if ((doc !== undefined) && (doc !== null) &&
+				(doc._id !== undefined) && (doc._id !== null) &&
+				(doc._rev !== undefined) && (doc._rev !== null)) {
+				oRet = doc;
 			}
-			return doc;
+			return oRet;
 		}).catch((e) => {
-			return null;
+			return oRet;
 		});
 	}// exists_doc
 	public insert_doc(doc: IPouchDocument): Promise<PouchUpdateResponse> {
 		if ((doc === undefined) || (doc === null)) {
-			Promise.reject(new Error(ERR_DOCUMENT_INVALID));
+			throw new Error(ERR_DOCUMENT_INVALID);
 		}
 		return this.db.then((xdb) => {
 			return xdb.put(doc);
+		}).catch((e) => {
+			return { ok: false, id: null, rev: null };
 		});
 	}// insert_doc
 	public update_doc(doc: IPouchDocument): Promise<PouchUpdateResponse> {
 		if ((doc === undefined) || (doc === null)) {
 			throw new Error(ERR_DOCUMENT_INVALID);
 		}
+		let bInsert: boolean = false;
+		let docid: string = null;
 		if (!doc.hasOwnProperty(PROP_ID)) {
-			return this.insert_doc(doc);
+			bInsert = true;
+		} else {
+			docid = doc[PROP_ID];
+			if (docid === null) {
+				bInsert = true;
+			} else if (docid.trim().length < 1) {
+				bInsert = true;
+			}
 		}
-		let docid: string = doc[PROP_ID];
-		if (docid == null) {
+		if (bInsert) {
 			let temp: any = {};
 			for (let key in doc) {
 				if ((key != PROP_ID) && (key != PROP_REV)) {
@@ -155,7 +159,7 @@ export class PouchDatabase implements IDocPersist {
 			zdb = xdb;
 			return xdb.get(docid, { attachments: true });
 		}).then((p) => {
-			rid = docid;
+			rid = p[PROP_ID];
 			rev = p[PROP_REV];
 			doc[PROP_REV] = rev;
 			if (p.hasOwnProperty(PROP_ATTACHMENTS)) {
@@ -187,16 +191,15 @@ export class PouchDatabase implements IDocPersist {
 		if (docid == null) {
 			throw new Error(ERR_DOCUMENT_ID);
 		}
+		if (docid.trim().length < 1) {
+			throw new Error(ERR_DOCUMENT_ID);
+		}
 		let zdb: IPouchDB = null;
 		return this.db.then((xdb) => {
 			zdb = xdb;
 			return xdb.get(docid);
 		}).then((p) => {
-			if ((p !== undefined) && (p !== null) && (p._rev !== undefined) && (p._rev !== null)) {
-				return zdb.remove(p);
-			} else {
-				return { ok: true, id: docid, rev: null };
-			}
+			return zdb.remove(p);
 		}, (err) => {
 			if (err.status != 404) {
 				throw new Error(err.reason);
@@ -205,9 +208,9 @@ export class PouchDatabase implements IDocPersist {
 		});
 	}// remove_doc
 	//
-	public bulk_maintains(docs: IPouchDocument[]): Promise<any> {
-		let oRet: any = [];
-		let dd: any[] = [];
+	public bulk_maintains(docs: IPouchDocument[]): Promise<PouchUpdateOptions[]> {
+		let oRet: IPouchDocument[] = [];
+		let dd: IPouchDocument[] = [];
 		if ((docs !== undefined) && (docs !== null) && (docs.length > 0)) {
 			for (let d of docs) {
 				if ((d !== undefined) && (d !== null)) {
@@ -245,7 +248,7 @@ export class PouchDatabase implements IDocPersist {
 				(rr.rows !== null)) {
 				for (let r of rr.rows) {
 					if ((r.id !== undefined) && (r.id !== null)) {
-						if ((r.deleted !== undefined) && (r.deleted !== undefined)) {
+						if ((r.deleted !== undefined) && (r.deleted !== null)) {
 							continue;
 						}
 						oRet.push(r.id);
@@ -279,11 +282,13 @@ export class PouchDatabase implements IDocPersist {
 				(rr.rows !== null)) {
 				for (let r of rr.rows) {
 					if ((r.id !== undefined) && (r.doc !== undefined) && (r.doc !== null)) {
-						if ((r.deleted !== undefined) && (r.deleted !== undefined)) {
+						if ((r.deleted !== undefined) && (r.deleted !== null)) {
 							continue;
 						}
 						let doc = r.doc;
-						oRet.push(doc);
+						if ((doc !== undefined) && (doc !== null)) {
+							oRet.push(doc);
+						}
 					}
 				}// r
 			}
@@ -298,10 +303,16 @@ export class PouchDatabase implements IDocPersist {
 		if ((ids === undefined) || (ids === null)) {
 			return Promise.resolve(oRet);
 		}
-		if (ids.length < 1) {
+		let dd: string[] = [];
+		for (let id of ids) {
+			if ((id !== undefined) && (id !== null) && (id.trim().length > 0)) {
+				dd.push(id);
+			}
+		}
+		if (dd.length < 1) {
 			return Promise.resolve(oRet);
 		}
-		let options: PouchAllDocsOptions = { keys: ids, include_docs: true };
+		let options: PouchAllDocsOptions = { keys: dd, include_docs: true };
 		return this.db.then((xdb) => {
 			return xdb.allDocs(options);
 		}).then((rr) => {
@@ -319,7 +330,7 @@ export class PouchDatabase implements IDocPersist {
 								bOk = false;
 							}
 						}
-						if ((r.doc === undefined) || (r.doc === null)) {
+						if (bOk && ((r.doc === undefined) || (r.doc === null))) {
 							bOk = false;
 						}
 						if (bOk) {
@@ -332,69 +343,8 @@ export class PouchDatabase implements IDocPersist {
 		}).catch((e) => {
 			return oRet;
 		});
-	}//get_items_array
-	public find_attachment(docid: string, attachmentId: string): Promise<Blob> {
-		let oRet: Blob = null;
-		if ((docid === undefined) || (docid === null) || (attachmentId === undefined) ||
-			(attachmentId === null)) {
-			return Promise.resolve(oRet);
-		}
-		return this.db.then((xdb: IPouchDB) => {
-			return xdb.getAttachment(docid, attachmentId);
-		}).then((p) => {
-			return p;
-		}, (err) => {
-			return null;
-		});
-	}// find_attachment
-	public maintains_attachment(docid: string, attachmentId: string,
-		attachmentData: Blob, attachmentType: string): Promise<PouchUpdateResponse> {
-		if ((docid === undefined) || (docid === null) || (attachmentId === undefined) ||
-			(attachmentId === null) || (attachmentData === undefined) ||
-			(attachmentData === null) || (attachmentType === undefined) ||
-			(attachmentType === null)) {
-			throw new Error(ERR_ARGUMENTS_INVALID);
-		}
-		let xdb: IPouchDB = null;
-		let rev: string = null;
-		return this.db.then((d: IPouchDB) => {
-			xdb = d;
-			return xdb.get(docid);
-		}).then((p) => {
-			rev = p._rev;
-			return xdb.putAttachment(p._id, attachmentId, p._rev, attachmentData, attachmentType);
-		}).then((rx) => {
-			return rx;
-		}, (err: PouchError) => {
-			if (err.status == 409) {
-				return { ok: true, id: docid, rev: rev };
-			} else {
-				throw new Error(err.reason);
-			}
-		});
-	}// maintains_attachment
-	public remove_attachment(docid: string, attachmentId: string): Promise<PouchUpdateResponse> {
-		if ((docid === undefined) || (docid === null) || (attachmentId === undefined) ||
-			(attachmentId === null)) {
-			throw new Error(ERR_ARGUMENTS_INVALID);
-		}
-		let xdb: IPouchDB = null;
-		return this.db.then((d: IPouchDB) => {
-			xdb = d;
-			return xdb.get(docid);
-		}).then((p) => {
-			return xdb.removeAttachment(p._id, attachmentId, p._rev);
-		});
-	}// maintains_attachment
-	public isOnline(): Promise<boolean> {
-		let self = this;
-		return this.db.then((xdb) => {
-			return ((xdb !== undefined) && (xdb !== null));
-		});
-	}// isOnline
-
-
-	public remove_all_items(startKey: string, endKey: string): Promise<any> {
+	}//docs_array
+	public remove_all_items(startKey: string, endKey: string): Promise<PouchUpdateOptions[]> {
 		if ((startKey === undefined) || (startKey === null) ||
 			(endKey === undefined) || (endKey === null)) {
 			throw new Error(ERR_ARGUMENTS_INVALID);
@@ -419,6 +369,81 @@ export class PouchDatabase implements IDocPersist {
 			}
 		});
 	}//remove_all_items
+	//
+	public isOnline(): Promise<boolean> {
+		return this.db.then((xdb) => {
+			return ((xdb !== undefined) && (xdb !== null));
+		}).catch((e) => {
+			return false;
+		})
+	}// isOnline
+	//
+	public find_attachment(docid: string, attachmentId: string): Promise<Blob> {
+		let oRet: Blob = null;
+		if ((docid === undefined) || (docid === null) || (attachmentId === undefined) ||
+			(attachmentId === null)) {
+			return Promise.resolve(oRet);
+		}
+		if ((docid.trim().length < 1) || (attachmentId.trim().length < 1)) {
+			return Promise.resolve(oRet);
+		}
+		return this.db.then((xdb: IPouchDB) => {
+			return xdb.getAttachment(docid, attachmentId);
+		}).catch((e) => {
+			return null;
+		});
+	}// find_attachment
+	public maintains_attachment(docid: string, attachmentId: string,
+		attachmentData: Blob, attachmentType: string): Promise<PouchUpdateResponse> {
+		if ((docid === undefined) || (docid === null) || (attachmentId === undefined) ||
+			(attachmentId === null) || (attachmentData === undefined) ||
+			(attachmentData === null) || (attachmentType === undefined) ||
+			(attachmentType === null)) {
+			throw new Error(ERR_ARGUMENTS_INVALID);
+		}
+		if ((docid.trim().length < 1) || (attachmentId.trim().length < 1) ||
+			(attachmentType.trim().length < 1) || (attachmentData.size < 1)) {
+			throw new Error(ERR_ARGUMENTS_INVALID);
+		}
+		let xdb: IPouchDB = null;
+		let rev: string = null;
+		return this.db.then((d: IPouchDB) => {
+			xdb = d;
+			return xdb.get(docid);
+		}).then((p) => {
+			rev = p._rev;
+			return xdb.putAttachment(p._id, attachmentId, p._rev, attachmentData, attachmentType);
+		}).then((rx) => {
+			return rx;
+		}, (err: PouchError) => {
+			if (err.status == 409) {
+				return { ok: true, id: docid, rev: rev };
+			} else {
+				throw new Error(err.reason);
+			}
+		}).catch((e) => {
+			return { ok: false, id: null, rev: null };
+		});
+	}// maintains_attachment
+	public remove_attachment(docid: string, attachmentId: string): Promise<PouchUpdateResponse> {
+		if ((docid === undefined) || (docid === null) || (attachmentId === undefined) ||
+			(attachmentId === null)) {
+			throw new Error(ERR_ARGUMENTS_INVALID);
+		}
+		if ((docid.trim().length < 1) || (attachmentId.trim().length < 1)) {
+			throw new Error(ERR_ARGUMENTS_INVALID);
+		}
+		let xdb: IPouchDB = null;
+		return this.db.then((d: IPouchDB) => {
+			xdb = d;
+			return xdb.get(docid);
+		}).then((p) => {
+			return xdb.removeAttachment(p._id, attachmentId, p._rev);
+		}).catch((e) => {
+			return { ok: false, id: null, rev: null };
+		});
+	}// maintains_attachment
+	//	
 	public create_one_index(field: string): Promise<boolean> {
 		let oRet: boolean = false;
 		if ((field === undefined) || (field === null)) {
@@ -435,6 +460,8 @@ export class PouchDatabase implements IDocPersist {
 				bRet = ((r.result == CREATED_STRING) || (r.result == EXISTS_STRING));
 			}
 			return bRet;
+		}).catch((e) => {
+			return false;
 		});
 	}// create_indexes
 	public create_multi_index(fields: string[]): Promise<boolean> {
@@ -461,6 +488,8 @@ export class PouchDatabase implements IDocPersist {
 				bRet = ((r.result == CREATED_STRING) || (r.result == EXISTS_STRING));
 			}
 			return bRet;
+		}).catch((e) => {
+			return false;
 		});
 	}// create_indexes
 	public create_indexes(fields: string[]): Promise<boolean[]> {
@@ -481,16 +510,28 @@ export class PouchDatabase implements IDocPersist {
 		for (let x of ss) {
 			oAr.push(this.create_one_index(x));
 		}
-		return Promise.all(oAr);
+		return Promise.all(oAr).then((r) => {
+			return r;
+		}).catch((e) => {
+			return oRet;
+		});
 	}//create_all_indexes
-	public query_docs(sel: any, skip?: number, limit?: number, fields?: string[]): Promise<any[]> {
-		let oRet: any[] = [];
+	public query_docs(sel: any, skip?: number, limit?: number, fields?: string[]): Promise<IPouchDocument[]> {
+		let oRet: IPouchDocument[] = [];
 		if ((sel === undefined) || (sel === null)) {
 			return Promise.resolve(oRet);
 		}
 		let options: PouchFindOptions = { selector: sel };
 		if ((fields !== undefined) && (fields !== null) && (fields.length > 0)) {
-			options.fields = fields;
+			let ff: string[] = [];
+			for (let f of fields) {
+				if ((f !== undefined) && (f !== null) && (f.trim().length > 0)) {
+					ff.push(f);
+				}
+			}
+			if (ff.length > 0) {
+				options.fields = ff;
+			}
 		}
 		if ((skip !== undefined) && (skip !== null) && (skip > 0)) {
 			options.skip = skip;
@@ -507,7 +548,7 @@ export class PouchDatabase implements IDocPersist {
 			return oRet;
 		}).catch((e) => {
 			return oRet;
-		})
+		});
 	}// find_docs
 	public remove_query_docs(sel: any): Promise<boolean> {
 		if ((sel === undefined) || (sel == null)) {
@@ -538,4 +579,25 @@ export class PouchDatabase implements IDocPersist {
 			return false;
 		});
 	}// remove_query_docs
+	public replicate(from: string, to: string, ids?: string[]): Promise<boolean> {
+		let oRet: boolean = false;
+		let options: any = {};
+		if ((ids !== undefined) && (ids !== null) && (ids.length > 0)) {
+			let ff: string[] = [];
+			for (let f of ids) {
+				if ((f !== undefined) && (f !== null) && (f.trim().length > 0)) {
+					ff.push(f);
+				}
+			}
+			if (ff.length > 0) {
+				options.doc_ids = ff;
+			}
+		}
+		return PouchDB.replicate(from, to, options).then((b) => {
+			oRet = ((b !== undefined) && (b !== null));
+			return oRet;
+		}).catch((e) => {
+			return false;
+		});
+	}// replicate_all
 }// class PouchDatabase

@@ -3,7 +3,8 @@
 // Definitions by: Bill Sears <https://github.com/MrBigDog2U/>
 // Definitions: https://github.com/borisyankov/DefinitelyTyped
 //
-/// </// <reference path="../es6.d.ts"/>
+// <reference path="../es6.d.ts"/>
+//
 interface IPouchDocument extends Object {
 	_id?:string;
 	_rev?:string;

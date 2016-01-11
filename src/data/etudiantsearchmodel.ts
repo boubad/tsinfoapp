@@ -2,7 +2,8 @@
 //
 import {BaseConsultViewModel} from './baseconsultmodel';
 import {UserInfo} from './userinfo';
-import {ETUDIANT_TYPE, ETUDAFFECTATION_TYPE} from './infoconstants';
+import {ETUDIANT_TYPE, ETUDAFFECTATION_TYPE,PROP_ID,
+	PROP_GROUPEID,PROP_DEPARTEMENTID} from './infoconstants';
 import {IPerson, IEtudiant, IGroupe, IDepartement} from 'infodata';
 //
 export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
@@ -23,20 +24,24 @@ export class EtudiantSearchModel extends BaseConsultViewModel<IEtudiant> {
 		let deps: string[] = [];
 		let grps: string[] = [];
 		let etds: string[] = [];
-		return this.dataService.service.query_docs({ personid: pPers.id, type: ETUDIANT_TYPE }, null, null, ["_id", "departementid"]).then((xx) => {
+		return this.dataService.service.query_docs({ personid: pPers.id, type: ETUDIANT_TYPE }, null, null, [PROP_ID, PROP_DEPARTEMENTID]).then((xx) => {
 			for (let x of xx) {
-				if ((x.departementid !== undefined) && (x.departementid !== null)) {
-					deps.push(x.departementid);
+				if (x.hasOwnProperty(PROP_DEPARTEMENTID)){
+					if (x[PROP_DEPARTEMENTID] !== null){
+						deps.push(x[PROP_DEPARTEMENTID]);
+					}
 				}
 				if ((x._id !== undefined) && (x._id !== null)) {
 					etds.push(x._id);
 				}
 			}
-			return this.dataService.service.query_docs({ personid: pPers.id, type: ETUDAFFECTATION_TYPE }, null, null, ["_id", "groupeid"]);
+			return this.dataService.service.query_docs({ personid: pPers.id, type: ETUDAFFECTATION_TYPE }, null, null, [PROP_ID, PROP_GROUPEID]);
 		}).then((gg) => {
-			for (let g of gg) {
-				if ((g.groupeid !== undefined) && (g.groupeid !== null)) {
-					grps.push(g.groupeid);
+			for (let x of gg) {
+				if (x.hasOwnProperty(PROP_GROUPEID)){
+					if (x[PROP_GROUPEID] !== null){
+						grps.push(x[PROP_GROUPEID]);
+					}
 				}
 			}
 			pPers.departementids = deps;
