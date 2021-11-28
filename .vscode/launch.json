@@ -1,0 +1,23 @@
+{
+    // Utilisez IntelliSense pour en savoir plus sur les attributs possibles.
+    // Pointez pour afficher la description des attributs existants.
+    // Pour plus d'informations, visitez : https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+    {
+        "type": "firefox",
+        "request": "launch",
+        "reAttach": true,
+        "name": "Firefox",
+        "url": "http://localhost:5000/index.html",
+        "webRoot": "${workspaceFolder}/public"
+    },
+        {
+            "type": "pwa-msedge",
+            "request": "launch",
+            "name": "Launch Edge against localhost",
+            "url": "http://localhost:5000",
+            "webRoot": "${workspaceFolder}/public"
+        }
+    ]
+}
