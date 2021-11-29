@@ -13,7 +13,7 @@
     _name
   ) => {};
   //
-  const id = IdUtils.CreateID("text_");
+  const id = IdUtils.CreateID("ipch_");
   //
   const onChanged = (e: Event) => {
     const t = e.target as HTMLInputElement;

@@ -1,34 +1,24 @@
 <script lang="ts">
   //
   import { onMount } from "svelte";
-  import { NavLink, Row, Table } from "sveltestrap";
-  import {
-ROUTE_ETUDAFFECTATIONS_CREATE,
-  } from "../../../../routes/routesdefs";
+  import { Row, Table } from "sveltestrap";
+  import { ROUTE_ETUDAFFECTATIONS_CREATE } from "../../../../routes/routesdefs";
   import type { IDataOption } from "../../../data/IDataOption";
   import { EtudiantServices } from "../../../data/EtudiantServices";
   import {
+    GetInitialPaginationData,
     PaginationDataSetItemsCount,
     PaginationDataSetPage,
   } from "../../../data/PaginationUtils";
   import ListCommands from "../../components/ListCommands.svelte";
   import PageNavigator from "../../components/PageNavigator.svelte";
-  import PhotoComponent from "../../components/PhotoComponent.svelte";
-  import {
-    PROMPT_NAME,
-    PROMPT_OBSERVATIONS,
-    PROMPT_PHOTO,
-  } from "../../InfoPrompt";
-  import {
-    etudiantfilterstore,
-    etudiantpaginationstore,
-  } from "../../stores/EtudiantStore";
-  import { SelectUtils } from "../SelectUtils";
+  import { etudiantfilterstore } from "../../stores/EtudiantStore";
   import { DomainConstants } from "../../../data/DomainConstants";
-  import InputCheck from "../../components/InputCheck.svelte";
   import { AnneeServices } from "../../../data/AnneeServices";
   import { EtudAffectationServices } from "../../../data/EtudAffectationServices";
   import { CreateEtudAffectation } from "../../../data/IEtudAffectation";
+  import type { IPaginationData } from "../../../data/IPaginationData";
+  import ItemOption from "../../components/ItemOption.svelte";
 
   //
   export let params: any = {};
@@ -44,9 +34,65 @@ ROUTE_ETUDAFFECTATIONS_CREATE,
   let groupeid: string = "";
   let startdate: string = "";
   let enddate: string = "";
+  let pagination: IPaginationData = GetInitialPaginationData();
   //
-  $: pagination = $etudiantpaginationstore;
-
+  const performRefresh = async (
+    annee?: string,
+    groupe?: string
+  ): Promise<void> => {
+    ids = [];
+    items = [];
+    allItems = [];
+    startdate = "";
+    enddate = "";
+    anneeid = "";
+    groupeid = "";
+    if (annee && annee.length > 0) {
+      anneeid = annee;
+      const pf = new AnneeServices();
+      const a = await pf.findItemByIdAsync(anneeid);
+      if (a) {
+        startdate = a.startdate;
+        enddate = a.enddate;
+      }
+    } // anneeid
+    if (groupe && groupe.length > 0) {
+      groupeid = groupe;
+    } // groupeid
+    if (anneeid.length > 0 && groupeid.length > 0) {
+      const pMan = new EtudiantServices();
+      const filter = $etudiantfilterstore;
+      const aa = await pMan.getPersonsOptionsByFilterAsync({
+        ...filter,
+        doctype: DomainConstants.TYPE_ETUDIANT,
+      });
+      const vv = await getCurrentIds(anneeid);
+      const bb: IDataOption[] = [];
+      const n = aa.length;
+      const m = vv.length;
+      for (let i = 0; i < n; i++) {
+        const p = aa[i];
+        const sid = p.value;
+        let found = false;
+        for (let j = 0; j < m; j++) {
+          const s = vv[j];
+          if (sid === s) {
+            found = true;
+            break;
+          }
+        } // j
+        if (!found) {
+          bb.push(p);
+        }
+      } // i
+      allItems = [...bb];
+      const itemsCount = allItems.length;
+      const pdata = PaginationDataSetItemsCount(pagination, itemsCount);
+      pagination = { ...pdata };
+      updatePage();
+    } // anneeid && groupeid
+    canCreate = ids.length > 0 && anneeid.length > 0 && groupeid.length > 0;
+  };
   //
   const updatePage = (): void => {
     let opts: IDataOption[] = [];
@@ -80,10 +126,8 @@ ROUTE_ETUDAFFECTATIONS_CREATE,
     items = [...opts];
   };
   //
-  const getCurrentIds = async (
-    annee: string,
-  ): Promise<string[]> => {
-      const vret:string[] = [];
+  const getCurrentIds = async (annee: string): Promise<string[]> => {
+    const vret: string[] = [];
     const pMan = new EtudAffectationServices();
     const dd = await pMan.datastore.findAllDocsBySelectorAsync(
       {
@@ -93,76 +137,19 @@ ROUTE_ETUDAFFECTATIONS_CREATE,
       [DomainConstants.FIELD_ETUDIANTID]
     );
     const n = dd.length;
-    for (let i = 0; i < n; i++){
-        const p = dd[i];
-        if (p.etudiantid){
-            vret.push(p.etudiantid as string);
-        }
-    }// i
+    for (let i = 0; i < n; i++) {
+      const p = dd[i];
+      if (p.etudiantid) {
+        vret.push(p.etudiantid as string);
+      }
+    } // i
     return vret;
   }; // getCurrentIds
-  //
-  const performRefresh = async (
-    annee?: string,
-    groupe?: string
-  ): Promise<void> => {
-    if (annee && annee.length > 0) {
-      anneeid = annee;
-      const pf = new AnneeServices();
-      const a = await pf.findItemByIdAsync(anneeid);
-      if (a) {
-        startdate = a.startdate;
-        enddate = a.enddate;
-      }
-    }
-    if (groupe && groupe.length > 0) {
-      groupeid = groupe;
-    }
-    ids = [];
-    const pMan = new EtudiantServices();
-    pagination = $etudiantpaginationstore;
-    const filter = $etudiantfilterstore;
-    const aa = await pMan.getPersonsOptionsByFilterAsync({
-      ...filter,
-      doctype: DomainConstants.TYPE_ETUDIANT,
-    });
-     const vv = await getCurrentIds(anneeid);
-     const bb: IDataOption[] = [];
-     const n = aa.length;
-     const m = vv.length;
-     for (let i = 0; i < n; i++){
-        const p = aa[i];
-        const sid = p.value;
-        let found = false;
-        for (let j = 0; j < m; j++){
-          const s = vv[j];
-           if (sid === s){
-             found = true;
-             break;
-           }
-        }// j
-        if (!found){
-            bb.push(p);
-        }
-     }// i
-    allItems = [...bb];
-    const itemsCount = allItems.length;
-    const pdata = PaginationDataSetItemsCount(pagination, itemsCount);
-    pagination = { ...pdata };
-    etudiantpaginationstore.set(pagination);
-    updatePage();
-    canCreate = ids.length > 0 && anneeid.length > 0 && groupeid.length > 0;
-  };
   //
   const onGotoPage = (n: number): void => {
     const pdata = PaginationDataSetPage(pagination, n);
     pagination = { ...pdata };
-    etudiantpaginationstore.set(pagination);
     updatePage();
-  };
-  //
-  const handleSelectEtudiant = (etudiantid: string): void => {
-    SelectUtils.SelectEtudiant(etudiantid);
   };
   //
   const handleCreate = async (): Promise<void> => {
@@ -217,62 +204,43 @@ ROUTE_ETUDAFFECTATIONS_CREATE,
   <Row>
     <h2 class="text-center">{"Création affectations étudiants"}</h2>
   </Row>
-  <Row>
-    <ListCommands
-      cancreate={canCreate}
-      canrefresh={true}
-      newbuttontext={"Enregistrer"}
-      onCreate={handleCreate}
-      onRefresh={performRefresh}
-    />
-  </Row>
   {#if items.length > 0}
+    <Row>
+      <ListCommands
+        cancreate={canCreate}
+        canrefresh={true}
+        newbuttontext={"Enregistrer"}
+        onCreate={handleCreate}
+        onRefresh={performRefresh}
+      />
+    </Row>
     <Row>
       <PageNavigator
         {pages}
         {page}
         {pagesCount}
         {onGotoPage}
-        lpath={ROUTE_ETUDAFFECTATIONS_CREATE + "/" + anneeid + "/" + groupeid }
+        lpath={ROUTE_ETUDAFFECTATIONS_CREATE + "/" + anneeid + "/" + groupeid}
       />
     </Row>
-
     <Row>
       <Table bordered={true} striped={true}>
         <thead>
           <tr>
-            <th>{"Sélection"}</th>
-            <th>{PROMPT_PHOTO}</th>
-            <th>{PROMPT_NAME}</th>
-            <th>{PROMPT_OBSERVATIONS}</th>
+            <th>{"Etudiants"}</th>
           </tr>
         </thead>
         <tbody>
           {#each items as item (item.value)}
             <tr>
               <td>
-                <InputCheck
+                <ItemOption
                   name={item.value}
-                  value={item.selected ? item.selected : false}
-                  onValueChanged={onSelectionChanged}
+                  url={item.url}
+                  label={item.name}
+                  subTitle={item.subTitle}
+                  {onSelectionChanged}
                 />
-              </td>
-              <td>
-                {#if item.url}
-                  <PhotoComponent url={item.url} text={item.name} height={56} />
-                {/if}
-              </td>
-              <td>
-                <NavLink
-                  on:click={() => {
-                    handleSelectEtudiant(item.value);
-                  }}
-                >
-                  {item.name}
-                </NavLink>
-              </td>
-              <td>
-                {item.subTitle ? item.subTitle : ""}
               </td>
             </tr>
           {/each}
