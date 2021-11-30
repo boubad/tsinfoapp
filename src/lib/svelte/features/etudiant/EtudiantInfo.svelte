@@ -77,21 +77,31 @@
   });
   //
 </script>
+
 <div>
   <Row>
-    <h2 class="text-center">{TITLE_ETUDIANT_INFO}</h2>
+    <Col xs="1" />
+    <Col xs="6">
+      <h2 class="text-center">{TITLE_ETUDIANT_INFO}</h2>
+    </Col>
+    <Col xs="1" />
   </Row>
   <Row>
-    <PersonHeader
-      url={etudiant._url}
-      firstname={etudiant.firstname}
-      lastname={etudiant.lastname}
-    />
+    <Col xs="1" />
+    <Col xs="6">
+      <PersonHeader
+        url={etudiant._url}
+        firstname={etudiant.firstname}
+        lastname={etudiant.lastname}
+      />
+    </Col>
+    <Col xs="1" />
   </Row>
   <Row>
     <Form>
       <Row>
-        <Col>
+        <Col xs="1" />
+        <Col xs="2">
           <InputText
             value={etudiant.departement}
             label={PROMPT_DEPARTEMENT}
@@ -99,7 +109,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={etudiant.ville}
             label={PROMPT_VILLE}
@@ -107,7 +117,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={etudiant.etablissement}
             label={PROMPT_ETABLISSEMENT}
@@ -115,43 +125,47 @@
             {onValueChanged}
           />
         </Col>
+        <Col xs="1" />
       </Row>
       <Row>
-        <Col>
+        <Col xs="1" />
+        <Col xs="2">
           <InputText
             value={etudiant.seriebac}
-            label={PROMPT_SERIEBAC}
+            label={"Série bac."}
             name={DomainConstants.FIELD_SERIEBAC}
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={etudiant.optionbac}
-            label={PROMPT_OPTIONBAC}
+            label={"Option bac."}
             name={DomainConstants.FIELD_OPTIONBAC}
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={etudiant.mentionbac}
-            label={PROMPT_MENTIONBAC}
+            label={"Mention bac."}
             name={DomainConstants.FIELD_MENTIONBAC}
             {onValueChanged}
           />
         </Col>
+        <Col xs="1" />
       </Row>
       <Row>
-        <Col>
+        <Col xs="1" />
+        <Col xs="2">
           <InputText
             value={etudiant.sup}
-            label={PROMPT_ETUDESSUPERIEURES}
+            label={"Etudes sup."}
             name={DomainConstants.FIELD_ETUDESSUPERIEURES}
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={etudiant.redoublant}
             label={PROMPT_REDOUBLANT}
@@ -159,7 +173,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={etudiant.typeformation}
             label={PROMPT_TYPEFORMATION}
@@ -167,9 +181,11 @@
             {onValueChanged}
           />
         </Col>
+        <Col xs="1" />
       </Row>
       <Row>
-        <Col>
+        <Col xs="1" />
+        <Col xs="2">
           <InputText
             value={etudiant.ident}
             label={PROMPT_DOSSIER}
@@ -177,21 +193,26 @@
             {onValueChanged}
           />
         </Col>
+        <Col xs="1" />
       </Row>
     </Form>
   </Row>
   <Row>
-    <EditCommands
-      cancancel={isModified}
-      canremove={false}
-      cansave={storeable}
-      onCancel={() => {
-        onCancelEtudiant();
-      }}
-      onSave={async () => {
-        onSaveEtudiant();
-      }}
-      onRemove={() => {}}
-    />
+    <Col xs="1" />
+    <Col xs="6">
+      <EditCommands
+        cancancel={isModified}
+        canremove={false}
+        cansave={storeable}
+        onCancel={() => {
+          onCancelEtudiant();
+        }}
+        onSave={async () => {
+          onSaveEtudiant();
+        }}
+        onRemove={() => {}}
+      />
+    </Col>
+    <Col xs="1" />
   </Row>
 </div>

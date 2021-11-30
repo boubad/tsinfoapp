@@ -45,7 +45,7 @@
   const onValueChanged = (val: unknown, name: string): void => {
     const pp = { ...groupecontroles, _modified: true };
     pp[name] = val;
-    groupecontroles = {...pp};
+    groupecontroles = { ...pp };
     _checkVars();
   };
   const performCancel = (): void => {
@@ -93,7 +93,7 @@
     <Col>
       <Form>
         <Row>
-          <Col>
+          <Col xs="3">
             <InputText
               value={groupecontroles.sigle}
               label={PROMPT_SIGLE}
@@ -101,7 +101,7 @@
               {onValueChanged}
             />
           </Col>
-          <Col>
+          <Col xs="3">
             <InputText
               value={groupecontroles.name}
               label={PROMPT_NAME}
@@ -111,7 +111,7 @@
           </Col>
         </Row>
         <Row>
-          <Col>
+          <Col xs="2">
             <InputText
               value={groupecontroles.duration}
               label={PROMPT_DURATION}
@@ -119,7 +119,7 @@
               {onValueChanged}
             />
           </Col>
-          <Col>
+          <Col xs="2">
             <InputCoefficient
               value={groupecontroles.coefficient}
               label={PROMPT_COEFFICIENT}
@@ -127,15 +127,17 @@
               {onValueChanged}
             />
           </Col>
-          <Col>
+          <Col xs="2">
             <InputHasNotes value={groupecontroles.hasnotes} {onValueChanged} />
           </Col>
         </Row>
         <Row>
-          <InputObservations
-            value={groupecontroles.observations}
-            {onValueChanged}
-          />
+          <Col xs="6">
+            <InputObservations
+              value={groupecontroles.observations}
+              {onValueChanged}
+            />
+          </Col>
         </Row>
       </Form>
     </Col>

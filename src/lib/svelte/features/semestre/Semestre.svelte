@@ -33,7 +33,7 @@
   const onValueChanged = (val: unknown, name: string): void => {
     const pp = { ...semestre, _modified: true };
     pp[name] = val;
-    semestre = {...pp};
+    semestre = { ...pp };
     _checkVars();
   };
   const performCancel = async (): Promise<void> => {
@@ -119,7 +119,7 @@
   <Row>
     <Form>
       <Row>
-        <Col>
+        <Col xs="3">
           <InputText
             value={semestre.sigle}
             label={PROMPT_SIGLE}
@@ -127,7 +127,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="3">
           <InputText
             value={semestre.name}
             label={PROMPT_NAME}
@@ -137,7 +137,9 @@
         </Col>
       </Row>
       <Row>
-        <InputObservations value={semestre.observations} {onValueChanged} />
+        <Col xs="6">
+          <InputObservations value={semestre.observations} {onValueChanged} />
+        </Col>
       </Row>
     </Form>
   </Row>

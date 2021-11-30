@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { NavLink, Row, Table } from "sveltestrap";
+  import { Col, NavLink, Row, Table } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import {
     ROUTE_ANNEE_DETAIL,
@@ -90,85 +90,93 @@
 
 <div>
   <Row>
+    <Col xs="1" />
     <h2 class="text-center">{TITLE_ETUDIANT_NOTES}</h2>
+    <Col xs="1" />
   </Row>
   <Row>
+    <Col xs="1" />
     <PersonHeader
       url={etudiant._url}
       firstname={etudiant.firstname}
       lastname={etudiant.lastname}
     />
+    <Col xs="1" />
   </Row>
   <Row>
-    <Table bordered={true} striped={true}>
-      <thead>
-        <tr>
-          <th>{PROMPT_DATE}</th>
-          <th>{PROMPT_ANNEE}</th>
-          <th>{PROMPT_SEMESTRE}</th>
-          <th>{PROMPT_MATIERE}</th>
-          <th>{PROMPT_CONTROLE}</th>
-          <th>{PROMPT_NOTE}</th>
-          <th>{PROMPT_OBSERVATIONS}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each items as note}
+    <Col xs="1" />
+    <Col>
+      <Table bordered={true} striped={true}>
+        <thead>
           <tr>
-            <td>
-              <NavLink
-                on:click={() => {
-                  selectItem(note._id);
-                }}
-              >
-                {DateUtils.toDisplay(note._date)}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink
-                on:click={() => {
-                  handleSelectAnnee(note._anneeid);
-                }}
-              >
-                {note._anneeSigle ? note._anneeSigle : ""}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink
-                on:click={() => {
-                  handleSelectSemestre(note._semestreid);
-                }}
-              >
-                {note._semestreSigle ? note._semestreSigle : ""}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink
-                on:click={() => {
-                  handleSelectMatiere(note._matiereid);
-                }}
-              >
-                {note._matiereSigle ? note._matiereSigle : ""}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink
-                on:click={() => {
-                  selectControle(note.controleid);
-                }}
-              >
-                {note._controleName ? note._controleName : ""}
-              </NavLink>
-            </td>
-            <td class="float-right">
-              {note.value !== undefined && note.value !== null
-                ? "" + note.value
-                : ""}
-            </td>
-            <td>{note.observations ? note.observations : ""}</td>
+            <th>{PROMPT_DATE}</th>
+            <th>{PROMPT_ANNEE}</th>
+            <th>{PROMPT_SEMESTRE}</th>
+            <th>{PROMPT_MATIERE}</th>
+            <th>{PROMPT_CONTROLE}</th>
+            <th>{PROMPT_NOTE}</th>
+            <th>{PROMPT_OBSERVATIONS}</th>
           </tr>
-        {/each}
-      </tbody>
-    </Table>
+        </thead>
+        <tbody>
+          {#each items as note}
+            <tr>
+              <td>
+                <NavLink
+                  on:click={() => {
+                    selectItem(note._id);
+                  }}
+                >
+                  {DateUtils.toDisplay(note._date)}
+                </NavLink>
+              </td>
+              <td>
+                <NavLink
+                  on:click={() => {
+                    handleSelectAnnee(note._anneeid);
+                  }}
+                >
+                  {note._anneeSigle ? note._anneeSigle : ""}
+                </NavLink>
+              </td>
+              <td>
+                <NavLink
+                  on:click={() => {
+                    handleSelectSemestre(note._semestreid);
+                  }}
+                >
+                  {note._semestreSigle ? note._semestreSigle : ""}
+                </NavLink>
+              </td>
+              <td>
+                <NavLink
+                  on:click={() => {
+                    handleSelectMatiere(note._matiereid);
+                  }}
+                >
+                  {note._matiereSigle ? note._matiereSigle : ""}
+                </NavLink>
+              </td>
+              <td>
+                <NavLink
+                  on:click={() => {
+                    selectControle(note.controleid);
+                  }}
+                >
+                  {note._controleName ? note._controleName : ""}
+                </NavLink>
+              </td>
+              <td class="float-right">
+                {note.value !== undefined && note.value !== null
+                  ? "" + note.value
+                  : ""}
+              </td>
+              <td>{note.observations ? note.observations : ""}</td>
+            </tr>
+          {/each}
+        </tbody>
+      </Table>
+    </Col>
+    <Col xs="1" />
   </Row>
 </div>

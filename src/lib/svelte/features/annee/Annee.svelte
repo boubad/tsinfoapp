@@ -138,7 +138,7 @@
       <Row>
         <Form>
           <Row>
-            <Col>
+            <Col xs="3">
               <InputDate
                 value={annee.startdate}
                 label={PROMPT_STARTDATE}
@@ -146,7 +146,7 @@
                 {onValueChanged}
               />
             </Col>
-            <Col>
+            <Col xs="3">
               <InputDate
                 value={annee.enddate}
                 label={PROMPT_ENDDATE}
@@ -156,7 +156,7 @@
             </Col>
           </Row>
           <Row>
-            <Col>
+            <Col xs="3">
               <InputText
                 value={annee.sigle}
                 label={PROMPT_SIGLE}
@@ -164,7 +164,7 @@
                 {onValueChanged}
               />
             </Col>
-            <Col>
+            <Col xs="3">
               <InputText
                 value={annee.name}
                 label={PROMPT_NAME}
@@ -174,10 +174,10 @@
             </Col>
           </Row>
           <Row>
-            <Col>
+            <Col xs="4">
               <InputObservations value={annee.observations} {onValueChanged} />
             </Col>
-            <Col>
+            <Col xs="2">
               <StatusChoice value={annee.status} {onValueChanged} />
             </Col>
           </Row>

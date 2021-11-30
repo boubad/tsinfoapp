@@ -102,31 +102,44 @@
 
 <div>
   <Row>
-    <h2 class="text-center">{TITLE_ETUDIANT_IDENT}</h2>
+    <Col xs="1" />
+    <Col xs="6">
+      <h2 class="text-center">{TITLE_ETUDIANT_IDENT}</h2>
+    </Col>
+    <Col xs="1" />
   </Row>
   <Row>
-    <PersonHeader
-      url={etudiant._url}
-      firstname={etudiant.firstname}
-      lastname={etudiant.lastname}
-    />
+    <Col xs="1" />
+    <Col xs="6">
+      <PersonHeader
+        url={etudiant._url}
+        firstname={etudiant.firstname}
+        lastname={etudiant.lastname}
+      />
+    </Col>
+    <Col xs="1" />
   </Row>
   {#if isPersisted}
     <Row>
-      <Col class="text-center">
-        <DeleteItem
-          buttonText={COMMAND_REMOVE_ETUDIANT}
-          dialogText={TEXT_REMOVE_ETUDIANT}
-          dialogTitle={TITLE_REMOVE_ETUDIANT}
-          onDeleteItem={onRemoveEtudiant}
-        />
+      <Col xs="1" />
+      <Col xs="6">
+        <Col class="text-center">
+          <DeleteItem
+            buttonText={COMMAND_REMOVE_ETUDIANT}
+            dialogText={TEXT_REMOVE_ETUDIANT}
+            dialogTitle={TITLE_REMOVE_ETUDIANT}
+            onDeleteItem={onRemoveEtudiant}
+          />
+        </Col>
       </Col>
+      <Col xs="1" />
     </Row>
   {/if}
   <Row>
     <Form>
       <Row>
-        <Col>
+        <Col xs="1" />
+        <Col xs="2">
           <InputText
             value={etudiant.username}
             label={PROMPT_USERNAME}
@@ -135,10 +148,10 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <SexeChoice value={etudiant.sexe} {onValueChanged} />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputDate
             value={etudiant.birthdate}
             label={PROMPT_BIRTHDATE}
@@ -146,9 +159,11 @@
             {onValueChanged}
           />
         </Col>
+        <Col xs="1" />
       </Row>
       <Row>
-        <Col>
+        <Col xs="1" />
+        <Col xs="3">
           <InputText
             value={etudiant.lastname}
             label={PROMPT_LASTNAME}
@@ -157,7 +172,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="3">
           <InputText
             value={etudiant.firstname}
             label={PROMPT_FIRSTNAME}
@@ -166,9 +181,11 @@
             {onValueChanged}
           />
         </Col>
+        <Col xs="1" />
       </Row>
       <Row>
-        <Col>
+        <Col xs="1" />
+        <Col xs="2">
           <InputEmail
             value={etudiant.email}
             label={PROMPT_EMAIL}
@@ -176,7 +193,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputPhone
             value={etudiant.phone}
             label={PROMPT_PHONE}
@@ -185,7 +202,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={etudiant.address}
             label={PROMPT_ADDRESS}
@@ -193,14 +210,14 @@
             {onValueChanged}
           />
         </Col>
+        <Col xs="1" />
       </Row>
       <Row>
-        <Col>
-          <InputObservations
-            value={etudiant.observations}
-            {onValueChanged}
-          />
+        <Col xs="1" />
+        <Col xs="6">
+          <InputObservations value={etudiant.observations} {onValueChanged} />
         </Col>
+        <Col xs="1" />
       </Row>
     </Form>
   </Row>

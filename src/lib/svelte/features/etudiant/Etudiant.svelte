@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
 
-  import { Row, TabContent, TabPane } from "sveltestrap";
+  import { Col, Row, TabContent, TabPane } from "sveltestrap";
   import {
     MENU_AFFECTATIONS_LIST,
     MENU_BLOBS,
@@ -36,26 +36,30 @@
 
 <div>
   <Row>
-    <TabContent>
-      <TabPane tabId="ident" tab={MENU_IDENT} active>
-        <EtudiantIdent params={{ id: params.id }} />
-      </TabPane>
-      <TabPane tabId="info" tab={MENU_INFOS} disabled={isNotPersisted}>
-        <EtudiantInfo params={{ id: params.id }} />
-      </TabPane>
-      <TabPane tabId="notes" tab={MENU_NOTES} disabled={isNotPersisted}>
-        <EtudiantNotes params={{ id: params.id }} />
-      </TabPane>
-      <TabPane tabId="evts" tab={MENU_EVTS} disabled={isNotPersisted}>
-        <EtudiantEvts params={{ id: params.id }} />
-      </TabPane>
-      <TabPane tabId="affs" tab={MENU_AFFECTATIONS_LIST}>
-        disabled={isNotPersisted}
-        <EtudiantAffectations params={{ id: params.id }} />
-      </TabPane>
-      <TabPane tabId="blobs" tab={MENU_BLOBS} disabled={isNotPersisted}>
-        <EtudiantBlobs params={{ id: params.id }} />
-      </TabPane>
-    </TabContent>
+    <Col xs="1" />
+    <Col>
+      <TabContent>
+        <TabPane tabId="ident" tab={MENU_IDENT} active>
+          <EtudiantIdent params={{ id: params.id }} />
+        </TabPane>
+        <TabPane tabId="info" tab={MENU_INFOS} disabled={isNotPersisted}>
+          <EtudiantInfo params={{ id: params.id }} />
+        </TabPane>
+        <TabPane tabId="notes" tab={MENU_NOTES} disabled={isNotPersisted}>
+          <EtudiantNotes params={{ id: params.id }} />
+        </TabPane>
+        <TabPane tabId="evts" tab={MENU_EVTS} disabled={isNotPersisted}>
+          <EtudiantEvts params={{ id: params.id }} />
+        </TabPane>
+        <TabPane tabId="affs" tab={MENU_AFFECTATIONS_LIST}>
+          disabled={isNotPersisted}
+          <EtudiantAffectations params={{ id: params.id }} />
+        </TabPane>
+        <TabPane tabId="blobs" tab={MENU_BLOBS} disabled={isNotPersisted}>
+          <EtudiantBlobs params={{ id: params.id }} />
+        </TabPane>
+      </TabContent>
+    </Col>
+    <Col xs="1" />
   </Row>
 </div>

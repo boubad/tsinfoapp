@@ -113,7 +113,7 @@
   <Row>
     <Form>
       <Row>
-        <Col>
+        <Col xs="3">
           <InputText
             value={unite.sigle}
             label={PROMPT_SIGLE}
@@ -121,7 +121,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="3">
           <InputText
             value={unite.name}
             label={PROMPT_NAME}
@@ -131,7 +131,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="6">
           <InputObservations
             value={unite.observations}
             {onValueChanged}

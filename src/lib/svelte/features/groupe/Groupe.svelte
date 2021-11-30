@@ -145,13 +145,13 @@
   <Row>
     <Form>
       <Row>
-        <Col>
+        <Col xs="3">
           <GroupeTypeChoice
             value={groupe.groupetype}
             onValueChanged={onGroupeTypeChanged}
           />
         </Col>
-        <Col>
+        <Col xs="3">
           <ItemChoice
             items={parents}
             label={PROMPT_PARENT_GROUPE}
@@ -162,7 +162,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="3">
           <InputText
             value={groupe.sigle}
             label={PROMPT_SIGLE}
@@ -170,7 +170,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="3">
           <InputText
             value={groupe.name}
             label={PROMPT_NAME}
@@ -180,10 +180,12 @@
         </Col>
       </Row>
       <Row>
+        <Col xs="6">
         <InputObservations
           value={groupe.observations}
           {onValueChanged}
         />
+        </Col>
       </Row>
     </Form>
   </Row>
