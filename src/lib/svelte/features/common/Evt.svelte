@@ -140,10 +140,10 @@
   <Row>
     <Form>
       <Row>
-        <Col>
+        <Col xs="2">
           <EvtTypeChoice value={evt.evttype} {onValueChanged} />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={evt.duration}
             label={PROMPT_DURATION}
@@ -151,12 +151,12 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputJustife value={evt.justifie} {onValueChanged} />
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="6">
           <InputObservations value={evt.observations} {onValueChanged} />
         </Col>
       </Row>

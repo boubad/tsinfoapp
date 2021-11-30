@@ -210,7 +210,7 @@
       </Col>
     {/if}
     {#if semestres.length > 1}
-      <Col>
+    <Col>
         <ItemChoice
           value={semestre}
           label={PROMPT_SEMESTRE}

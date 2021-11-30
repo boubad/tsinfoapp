@@ -133,7 +133,7 @@
   <Row>
     <Form>
       <Row>
-        <Col>
+        <Col xs="3">
           <InputDate
             value={etudaffectation.startdate}
             label={PROMPT_STARTDATE}
@@ -143,7 +143,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="3">
           <InputDate
             value={etudaffectation.enddate}
             label={PROMPT_ENDDATE}
@@ -155,7 +155,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="6">
           <InputObservations
             value={etudaffectation.observations}
             {onValueChanged}

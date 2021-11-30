@@ -71,7 +71,7 @@
         } // g
       } // c
     } // id
-    prev = {...controle};
+    prev = { ...controle };
     _checkVars();
   }; // performRefresh
   //
@@ -137,7 +137,7 @@
   <Row>
     <Form>
       <Row>
-        <Col>
+        <Col xs="3">
           <InputDate
             value={controle.date}
             label={PROMPT_DATE}
@@ -149,7 +149,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="3">
           <ItemChoice
             value={controle.groupecontroleid}
             label={PROMPT_GROUPECONTROLES}
@@ -161,7 +161,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="3">
           <InputText
             value={controle.place}
             label={PROMPT_PLACE}
@@ -171,7 +171,9 @@
         </Col>
       </Row>
       <Row>
-        <InputObservations value={controle.observations} {onValueChanged} />
+        <Col xs="6">
+          <InputObservations value={controle.observations} {onValueChanged} />
+        </Col>
       </Row>
     </Form>
   </Row>

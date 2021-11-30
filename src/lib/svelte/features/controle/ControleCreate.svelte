@@ -134,7 +134,7 @@
   <Row>
     <Form>
       <Row>
-        <Col>
+        <Col xs="3">
           <InputDate
             value={controle.date}
             label={PROMPT_DATE}
@@ -146,7 +146,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="3">
           <ItemChoice
             value={controle.groupecontroleid}
             label={PROMPT_GROUPECONTROLES}
@@ -157,7 +157,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="3">
           <InputText
             value={controle.place}
             label={PROMPT_PLACE}
@@ -167,7 +167,9 @@
         </Col>
       </Row>
       <Row>
+        <Col xs="6">
         <InputObservations value={controle.observations} {onValueChanged} />
+        </Col>
       </Row>
     </Form>
   </Row>
