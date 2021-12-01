@@ -1,7 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-
-  import { Col, Row, TabContent, TabPane } from "sveltestrap";
+  import { TabContent, TabPane } from "sveltestrap";
   import {
     MENU_AFFECTATIONS_LIST,
     MENU_BLOBS,
@@ -19,47 +17,27 @@
   //
   export let params: any = {};
   //
-  let isNotPersisted: boolean = true;
-  //
-  const performRefresh = (id?: string): void => {
-    isNotPersisted = true;
-    if (id !== undefined && id !== null && id.trim().length > 0) {
-      isNotPersisted = false;
-    }
-  }; // performRefresh
-  //
-  onMount(() => {
-    performRefresh(params.id);
-  });
+  $: isPersisted = params.id && params.id.length > 0;
   //
 </script>
 
-<div>
-  <Row>
-    <Col xs="1" />
-    <Col>
-      <TabContent>
-        <TabPane tabId="ident" tab={MENU_IDENT} active>
-          <EtudiantIdent params={{ id: params.id }} />
-        </TabPane>
-        <TabPane tabId="info" tab={MENU_INFOS} disabled={isNotPersisted}>
-          <EtudiantInfo params={{ id: params.id }} />
-        </TabPane>
-        <TabPane tabId="notes" tab={MENU_NOTES} disabled={isNotPersisted}>
-          <EtudiantNotes params={{ id: params.id }} />
-        </TabPane>
-        <TabPane tabId="evts" tab={MENU_EVTS} disabled={isNotPersisted}>
-          <EtudiantEvts params={{ id: params.id }} />
-        </TabPane>
-        <TabPane tabId="affs" tab={MENU_AFFECTATIONS_LIST}>
-          disabled={isNotPersisted}
-          <EtudiantAffectations params={{ id: params.id }} />
-        </TabPane>
-        <TabPane tabId="blobs" tab={MENU_BLOBS} disabled={isNotPersisted}>
-          <EtudiantBlobs params={{ id: params.id }} />
-        </TabPane>
-      </TabContent>
-    </Col>
-    <Col xs="1" />
-  </Row>
-</div>
+<TabContent>
+  <TabPane tabId="ident" tab={MENU_IDENT} active>
+    <EtudiantIdent {params} />
+  </TabPane>
+  <TabPane tabId="info" tab={MENU_INFOS} disabled={!isPersisted}>
+    <EtudiantInfo {params} />
+  </TabPane>
+  <TabPane tabId="notes" tab={MENU_NOTES} disabled={!isPersisted}>
+    <EtudiantNotes {params} />
+  </TabPane>
+  <TabPane tabId="evts" tab={MENU_EVTS} disabled={!isPersisted}>
+    <EtudiantEvts {params} />
+  </TabPane>
+  <TabPane tabId="affs" tab={MENU_AFFECTATIONS_LIST}  disabled={!isPersisted}>
+    <EtudiantAffectations {params} />
+  </TabPane>
+  <TabPane tabId="blobs" tab={MENU_BLOBS} disabled={!isPersisted}>
+    <EtudiantBlobs {params} />
+  </TabPane>
+</TabContent>

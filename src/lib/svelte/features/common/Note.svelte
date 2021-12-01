@@ -128,10 +128,8 @@
       deleteDialogTitle={TITLE_REMOVE_NOTE}
       deleteDialogText={TEXT_REMOVE_NOTE}
       cancancel={isNoteModified}
-      canremove={false}
       cansave={isNoteModified}
       onCancel={performCancel}
-      onRemove={() => {}}
       onSave={performSave}
     />
   </Row>

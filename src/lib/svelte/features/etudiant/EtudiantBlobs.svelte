@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Row } from "sveltestrap";
+  import { Col, Row } from "sveltestrap";
   import type { IAttachedDoc } from "../../../data/IAttachedDoc";
   import { CreateEtudiant, IEtudiantDoc } from "../../../data/IEtudiantDoc";
   import { EtudiantServices } from "../../../data/EtudiantServices";
@@ -64,21 +64,27 @@
 
 <div>
   <Row>
-    <h2 class="ext-center">{TITLE_ETUDIANT_BLOBS}</h2>
+    <Col class="text-center">
+      <h2 class="ext-center">{TITLE_ETUDIANT_BLOBS}</h2>
+    </Col>
   </Row>
   <Row>
-    <PersonHeader
-      url={etudiant._url}
-      firstname={etudiant.firstname}
-      lastname={etudiant.lastname}
-    />
+    <Col class="text-center">
+      <PersonHeader
+        url={etudiant._url}
+        firstname={etudiant.firstname}
+        lastname={etudiant.lastname}
+      />
+    </Col>
   </Row>
   <Row>
-    <BlobInfo
-      parentid={etudiant._id}
-      {blobs}
-      onSave={onSaveAttachment}
-      onRemove={onRemoveAttachment}
-    />
+    <Col class="text-center">
+      <BlobInfo
+        parentid={etudiant._id}
+        {blobs}
+        onSave={onSaveAttachment}
+        onRemove={onRemoveAttachment}
+      />
+    </Col>
   </Row>
 </div>

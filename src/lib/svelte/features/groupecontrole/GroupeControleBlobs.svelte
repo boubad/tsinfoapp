@@ -6,7 +6,7 @@
   import { CreateGroupeControles } from "../../../data/IGroupeControlesDoc";
   import { GroupeControlesServices } from "../../../data/GroupeControlesServices";
   import BlobInfo from "../../components/BlobInfo.svelte";
-  import { TITLE_ETUDIANT_BLOBS } from "../../InfoPrompt";
+  import { TITLE_GROUPESCONTROLES_BLOBS } from "../../InfoPrompt";
   //
 
   export let params: any = {};
@@ -73,7 +73,7 @@
 
 <div>
   <Row>
-    <h2 class="text-center">{TITLE_ETUDIANT_BLOBS}</h2>
+    <h2 class="text-center">{TITLE_GROUPESCONTROLES_BLOBS}</h2>
   </Row>
   <Row>
     <BlobInfo

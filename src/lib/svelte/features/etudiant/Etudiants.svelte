@@ -1,7 +1,7 @@
 <script lang="ts">
   //
   import { onMount } from "svelte";
-  import { NavLink, Row, Table } from "sveltestrap";
+  import { Col, NavLink, Row, Table } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import {
     ROUTE_ETUDIANTS_LIST,
@@ -111,61 +111,73 @@
 
 <div>
   <Row>
-    <h2 class="text-center">{TITLE_ETUDIANTS_LIST}</h2>
+    <Col class="text-center">
+      <h2 class="text-center">{TITLE_ETUDIANTS_LIST}</h2>
+    </Col>
   </Row>
   <Row>
-    <ListCommands
-      cancreate={true}
-      canrefresh={true}
-      newbuttontext={COMMAND_ETUDIANT_NEW}
-      onCreate={handleCreate}
-      onRefresh={performRefresh}
-    />
+    <Col class="text-center">
+      <ListCommands
+        cancreate={true}
+        canrefresh={true}
+        newbuttontext={COMMAND_ETUDIANT_NEW}
+        onCreate={handleCreate}
+        onRefresh={performRefresh}
+      />
+    </Col>
   </Row>
   {#if items.length > 0}
     <Row>
-      <PageNavigator
-        {pages}
-        {page}
-        {pagesCount}
-        {onGotoPage}
-        lpath={ROUTE_ETUDIANTS_LIST}
-      />
+      <Col class="text-center">
+        <PageNavigator
+          {pages}
+          {page}
+          {pagesCount}
+          {onGotoPage}
+          lpath={ROUTE_ETUDIANTS_LIST}
+        />
+      </Col>
     </Row>
 
     <Row>
-      <Table bordered={true} striped={true}>
-        <thead>
-          <tr>
-            <th>{PROMPT_PHOTO}</th>
-            <th>{PROMPT_NAME}</th>
-            <th>{PROMPT_OBSERVATIONS}</th>
-          </tr>
-        </thead>
-        <tbody>
-          {#each items as item (item.value)}
+      <Col class="text-center">
+        <Table bordered={true} striped={true}>
+          <thead>
             <tr>
-              <td>
-                {#if item.url}
-                  <PhotoComponent url={item.url} text={item.name} height={56} />
-                {/if}
-              </td>
-              <td>
-                <NavLink
-                  on:click={() => {
-                    handleSelectEtudiant(item.value);
-                  }}
-                >
-                  {item.name}
-                </NavLink>
-              </td>
-              <td>
-                {item.subTitle ? item.subTitle : ""}
-              </td>
+              <th>{PROMPT_PHOTO}</th>
+              <th>{PROMPT_NAME}</th>
+              <th>{PROMPT_OBSERVATIONS}</th>
             </tr>
-          {/each}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody>
+            {#each items as item (item.value)}
+              <tr>
+                <td>
+                  {#if item.url}
+                    <PhotoComponent
+                      url={item.url}
+                      text={item.name}
+                      height={56}
+                    />
+                  {/if}
+                </td>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      handleSelectEtudiant(item.value);
+                    }}
+                  >
+                    {item.name}
+                  </NavLink>
+                </td>
+                <td>
+                  {item.subTitle ? item.subTitle : ""}
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </Table>
+      </Col>
     </Row>
   {/if}
 </div>

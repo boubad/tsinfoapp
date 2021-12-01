@@ -5,9 +5,8 @@
   export let text: string = "";
   export let height: number = 48;
   //
-  $: hasUrl = url && url.trim().length > 0;
 </script>
 
-{#if hasUrl}
+{#if url && url.trim().length > 0}
   <Image src={url} alt={text} {height} />
 {/if}

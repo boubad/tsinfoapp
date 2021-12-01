@@ -158,10 +158,8 @@
       deleteDialogTitle={TITLE_REMOVE_EVT}
       deleteDialogText={TEXT_REMOVE_EVT}
       cancancel={isEvtModified}
-      canremove={false}
       cansave={storeable}
       onCancel={performCancel}
-      onRemove={() => {}}
       onSave={performSave}
     />
   </Row>

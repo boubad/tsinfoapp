@@ -74,7 +74,7 @@
   <Row>
     <Form>
       <Row>
-        <Col>
+        <Col xs="3">
           <InputText
             value={matiere.sigle}
             label={PROMPT_SIGLE}
@@ -82,7 +82,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="3">
           <InputText
             value={matiere.name}
             label={PROMPT_NAME}
@@ -92,7 +92,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="2">
           <InputCoefficient
             value={matiere.coefficient}
             label={PROMPT_COEFFICIENT}
@@ -100,7 +100,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputCoefficient
             value={matiere.ecs}
             label={PROMPT_ECS}
@@ -108,7 +108,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={matiere.module_name}
             label={PROMPT_MODULE_NAME}
@@ -118,20 +118,20 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="6">
           <InputObservations value={matiere.observations} {onValueChanged} />
         </Col>
       </Row>
     </Form>
   </Row>
   <Row>
-    <EditCommands
-      cancancel={isModified}
-      canremove={false}
-      cansave={storeable}
-      onCancel={performCancel}
-      onRemove={() => {}}
-      onSave={performSave}
-    />
+    <Col class="text-center">
+      <EditCommands
+        cancancel={isModified}
+        cansave={storeable}
+        onCancel={performCancel}
+        onSave={performSave}
+      />
+    </Col>
   </Row>
 </div>

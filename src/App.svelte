@@ -6,27 +6,12 @@
   import { routes } from "./routes/routes";
 </script>
 
-<div>
-  <Row>
-    <Col xs="1" />
-    <Col>
-      <InfoNav />
-    </Col>
-    <Col xs="1" />
-  </Row>
-  <Row>
-    <Col xs="1" />
-    <Col>
-      <Global />
-    </Col>
-    <Col xs="1" />
-  </Row>
-  <Row>
-    <Col xs="1" />
-    <!-- Show the router -->
-    <Col>
-      <Router {routes} />
-    </Col>
-    <Col xs="1" />
-  </Row>
-</div>
+<Row>
+  <Col xs="1" />
+  <Col>
+    <InfoNav />
+    <Global />
+    <Router {routes} />
+  </Col>
+  <Col xs="1" />
+</Row>

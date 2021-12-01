@@ -56,7 +56,7 @@
   const onValueChanged = (val: unknown, name: string): void => {
     const pp = { ...groupe, _modified: true };
     pp[name] = val;
-    groupe = {...pp};
+    groupe = { ...pp };
     _checkVars();
   };
   const onGroupeTypeChanged = async (
@@ -94,13 +94,13 @@
   <Row>
     <Form>
       <Row>
-        <Col>
+        <Col xs="3">
           <GroupeTypeChoice
             value={groupe.groupetype}
             onValueChanged={onGroupeTypeChanged}
           />
         </Col>
-        <Col>
+        <Col xs="3">
           <ItemChoice
             items={parents}
             label={PROMPT_PARENT_GROUPE}
@@ -111,7 +111,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="3">
           <InputText
             value={groupe.sigle}
             label={PROMPT_SIGLE}
@@ -119,7 +119,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="3">
           <InputText
             value={groupe.name}
             label={PROMPT_NAME}
@@ -129,18 +129,20 @@
         </Col>
       </Row>
       <Row>
-        <InputObservations value={groupe.observations} {onValueChanged} />
+        <Col xs="6">
+          <InputObservations value={groupe.observations} {onValueChanged} />
+        </Col>
       </Row>
     </Form>
   </Row>
   <Row>
-    <EditCommands
-      cancancel={isModified}
-      canremove={false}
-      cansave={storeable}
-      onCancel={performCancel}
-      onRemove={() => {}}
-      onSave={performSave}
-    />
+    <Col class="text">
+      <EditCommands
+        cancancel={isModified}
+        cansave={storeable}
+        onCancel={performCancel}
+        onSave={performSave}
+      />
+    </Col>
   </Row>
 </div>

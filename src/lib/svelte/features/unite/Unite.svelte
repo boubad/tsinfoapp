@@ -132,23 +132,22 @@
       </Row>
       <Row>
         <Col xs="6">
-          <InputObservations
-            value={unite.observations}
-            {onValueChanged}
-          />
+          <InputObservations value={unite.observations} {onValueChanged} />
         </Col>
       </Row>
     </Form>
   </Row>
   <Row>
-    <EditCommands
-      cancancel={isModified}
-      canremove={unite._rev.length > 0}
-      cansave={storeable}
-      onCancel={performCancel}
-      onRemove={performRemove}
-      onSave={performSave}
-    />
+    <Col class="text-center">
+      <EditCommands
+        cancancel={isModified}
+        canremove={unite._rev.length > 0}
+        cansave={storeable}
+        onCancel={performCancel}
+        onRemove={performRemove}
+        onSave={performSave}
+      />
+    </Col>
   </Row>
   {#if unite._id.length > 0 && unite._rev.length}
     <Row>

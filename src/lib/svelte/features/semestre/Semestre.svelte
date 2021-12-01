@@ -144,14 +144,16 @@
     </Form>
   </Row>
   <Row>
-    <EditCommands
-      cancancel={isModified}
-      canremove={semestre._rev.length > 0}
-      cansave={storeable}
-      onCancel={performCancel}
-      onRemove={performRemove}
-      onSave={performSave}
-    />
+    <Col class="text-center">
+      <EditCommands
+        cancancel={isModified}
+        canremove={semestre._rev.length > 0}
+        cansave={storeable}
+        onCancel={performCancel}
+        onRemove={performRemove}
+        onSave={performSave}
+      />
+    </Col>
   </Row>
   {#if semestre._id.length > 0 && semestre._rev.length > 0}
     <Row>

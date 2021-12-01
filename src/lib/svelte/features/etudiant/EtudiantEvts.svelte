@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { NavLink, Row, Table } from "sveltestrap";
+  import { Col, NavLink, Row, Table } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import {
     ROUTE_ANNEE_DETAIL,
@@ -91,81 +91,89 @@
 
 <div>
   <Row>
-    <h2 class="text-center">{TITLE_ETUDIANT_EVTS}</h2>
+    <Col class="text-center">
+      <h2 class="text-center">{TITLE_ETUDIANT_EVTS}</h2>
+    </Col>
   </Row>
   <Row>
-    <PersonHeader
-      url={etudiant._url}
-      firstname={etudiant.firstname}
-      lastname={etudiant.lastname}
-    />
+    <Col class="text-center">
+      <PersonHeader
+        url={etudiant._url}
+        firstname={etudiant.firstname}
+        lastname={etudiant.lastname}
+      />
+    </Col>
   </Row>
-  <Row>
-    <Table bordered={true} striped={true}>
-      <thead>
-        <tr>
-          <th>{PROMPT_DATE}</th>
-          <th>{PROMPT_ANNEE}</th>
-          <th>{PROMPT_SEMESTRE}</th>
-          <th>{PROMPT_MATIERE}</th>
-          <th>{PROMPT_CONTROLE}</th>
-          <th>{PROMPT_EVT}</th>
-          <th>{PROMPT_OBSERVATIONS}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each items as evt}
-          <tr>
-            <td>
-              <NavLink
-                on:click={() => {
-                  selectItem(evt._id);
-                }}
-              >
-                {DateUtils.toDisplay(evt._date)}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink
-                on:click={() => {
-                  handleSelectAnnee(evt._anneeid);
-                }}
-              >
-                {evt._anneeSigle ? evt._anneeSigle : ""}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink
-                on:click={() => {
-                  handleSelectSemestre(evt._semestreid);
-                }}
-              >
-                {evt._semestreSigle ? evt._semestreSigle : ""}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink
-                on:click={() => {
-                  handleSelectMatiere(evt._matiereid);
-                }}
-              >
-                {evt._matiereSigle ? evt._matiereSigle : ""}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink
-                on:click={() => {
-                  selectControle(evt.controleid);
-                }}
-              >
-                {evt._controleName ? evt._controleName : ""}
-              </NavLink>
-            </td>
-            <td>{ConvertEvtTypeToString(evt.evttype)}</td>
-            <td>{evt.observations ? evt.observations : ""}</td>
-          </tr>
-        {/each}
-      </tbody>
-    </Table>
-  </Row>
+  {#if items.length > 0}
+    <Row>
+      <Col class="text-center">
+        <Table bordered={true} striped={true}>
+          <thead>
+            <tr>
+              <th>{PROMPT_DATE}</th>
+              <th>{PROMPT_ANNEE}</th>
+              <th>{PROMPT_SEMESTRE}</th>
+              <th>{PROMPT_MATIERE}</th>
+              <th>{PROMPT_CONTROLE}</th>
+              <th>{PROMPT_EVT}</th>
+              <th>{PROMPT_OBSERVATIONS}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each items as evt}
+              <tr>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      selectItem(evt._id);
+                    }}
+                  >
+                    {DateUtils.toDisplay(evt._date)}
+                  </NavLink>
+                </td>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      handleSelectAnnee(evt._anneeid);
+                    }}
+                  >
+                    {evt._anneeSigle ? evt._anneeSigle : ""}
+                  </NavLink>
+                </td>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      handleSelectSemestre(evt._semestreid);
+                    }}
+                  >
+                    {evt._semestreSigle ? evt._semestreSigle : ""}
+                  </NavLink>
+                </td>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      handleSelectMatiere(evt._matiereid);
+                    }}
+                  >
+                    {evt._matiereSigle ? evt._matiereSigle : ""}
+                  </NavLink>
+                </td>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      selectControle(evt.controleid);
+                    }}
+                  >
+                    {evt._controleName ? evt._controleName : ""}
+                  </NavLink>
+                </td>
+                <td>{ConvertEvtTypeToString(evt.evttype)}</td>
+                <td>{evt.observations ? evt.observations : ""}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </Table>
+      </Col>
+    </Row>
+  {/if}
 </div>

@@ -102,43 +102,34 @@
 
 <div>
   <Row>
-    <Col xs="1" />
-    <Col xs="6">
+    <Col class="text-center">
       <h2 class="text-center">{TITLE_ETUDIANT_IDENT}</h2>
     </Col>
-    <Col xs="1" />
   </Row>
   <Row>
-    <Col xs="1" />
-    <Col xs="6">
+    <Col class="text-center">
       <PersonHeader
         url={etudiant._url}
         firstname={etudiant.firstname}
         lastname={etudiant.lastname}
       />
     </Col>
-    <Col xs="1" />
   </Row>
   {#if isPersisted}
     <Row>
-      <Col xs="1" />
-      <Col xs="6">
-        <Col class="text-center">
-          <DeleteItem
-            buttonText={COMMAND_REMOVE_ETUDIANT}
-            dialogText={TEXT_REMOVE_ETUDIANT}
-            dialogTitle={TITLE_REMOVE_ETUDIANT}
-            onDeleteItem={onRemoveEtudiant}
-          />
-        </Col>
+      <Col class="text-center">
+        <DeleteItem
+          buttonText={COMMAND_REMOVE_ETUDIANT}
+          dialogText={TEXT_REMOVE_ETUDIANT}
+          dialogTitle={TITLE_REMOVE_ETUDIANT}
+          onDeleteItem={onRemoveEtudiant}
+        />
       </Col>
-      <Col xs="1" />
     </Row>
   {/if}
   <Row>
     <Form>
       <Row>
-        <Col xs="1" />
         <Col xs="2">
           <InputText
             value={etudiant.username}
@@ -159,10 +150,8 @@
             {onValueChanged}
           />
         </Col>
-        <Col xs="1" />
       </Row>
       <Row>
-        <Col xs="1" />
         <Col xs="3">
           <InputText
             value={etudiant.lastname}
@@ -181,10 +170,8 @@
             {onValueChanged}
           />
         </Col>
-        <Col xs="1" />
       </Row>
       <Row>
-        <Col xs="1" />
         <Col xs="2">
           <InputEmail
             value={etudiant.email}
@@ -210,29 +197,26 @@
             {onValueChanged}
           />
         </Col>
-        <Col xs="1" />
       </Row>
       <Row>
-        <Col xs="1" />
-        <Col xs="6">
+        <Col xs="6" class="text-center">
           <InputObservations value={etudiant.observations} {onValueChanged} />
         </Col>
-        <Col xs="1" />
       </Row>
     </Form>
   </Row>
   <Row>
-    <EditCommands
-      cancancel={isModified}
-      canremove={false}
-      cansave={storeable}
-      onCancel={() => {
-        onCancelEtudiant();
-      }}
-      onRemove={() => {}}
-      onSave={async () => {
-        onSaveEtudiant();
-      }}
-    />
+    <Col class="test-center">
+      <EditCommands
+        cancancel={isModified}
+        cansave={storeable}
+        onCancel={() => {
+          onCancelEtudiant();
+        }}
+        onSave={async () => {
+          onSaveEtudiant();
+        }}
+      />
+    </Col>
   </Row>
 </div>

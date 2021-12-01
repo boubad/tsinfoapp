@@ -78,13 +78,13 @@
   <Row>
     <Form>
       <Row>
-        <Col>
+        <Col xs="2">
           <StatusChoice value={status} {onValueChanged} />
         </Col>
-        <Col>
+        <Col xs="2">
           <SexeChoice value={sexe} {onValueChanged} />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputDate
             value={birthdate}
             label={PROMPT_BIRTHDATE}
@@ -94,7 +94,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="3">
           <InputText
             value={lastname}
             label={PROMPT_LASTNAME}
@@ -102,7 +102,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="3">
           <InputText
             value={firstname}
             label={PROMPT_FIRSTNAME}
@@ -112,7 +112,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="3">
           <InputText
             value={email}
             label={PROMPT_EMAIL}
@@ -120,7 +120,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="3">
           <InputText
             value={phone}
             label={PROMPT_PHONE}
@@ -130,7 +130,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="3">
           <InputText
             value={address}
             label={PROMPT_ADDRESS}
@@ -138,7 +138,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="3">
           <InputObservations
             value={DomainConstants.FIELD_OBSERVATIONS}
             {onValueChanged}

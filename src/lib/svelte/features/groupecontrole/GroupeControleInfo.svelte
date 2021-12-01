@@ -19,11 +19,6 @@
   import InputHasNotes from "../../components/InputHasNotes.svelte";
   import InputCoefficient from "../../components/InputCoefficient.svelte";
   import { onMount } from "svelte";
-  import {
-    currentmatierestore,
-    currentsemestrestore,
-  } from "../../stores/globalstores";
-  //
   //
   export let params: any = {};
   let groupecontroles: IGroupeControlesDoc = CreateGroupeControles();
@@ -31,9 +26,6 @@
   let isModified: boolean = false;
   let storeable: boolean = false;
   let controleTitle: string = "";
-  //
-  let semestreid: string = "";
-  let matiereid: string = "";
   //
   const _checkVars = () => {
     isModified = groupecontroles._modified === true;
@@ -49,7 +41,7 @@
   const onValueChanged = (val: unknown, name: string): void => {
     const pp = { ...groupecontroles, _modified: true };
     pp[name] = val;
-    groupecontroles = {...pp};
+    groupecontroles = { ...pp };
     _checkVars();
   };
   const performCancel = (): void => {
@@ -60,7 +52,7 @@
     const pMan = new GroupeControlesServices();
     const r = await pMan.saveItemAsync(groupecontroles);
     if (r.ok && r.item) {
-      groupecontroles = {...r.item};
+      groupecontroles = { ...r.item };
     }
   };
   const performRemove = async (): Promise<void> => {
@@ -72,16 +64,11 @@
   };
   //
   const performRefresh = async (id?: string): Promise<void> => {
-    semestreid = $currentsemestrestore;
-    matiereid = $currentmatierestore;
-    groupecontroles = CreateGroupeControles();
-    groupecontroles.matiereid = matiereid;
-    groupecontroles.semestreid = semestreid;
     if (id && id.trim().length > 0) {
       const pMan = new GroupeControlesServices();
       const p = await pMan.findItemByIdAsync(id);
       if (p) {
-        groupecontroles = {...p};
+        groupecontroles = { ...p };
       }
     } // ig
     prev = { ...groupecontroles };
@@ -93,7 +80,6 @@
   });
   //
 </script>
-
 <div>
   <Row>
     <h2 class="text-center">{controleTitle}</h2>
@@ -102,7 +88,7 @@
     <Col>
       <Form>
         <Row>
-          <Col xs="3"> 
+          <Col xs="3">
             <InputText
               value={groupecontroles.sigle}
               label={PROMPT_SIGLE}
@@ -137,31 +123,30 @@
             />
           </Col>
           <Col xs="2">
-            <InputHasNotes
-              value={groupecontroles.hasnotes}
-              {onValueChanged}
-            />
+            <InputHasNotes value={groupecontroles.hasnotes} {onValueChanged} />
           </Col>
         </Row>
         <Row>
           <Col xs="6">
-          <InputObservations
-            value={groupecontroles.observations}
-            {onValueChanged}
-          />
+            <InputObservations
+              value={groupecontroles.observations}
+              {onValueChanged}
+            />
           </Col>
         </Row>
       </Form>
     </Col>
   </Row>
   <Row>
-    <EditCommands
-      cancancel={isModified}
-      canremove={groupecontroles._rev.length > 0}
-      cansave={storeable}
-      onCancel={performCancel}
-      onRemove={performRemove}
-      onSave={performSave}
-    />
+    <Col class="text-center">
+      <EditCommands
+        cancancel={isModified}
+        canremove={groupecontroles._rev.length > 0}
+        cansave={storeable}
+        onCancel={performCancel}
+        onRemove={performRemove}
+        onSave={performSave}
+      />
+    </Col>
   </Row>
 </div>

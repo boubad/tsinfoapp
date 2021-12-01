@@ -1,9 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
   //
-  import { NavLink, Row, Table } from "sveltestrap";
+  import { Col, NavLink, Row, Table } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
-  import { ROUTE_GROUPECONTROLE_CREATE, ROUTE_GROUPECONTROLE_DETAIL } from "../../../../routes/routesdefs";
+  import {
+    ROUTE_GROUPECONTROLE_CREATE,
+    ROUTE_GROUPECONTROLE_DETAIL,
+  } from "../../../../routes/routesdefs";
   import { GroupeControlesServices } from "../../../data/GroupeControlesServices";
   import type { IGroupeControlesDoc } from "../../../data/IGroupeControlesDoc";
   import ListCommands from "../../components/ListCommands.svelte";
@@ -23,7 +26,9 @@
   let items: IGroupeControlesDoc[] = [];
   //
   const handleCreate = (): void => {
-    InfoRouter(ROUTE_GROUPECONTROLE_CREATE + "/" + semestreid + "/" + matiereid);
+    InfoRouter(
+      ROUTE_GROUPECONTROLE_CREATE + "/" + semestreid + "/" + matiereid
+    );
   };
   //
   const handleSelectGroupeControle = (id: string): void => {
@@ -74,13 +79,15 @@
     <h2 class="text-center">{TITLE_GROUPESCONTROLES}</h2>
   </Row>
   <Row>
-    <ListCommands
-      cancreate={canCreate}
-      canrefresh={canCreate}
-      newbuttontext={COMMAND_NEW_GROUPEDONTROLE}
-      onCreate={handleCreate}
-      onRefresh={performRefresh}
-    />
+    <Col class="text-center">
+      <ListCommands
+        cancreate={canCreate}
+        canrefresh={canCreate}
+        newbuttontext={COMMAND_NEW_GROUPEDONTROLE}
+        onCreate={handleCreate}
+        onRefresh={performRefresh}
+      />
+    </Col>
   </Row>
   {#if items.length > 0}
     <Row>

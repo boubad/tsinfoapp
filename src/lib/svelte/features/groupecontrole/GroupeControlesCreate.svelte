@@ -143,13 +143,13 @@
     </Col>
   </Row>
   <Row>
+    <Col class="text-center">
     <EditCommands
       cancancel={isModified}
-      canremove={false}
       cansave={storeable}
       onCancel={performCancel}
-      onRemove={() => {}}
       onSave={performSave}
     />
+    </Col>
   </Row>
 </div>

@@ -80,27 +80,22 @@
 
 <div>
   <Row>
-    <Col xs="1" />
-    <Col xs="6">
+    <Col class="text-center">
       <h2 class="text-center">{TITLE_ETUDIANT_INFO}</h2>
     </Col>
-    <Col xs="1" />
   </Row>
   <Row>
-    <Col xs="1" />
-    <Col xs="6">
+    <Col class="text-center">
       <PersonHeader
         url={etudiant._url}
         firstname={etudiant.firstname}
         lastname={etudiant.lastname}
       />
     </Col>
-    <Col xs="1" />
   </Row>
   <Row>
     <Form>
       <Row>
-        <Col xs="1" />
         <Col xs="2">
           <InputText
             value={etudiant.departement}
@@ -125,14 +120,12 @@
             {onValueChanged}
           />
         </Col>
-        <Col xs="1" />
       </Row>
       <Row>
-        <Col xs="1" />
         <Col xs="2">
           <InputText
             value={etudiant.seriebac}
-            label={"Série bac."}
+            label={PROMPT_SERIEBAC}
             name={DomainConstants.FIELD_SERIEBAC}
             {onValueChanged}
           />
@@ -140,7 +133,7 @@
         <Col xs="2">
           <InputText
             value={etudiant.optionbac}
-            label={"Option bac."}
+            label={PROMPT_OPTIONBAC}
             name={DomainConstants.FIELD_OPTIONBAC}
             {onValueChanged}
           />
@@ -148,19 +141,17 @@
         <Col xs="2">
           <InputText
             value={etudiant.mentionbac}
-            label={"Mention bac."}
+            label={PROMPT_MENTIONBAC}
             name={DomainConstants.FIELD_MENTIONBAC}
             {onValueChanged}
           />
         </Col>
-        <Col xs="1" />
       </Row>
       <Row>
-        <Col xs="1" />
         <Col xs="2">
           <InputText
             value={etudiant.sup}
-            label={"Etudes sup."}
+            label={PROMPT_ETUDESSUPERIEURES}
             name={DomainConstants.FIELD_ETUDESSUPERIEURES}
             {onValueChanged}
           />
@@ -181,10 +172,8 @@
             {onValueChanged}
           />
         </Col>
-        <Col xs="1" />
       </Row>
       <Row>
-        <Col xs="1" />
         <Col xs="2">
           <InputText
             value={etudiant.ident}
@@ -193,16 +182,13 @@
             {onValueChanged}
           />
         </Col>
-        <Col xs="1" />
       </Row>
     </Form>
   </Row>
   <Row>
-    <Col xs="1" />
-    <Col xs="6">
+    <Col class="text-center">
       <EditCommands
         cancancel={isModified}
-        canremove={false}
         cansave={storeable}
         onCancel={() => {
           onCancelEtudiant();
@@ -210,9 +196,7 @@
         onSave={async () => {
           onSaveEtudiant();
         }}
-        onRemove={() => {}}
       />
     </Col>
-    <Col xs="1" />
   </Row>
 </div>

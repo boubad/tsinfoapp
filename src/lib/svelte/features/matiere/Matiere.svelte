@@ -176,14 +176,16 @@
     </Form>
   </Row>
   <Row>
-    <EditCommands
-      cancancel={isModified}
-      canremove={matiere._rev.length > 0}
-      cansave={storeable}
-      onCancel={performCancel}
-      onRemove={performRemove}
-      onSave={performSave}
-    />
+    <Col class="text-center">
+      <EditCommands
+        cancancel={isModified}
+        canremove={matiere._rev.length > 0}
+        cansave={storeable}
+        onCancel={performCancel}
+        onRemove={performRemove}
+        onSave={performSave}
+      />
+    </Col>
   </Row>
   {#if matiere._id.length > 0 && matiere._rev.length > 0}
     <Row>

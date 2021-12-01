@@ -82,7 +82,7 @@
   <Row>
     <Form>
       <Row>
-        <Col>
+        <Col xs="2">
           <InputText
             value={departement}
             label={PROMPT_DEPARTEMENT}
@@ -90,7 +90,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={ville}
             label={PROMPT_VILLE}
@@ -98,7 +98,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={etablissement}
             label={PROMPT_ETABLISSEMENT}
@@ -108,7 +108,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="2">
           <InputText
             value={seriebac}
             label={PROMPT_SERIEBAC}
@@ -116,7 +116,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={optionbac}
             label={PROMPT_OPTIONBAC}
@@ -124,7 +124,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={mentionbac}
             label={PROMPT_MENTIONBAC}
@@ -134,7 +134,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="2">
           <InputText
             value={sup}
             label={PROMPT_ETUDESSUPERIEURES}
@@ -142,7 +142,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={redoublant}
             label={PROMPT_REDOUBLANT}
@@ -150,7 +150,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col>
+        <Col xs="2">
           <InputText
             value={typeformation}
             label={PROMPT_TYPEFORMATION}
@@ -160,7 +160,7 @@
         </Col>
       </Row>
       <Row>
-        <Col>
+        <Col xs="2">
           <InputText
             value={dossier}
             label={PROMPT_DOSSIER}

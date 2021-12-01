@@ -190,6 +190,7 @@
     </Form>
   </Row>
   <Row>
+    <Col class="text-center">
     <EditCommands
       cancancel={isModified}
       canremove={groupe._rev.length > 0}
@@ -198,6 +199,7 @@
       onRemove={performRemove}
       onSave={performSave}
     />
+    </Col>
   </Row>
   {#if groupe._id.length > 0 && groupe._rev.length > 0}
     <Row>

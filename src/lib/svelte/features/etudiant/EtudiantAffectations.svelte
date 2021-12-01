@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { NavLink, Row, Table } from "sveltestrap";
+  import { Col, NavLink, Row, Table } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import {
     ROUTE_ANNEE_DETAIL,
@@ -85,79 +85,87 @@
 
 <div>
   <Row>
-    <h2 class="text-center">{TITLE_ETUDIANT_AFFECTATIONS}</h2>
+    <Col class="text-center">
+      <h2 class="text-center">{TITLE_ETUDIANT_AFFECTATIONS}</h2>
+    </Col>
   </Row>
   <Row>
-    <PersonHeader
-      url={etudiant._url}
-      firstname={etudiant.firstname}
-      lastname={etudiant.lastname}
-    />
+    <Col class="text-center">
+      <PersonHeader
+        url={etudiant._url}
+        firstname={etudiant.firstname}
+        lastname={etudiant.lastname}
+      />
+    </Col>
   </Row>
-  <Row>
-    <Table bordered={true} striped={true}>
-      <thead>
-        <tr>
-          <th>{PROMPT_ANNEE}</th>
-          <th>{PROMPT_SEMESTRE}</th>
-          <th>{PROMPT_GROUPE}</th>
-          <th>{PROMPT_STARTDATE}</th>
-          <th>{PROMPT_ENDDATE}</th>
-          <th>{PROMPT_OBSERVATIONS}</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each items as aff}
-          <tr>
-            <td>
-              <NavLink
-                on:click={() => {
-                  handleSelectAnnee(aff.anneeid);
-                }}
-              >
-                {aff._anneeSigle ? aff._anneeSigle : ""}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink
-                on:click={() => {
-                  handleSelectSemestre(aff._semestreid);
-                }}
-              >
-                {aff._semestreSigle ? aff._semestreSigle : ""}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink
-                on:click={() => {
-                  handleSelectGroupe(aff.groupeid);
-                }}
-              >
-                {aff._groupeSigle ? aff._groupeSigle : ""}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink
-                on:click={() => {
-                  handleSelectEtudAffectation(aff._id);
-                }}
-              >
-                {DateUtils.toDisplay(aff.startdate)}
-              </NavLink>
-            </td>
-            <td>
-              <NavLink
-                on:click={() => {
-                  handleSelectEtudAffectation(aff._id);
-                }}
-              >
-                {DateUtils.toDisplay(aff.enddate)}
-              </NavLink>
-            </td>
-            <td>{aff.observations}</td>
-          </tr>
-        {/each}
-      </tbody>
-    </Table>
-  </Row>
+  {#if items.length > 0}
+    <Row>
+      <Col class="text-center">
+        <Table bordered={true} striped={true}>
+          <thead>
+            <tr>
+              <th>{PROMPT_ANNEE}</th>
+              <th>{PROMPT_SEMESTRE}</th>
+              <th>{PROMPT_GROUPE}</th>
+              <th>{PROMPT_STARTDATE}</th>
+              <th>{PROMPT_ENDDATE}</th>
+              <th>{PROMPT_OBSERVATIONS}</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each items as aff}
+              <tr>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      handleSelectAnnee(aff.anneeid);
+                    }}
+                  >
+                    {aff._anneeSigle ? aff._anneeSigle : ""}
+                  </NavLink>
+                </td>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      handleSelectSemestre(aff._semestreid);
+                    }}
+                  >
+                    {aff._semestreSigle ? aff._semestreSigle : ""}
+                  </NavLink>
+                </td>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      handleSelectGroupe(aff.groupeid);
+                    }}
+                  >
+                    {aff._groupeSigle ? aff._groupeSigle : ""}
+                  </NavLink>
+                </td>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      handleSelectEtudAffectation(aff._id);
+                    }}
+                  >
+                    {DateUtils.toDisplay(aff.startdate)}
+                  </NavLink>
+                </td>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      handleSelectEtudAffectation(aff._id);
+                    }}
+                  >
+                    {DateUtils.toDisplay(aff.enddate)}
+                  </NavLink>
+                </td>
+                <td>{aff.observations}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </Table>
+      </Col>
+    </Row>
+  {/if}
 </div>
