@@ -4,19 +4,26 @@
     // Pour plus d'informations, visitez : https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-    {
-        "type": "firefox",
-        "request": "launch",
-        "reAttach": true,
-        "name": "Firefox",
-        "url": "http://localhost:5000/index.html",
-        "webRoot": "${workspaceFolder}/public"
-    },
+        {
+            "type": "firefox",
+            "request": "launch",
+            "reAttach": true,
+            "name": "Firefox",
+            "url": "http://localhost:5000/index.html",
+            "webRoot": "${workspaceFolder}/public"
+        },
         {
             "type": "pwa-msedge",
             "request": "launch",
-            "name": "Launch Edge against localhost",
+            "name": "Edge",
             "url": "http://localhost:5000",
+            "webRoot": "${workspaceFolder}/public"
+        },
+        {
+            "name": "DevTools",
+            "request": "launch",
+            "type": "vscode-edge-devtools.debug",
+            "url": "http://localhost:5000", // Provide your project's url to finish configuring
             "webRoot": "${workspaceFolder}/public"
         }
     ]
