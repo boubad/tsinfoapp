@@ -9,4 +9,6 @@
 
 {#if url && url.trim().length > 0}
   <Image src={url} alt={text} {height} />
+{:else}
+  <div />
 {/if}

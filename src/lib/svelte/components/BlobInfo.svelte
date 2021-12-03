@@ -13,7 +13,6 @@
     TITLE_BLOBS_DELETE,
   } from "../InfoPrompt";
   //
-  export let busy: boolean = false;
   export let parentid: string = "";
   export let blobs: IAttachedDoc[] = [];
   export let onSave: (
@@ -37,7 +36,7 @@
 <div>
   <Row>
     <Col>
-      <InputFile onFileSelected={onSave} {busy} {parentid} />
+      <InputFile onFileSelected={onSave} {parentid} />
     </Col>
   </Row>
   {#if blobs && blobs.length > 0}
@@ -54,7 +53,7 @@
           <tbody>
             {#each blobs as bx}
               <tr>
-                <th>
+                <td>
                   {#if bx.url && bx.url.length > 0}
                     <a
                       href={bx.url}
@@ -64,11 +63,10 @@
                       {bx.name}
                     </a>
                   {:else}{bx.name}{/if}
-                </th>
+                </td>
                 <td>{bx.content_type}</td>
                 <td>
                   <DeleteItem
-                    {busy}
                     buttonText={COMMAND_REMOVE}
                     dialogTitle={TITLE_BLOBS_DELETE}
                     dialogText={TEXT_BLOBS_DELETE}

@@ -1,13 +1,12 @@
 <script lang="ts">
   //
-  import { Input} from "sveltestrap";
+  import { Input } from "sveltestrap";
   import { IdUtils } from "../IdUtils";
 
   //
   export let value: boolean = false;
   export let label: string = "";
   export let name: string = "";
-  export let busy: boolean = false;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _value,
     _name
@@ -27,10 +26,8 @@
   class="font-weight-bold"
   type="checkbox"
   checked={value}
-  readonly={busy}
   {label}
   {name}
   {id}
-  disabled={busy}
   on:change={onChanged}
 />

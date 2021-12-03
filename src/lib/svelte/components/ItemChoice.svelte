@@ -7,7 +7,6 @@
   export let value: string = "";
   export let label: string = "";
   export let name: string = "";
-  export let busy: boolean = false;
   export let items: IDataOption[] = [];
   export let onValueChanged: (val: unknown, name: string) => void = (
     _val: unknown,
@@ -29,10 +28,8 @@
     class="font-weight-bold"
     type="select"
     size={1}
-    readonly={busy}
     {name}
     {id}
-    disabled={busy}
     on:change={onChanged}
     bind:value
   >

@@ -7,17 +7,11 @@
     Row,
   } from "sveltestrap";
   //
-  export let busy: boolean = false;
   export let page: number = 1;
   export let pagesCount: number = 0;
   export let pages: number[] = [];
   export let lpath: string = "#";
   export let onGotoPage: (p: number) => void = (_p: number) => {};
-  //
-  $: canDisplay = pagesCount > 1;
-  $: canPrev = page > 1;
-  $: canNext = page < pagesCount;
-  $: currentPath = "#" + lpath;
   //
   const onNavigate = (n: number) => {
     if (n > 0 && page !== n) {
@@ -27,24 +21,24 @@
   //
 </script>
 
-{#if canDisplay && !busy}
-  <div>
+<div>
+  {#if pagesCount > 1}
     <Row class="text-center">
       <Col class="text-center">
         <Pagination>
-          <PaginationItem disabled={!canPrev}>
+          <PaginationItem disabled={page <= 1}>
             <PaginationLink
               first
-              href={currentPath}
+              href={"#" + lpath}
               on:click={() => {
                 onNavigate(1);
               }}
             />
           </PaginationItem>
-          <PaginationItem disabled={!canPrev}>
+          <PaginationItem disabled={page <= 1}>
             <PaginationLink
               previous
-              href={currentPath}
+              href={"#" + lpath}
               on:click={() => {
                 onNavigate(page - 1);
               }}
@@ -53,7 +47,7 @@
           {#each pages as p (p)}
             <PaginationItem active={p === page}>
               <PaginationLink
-                href={currentPath}
+                href={"#" + lpath}
                 on:click={() => {
                   onNavigate(p);
                 }}
@@ -62,19 +56,19 @@
               </PaginationLink>
             </PaginationItem>
           {/each}
-          <PaginationItem disabled={!canNext}>
+          <PaginationItem disabled={page >= pagesCount}>
             <PaginationLink
               next
-              href={currentPath}
+              href={"#" + lpath}
               on:click={() => {
                 onNavigate(page + 1);
               }}
             />
           </PaginationItem>
-          <PaginationItem disabled={!canNext}>
+          <PaginationItem disabled={page >= pagesCount}>
             <PaginationLink
               last
-              href={currentPath}
+              href={"#" + lpath}
               on:click={() => {
                 onNavigate(pagesCount);
               }}
@@ -88,5 +82,5 @@
         </strong></Col
       >
     </Row>
-  </div>
-{/if}
+  {/if}
+</div>

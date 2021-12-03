@@ -7,8 +7,7 @@
   export let value: string = "";
   export let label: string = "";
   export let name: string = "";
-  export let busy: boolean = false;
-  export let size:number = 63;
+  export let size: number = 63;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _value,
     _name
@@ -32,10 +31,8 @@
     class="font-weight-bold"
     type="text"
     {size}
-    readonly={busy}
     {name}
     {id}
-    disabled={busy}
     on:change={onChanged}
     bind:value
   />

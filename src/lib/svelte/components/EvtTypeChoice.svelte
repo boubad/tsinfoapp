@@ -16,7 +16,6 @@
   export let value: EvtType = EvtType.Inconnu;
   export let label: string = PROMPT_EVTTYPE;
   export let name: string = DomainConstants.FIELD_EVTTYPE;
-  export let busy: boolean = false;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _val: any,
     _name: string
@@ -33,11 +32,4 @@
   };
 </script>
 
-<ItemChoice
-  {busy}
-  {items}
-  {label}
-  {name}
-  onValueChanged={valueChanged}
-  value={sval}
-/>
+<ItemChoice {items} {label} {name} onValueChanged={valueChanged} value={sval} />

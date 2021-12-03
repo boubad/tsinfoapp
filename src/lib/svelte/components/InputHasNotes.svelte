@@ -14,7 +14,6 @@
   export let value: boolean = false;
   export let label: string = PROMPT_HASNOTES;
   export let name: string = DomainConstants.FIELD_HASNOTES;
-  export let busy: boolean = false;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _val: any,
     _name: string
@@ -28,4 +27,4 @@
   //
 </script>
 
-<InputBoolean {busy} {items} {label} {name} {onValueChanged} {value} />
+<InputBoolean {items} {label} {name} {onValueChanged} {value} />

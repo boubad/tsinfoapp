@@ -9,7 +9,6 @@
   export let value: string = "";
   export let label: string = PROMPT_OBSERVATIONS;
   export let name: string = DomainConstants.FIELD_OBSERVATIONS;
-  export let busy: boolean = false;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _val: any,
     _name: string
@@ -31,10 +30,8 @@
     class="font-weight-bold"
     type="textarea"
     size={512}
-    readonly={busy}
     {name}
     {id}
-    disabled={busy}
     on:change={onChanged}
     bind:value
   />

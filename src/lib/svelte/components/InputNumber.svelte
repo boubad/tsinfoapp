@@ -4,8 +4,7 @@
   export let value: number | null;
   export let label: string;
   export let name: string;
-  export let busy: boolean = false;
-  export let size:number = 6;
+  export let size: number = 6;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _val: any,
     _name: string
@@ -29,4 +28,4 @@
   };
 </script>
 
-<InputText {busy} {label} {size} value={sval} onValueChanged={valueChanged} {name} />
+<InputText {label} {size} value={sval} onValueChanged={valueChanged} {name} />

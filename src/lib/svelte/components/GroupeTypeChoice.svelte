@@ -14,7 +14,6 @@
   export let value: GroupeType = GroupeType.Unknown;
   export let label: string = PROMPT_GROUPETYPE;
   export let name: string = DomainConstants.FIELD_GROUPETYPE;
-  export let busy: boolean = false;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _val: any,
     _name: string
@@ -32,11 +31,4 @@
   //
 </script>
 
-<ItemChoice
-  {busy}
-  {items}
-  {label}
-  {name}
-  onValueChanged={valueChanged}
-  value={sval}
-/>
+<ItemChoice {items} {label} {name} onValueChanged={valueChanged} value={sval} />

@@ -10,7 +10,6 @@
   } from "../InfoPrompt";
   import DeleteItem from "./DeleteItem.svelte";
   //
-  export let busy: boolean = false;
   export let canremove: boolean = false;
   export let cansave: boolean = false;
   export let cancancel: boolean = false;
@@ -23,34 +22,31 @@
   //
 </script>
 
-{#if !busy}
-  <div>
-    <Row>
-      {#if cancancel}
-        <Col>
-          <Button color="secondary" on:click={onCancel}>
-            {COMMAND_CANCEL}
-          </Button>
-        </Col>
-      {/if}
-      {#if cansave}
-        <Col>
-          <Button color="success" on:click={onSave}>
-            {COMMAND_SAVE}
-          </Button>
-        </Col>
-      {/if}
-      {#if canremove}
-        <Col>
-          <DeleteItem
-            {busy}
-            buttonText={deleteButtonText}
-            onDeleteItem={onRemove}
-            dialogTitle={deleteDialogTitle}
-            dialogText={deleteDialogText}
-          />
-        </Col>
-      {/if}
-    </Row>
-  </div>
-{/if}
+<div>
+  <Row>
+    {#if cancancel}
+      <Col>
+        <Button color="secondary" on:click={onCancel}>
+          {COMMAND_CANCEL}
+        </Button>
+      </Col>
+    {/if}
+    {#if cansave}
+      <Col>
+        <Button color="success" on:click={onSave}>
+          {COMMAND_SAVE}
+        </Button>
+      </Col>
+    {/if}
+    {#if canremove}
+      <Col>
+        <DeleteItem
+          buttonText={deleteButtonText}
+          onDeleteItem={onRemove}
+          dialogTitle={deleteDialogTitle}
+          dialogText={deleteDialogText}
+        />
+      </Col>
+    {/if}
+  </Row>
+</div>

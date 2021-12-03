@@ -154,9 +154,7 @@
             value={controle.groupecontroleid}
             label={PROMPT_GROUPECONTROLES}
             name={DomainConstants.FIELD_GROUPECONTROLEID}
-            busy={true}
             {items}
-            {onValueChanged}
           />
         </Col>
       </Row>

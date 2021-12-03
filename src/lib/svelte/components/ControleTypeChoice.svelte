@@ -14,7 +14,6 @@
   export let value: ControleType = ControleType.Unknown;
   export let label: string = PROMPT_CONTROLETYPE;
   export let name: string = DomainConstants.FIELD_CONTROLETYPE;
-  export let busy: boolean = false;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _val: any,
     _name: string
@@ -34,11 +33,4 @@
   //
 </script>
 
-<ItemChoice
-  {busy}
-  {items}
-  {label}
-  {name}
-  onValueChanged={valueChanged}
-  value={sval}
-/>
+<ItemChoice {items} {label} {name} onValueChanged={valueChanged} value={sval} />

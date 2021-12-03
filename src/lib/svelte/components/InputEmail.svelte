@@ -7,8 +7,7 @@
   export let value: string = "";
   export let label: string = "";
   export let name: string = "";
-  export let busy: boolean = false;
-  export let size:number = 63;
+  export let size: number = 63;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _val: any,
     _name: string
@@ -30,8 +29,6 @@
     class="font-weight-bold"
     type="email"
     {size}
-    readonly={busy}
-    disabled={busy}
     {name}
     {id}
     on:change={onChanged}

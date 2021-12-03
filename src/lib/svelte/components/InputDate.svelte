@@ -9,8 +9,7 @@
   export let name: string = "";
   export let min: string = "1980-01-01";
   export let max: string = "2030-12-31";
-  export let busy: boolean = false;
-  export let size:number = 23;
+  export let size: number = 23;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _val: any,
     _name: string
@@ -32,12 +31,10 @@
     class="font-weight-bold"
     type="date"
     {size}
-    readonly={busy}
     {name}
     {id}
     {min}
     {max}
-    disabled={busy}
     on:change={onChanged}
     bind:value
   />

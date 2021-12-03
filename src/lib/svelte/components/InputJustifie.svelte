@@ -15,7 +15,6 @@
   export let value: boolean;
   export let label: string = PROMPT_JUSTIFIE;
   export let name: string = DomainConstants.FIELD_JUSTIFIE;
-  export let busy: boolean = false;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _val: any,
     _name: string
@@ -29,4 +28,4 @@
   //
 </script>
 
-<InputBoolean {busy} {items} {label} {name} {onValueChanged} {value} />
+<InputBoolean {items} {label} {name} {onValueChanged} {value} />

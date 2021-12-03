@@ -15,7 +15,6 @@
   export let value: string = "";
   export let label: string = PROMPT_SEXE;
   export let name: string = DomainConstants.FIELD_SEXE;
-  export let busy: boolean = false;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _val: any,
     _name: string
@@ -28,4 +27,4 @@
   ];
 </script>
 
-<ItemChoice {busy} {items} {label} {name} {onValueChanged} {value} />
+<ItemChoice {items} {label} {name} {onValueChanged} {value} />

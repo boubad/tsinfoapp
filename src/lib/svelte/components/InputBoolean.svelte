@@ -9,7 +9,6 @@
   export let value: boolean;
   export let label: string;
   export let name: string;
-  export let busy: boolean = false;
   export let items: IDataOption[];
   export let onValueChanged: (val: unknown, name: string) => void = (
     _val: any,
@@ -30,11 +29,4 @@
   //
 </script>
 
-<ItemChoice
-  {busy}
-  {items}
-  {label}
-  {name}
-  onValueChanged={valueChanged}
-  value={sval}
-/>
+<ItemChoice {items} {label} {name} onValueChanged={valueChanged} value={sval} />

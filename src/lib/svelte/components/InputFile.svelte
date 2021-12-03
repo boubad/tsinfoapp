@@ -4,7 +4,6 @@
   import { IdUtils } from "../IdUtils";
   import { PROMPT_FICHIER } from "../InfoPrompt";
   //
-  export let busy: boolean = false;
   export let parentid: string = "";
   export let onFileSelected: (
     name: string,
@@ -16,8 +15,7 @@
     _mime: string,
     _data: Blob,
     _parentid?: string
-  ) =>{};
-  //
+  ) => {};
   //
   interface IMyEvent extends EventTarget {
     target: { files: any; result: any };
@@ -49,10 +47,8 @@
   <Input
     class={"font-weight-bold"}
     size={255}
-    readonly={!busy}
     type={"file"}
     name={"file"}
-    disabled={busy}
     {id}
     on:change={handleChange}
   />

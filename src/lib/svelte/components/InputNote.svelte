@@ -7,7 +7,6 @@
   export let value: number | null;
   export let label: string = PROMPT_NOTE;
   export let name: string = DomainConstants.FIELD_VALUE;
-  export let busy: boolean = false;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _val: any,
     _name: string
@@ -29,4 +28,4 @@
   };
 </script>
 
-<InputNumber {busy} {label} {value} onValueChanged={valueChanged} {name} />
+<InputNumber {label} {value} onValueChanged={valueChanged} {name} />
