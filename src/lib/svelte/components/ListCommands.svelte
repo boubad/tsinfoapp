@@ -24,8 +24,9 @@
       </Button>
     </Col>
   {/if}
+  <Col xs="1" />
   {#if cancreate}
-    <Col xs="2" class="text-center">
+    <Col xs="4" class="text-center">
       <Button
         color="secondary"
         on:click={() => {

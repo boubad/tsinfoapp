@@ -41,9 +41,7 @@
     evtTitle =
       DateUtils.toDisplay(evt._date) +
       " - " +
-      (evt._controleName ? evt._controleName : "") +
-      " " +
-      COMMAND_NEW_EVT;
+      (evt._controleName ? evt._controleName : "");
   }; // _checkVars
   //
   const performRefresh = async (id?: string): Promise<void> => {
@@ -128,14 +126,16 @@
 
 <div>
   <Row>
-    <h2>{evtTitle}</h2>
+    <h2 class="text-center">{evtTitle}</h2>
   </Row>
   <Row>
+    <Col class="text-center">
     <PersonHeader
       url={evt._url}
       firstname={evt._firstname}
       lastname={evt._lastname}
     />
+    </Col>
   </Row>
   <Row>
     <Form>
@@ -163,6 +163,7 @@
     </Form>
   </Row>
   <Row>
+    <Col class="text-center">
     <EditCommands
       deleteDialogTitle={TITLE_REMOVE_EVT}
       deleteDialogText={TEXT_REMOVE_EVT}
@@ -173,6 +174,7 @@
       onRemove={performRemove}
       onSave={performSave}
     />
+    </Col>
   </Row>
   <Row>
     <BlobInfo

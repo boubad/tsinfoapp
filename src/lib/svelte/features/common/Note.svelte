@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Form, Row } from "sveltestrap";
+  import { Col, Form, Row } from "sveltestrap";
   import { DateUtils } from "../../../data/DateUtils";
   import type { IAttachedDoc } from "../../../data/IAttachedDoc";
   import { initialNote, INoteDoc } from "../../../data/INoteDoc";
@@ -105,33 +105,39 @@
 
 <div>
   <Row>
-    <h2>{noteTitle}</h2>
+    <h2 class="text-center">{noteTitle}</h2>
   </Row>
   <Row>
-    <PersonHeader
-      url={note._url}
-      firstname={note._firstname}
-      lastname={note._lastname}
-    />
+    <Col class="text-center">
+      <PersonHeader
+        url={note._url}
+        firstname={note._firstname}
+        lastname={note._lastname}
+      />
+    </Col>
   </Row>
   <Row>
-    <Form>
+    <Col xs="2">
       <InputNote value={note.value} onValueChanged={onChangeValue} />
+    </Col>
+    <Col xs="6">
       <InputObservations
         value={note.observations}
         onValueChanged={onChangeValue}
       />
-    </Form>
+    </Col>
   </Row>
   <Row>
-    <EditCommands
-      deleteDialogTitle={TITLE_REMOVE_NOTE}
-      deleteDialogText={TEXT_REMOVE_NOTE}
-      cancancel={isNoteModified}
-      cansave={isNoteModified}
-      onCancel={performCancel}
-      onSave={performSave}
-    />
+    <Col class="text-center">
+      <EditCommands
+        deleteDialogTitle={TITLE_REMOVE_NOTE}
+        deleteDialogText={TEXT_REMOVE_NOTE}
+        cancancel={isNoteModified}
+        cansave={isNoteModified}
+        onCancel={performCancel}
+        onSave={performSave}
+      />
+    </Col>
   </Row>
   <Row>
     <BlobInfo
