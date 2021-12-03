@@ -184,14 +184,16 @@
         </Form>
       </Row>
       <Row>
-        <EditCommands
-          cancancel={isModified}
-          canremove={annee._rev.length > 0}
-          cansave={storeable}
-          onCancel={_performCancel}
-          onRemove={_performRemove}
-          onSave={_performSave}
-        />
+        <Col class="text-center">
+          <EditCommands
+            cancancel={isModified}
+            canremove={annee._rev.length > 0}
+            cansave={storeable}
+            onCancel={_performCancel}
+            onRemove={_performRemove}
+            onSave={_performSave}
+          />
+        </Col>
       </Row>
       {#if annee._id.length > 0 && annee._rev.length > 0}
         <Row>

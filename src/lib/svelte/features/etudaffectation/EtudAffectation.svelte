@@ -165,14 +165,16 @@
     </Form>
   </Row>
   <Row>
-    <EditCommands
-      cancancel={isModified}
-      canremove={etudaffectation._rev.length > 0}
-      cansave={storeable}
-      onCancel={performCancel}
-      onRemove={performRemove}
-      onSave={performSave}
-    />
+    <Col class="text-center">
+      <EditCommands
+        cancancel={isModified}
+        canremove={etudaffectation._rev.length > 0}
+        cansave={storeable}
+        onCancel={performCancel}
+        onRemove={performRemove}
+        onSave={performSave}
+      />
+    </Col>
   </Row>
   <Row>
     <BlobInfo

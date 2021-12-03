@@ -2,7 +2,7 @@
   import { onMount } from "svelte";
 
   //
-  import { NavLink, Row, Table } from "sveltestrap";
+  import { Col, NavLink, Row, Table } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import {
     ROUTE_GROUPECONTROLE_CREATE,
@@ -103,6 +103,7 @@
     <h2 class="text-center">{TITLE_CONTROLES_LIST}</h2>
   </Row>
   <Row>
+    <Col class="center">
     <ListCommands
       cancreate={anneeid.length > 0 && groupeid.length > 0}
       canrefresh={anneeid.length > 0 && groupeid.length > 0}
@@ -110,6 +111,7 @@
       onCreate={handleCreate}
       onRefresh={performRefresh}
     />
+    </Col>
   </Row>
   {#if items.length > 0}
     <Row>

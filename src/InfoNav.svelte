@@ -22,7 +22,7 @@
     TITLE_GROUPES,
     TITLE_GROUPESCONTROLES,
     TITLE_MATIERES,
-    TITLE_OPTIONS,
+    TITLE_MENU,
     TITLE_SEMESTRES,
     TITLE_UNITES,
   } from "./lib/svelte/InfoPrompt";
@@ -91,7 +91,7 @@
         <NavLink href={ROUTE_ETUDIANTS_LIST}>{TITLE_ETUDIANTS}</NavLink>
       </NavItem>
       <Dropdown nav inNavbar>
-        <DropdownToggle nav caret>{TITLE_OPTIONS}</DropdownToggle>
+        <DropdownToggle nav caret>{TITLE_MENU}</DropdownToggle>
         <DropdownMenu end>
           <DropdownItem
             on:click={() => {

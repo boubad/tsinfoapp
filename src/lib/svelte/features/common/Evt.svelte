@@ -130,11 +130,11 @@
   </Row>
   <Row>
     <Col class="text-center">
-    <PersonHeader
-      url={evt._url}
-      firstname={evt._firstname}
-      lastname={evt._lastname}
-    />
+      <PersonHeader
+        url={evt._url}
+        firstname={evt._firstname}
+        lastname={evt._lastname}
+      />
     </Col>
   </Row>
   <Row>
@@ -163,17 +163,17 @@
     </Form>
   </Row>
   <Row>
-    <Col class="text-center">
-    <EditCommands
-      deleteDialogTitle={TITLE_REMOVE_EVT}
-      deleteDialogText={TEXT_REMOVE_EVT}
-      cancancel={isEvtModified}
-      canremove={evt._rev.trim().length > 0 && evt._id.length > 0}
-      cansave={storeable}
-      onCancel={performCancel}
-      onRemove={performRemove}
-      onSave={performSave}
-    />
+    <Col xs="6" class="text-center">
+      <EditCommands
+        deleteDialogTitle={TITLE_REMOVE_EVT}
+        deleteDialogText={TEXT_REMOVE_EVT}
+        cancancel={isEvtModified}
+        canremove={evt._rev.trim().length > 0 && evt._id.length > 0}
+        cansave={storeable}
+        onCancel={performCancel}
+        onRemove={performRemove}
+        onSave={performSave}
+      />
     </Col>
   </Row>
   <Row>

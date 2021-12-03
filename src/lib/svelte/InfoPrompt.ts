@@ -171,5 +171,5 @@ export const TITLE_UNITES = "Unités d'enseignement";
 export const TITLE_HOME = "Accueil";
 export const TITLE_CONTROLES = "Contrôles";
 export const TITLE_ETUDIANTS = "Etudiants";
-export const TITLE_OPTIONS = "Options";
+export const TITLE_MENU = "Menu";
 export const TITLE_FILTERETUDIANTS = "Filtre étudiants";
