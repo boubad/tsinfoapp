@@ -60,11 +60,14 @@
                       target={"_blank"}
                       rel={"noopener norefrerrer"}
                     >
-                      {bx.name}
+                      <strong>{bx.name}</strong>
                     </a>
                   {:else}{bx.name}{/if}
                 </td>
-                <td>{bx.content_type}</td>
+                <td>
+                  <strong>{bx.content_type}</strong>
+                  
+                </td>
                 <td>
                   <DeleteItem
                     buttonText={COMMAND_REMOVE}

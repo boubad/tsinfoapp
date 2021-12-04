@@ -15,6 +15,7 @@
   import PhotoComponent from "../../components/PhotoComponent.svelte";
   import {
     PROMPT_EVTS,
+    PROMPT_GROUPE,
     PROMPT_NAME,
     PROMPT_NOTE,
     PROMPT_OBSERVATIONS,
@@ -122,7 +123,13 @@
           {page}
           {pagesCount}
           {onGotoPage}
-          lpath={ROUTE_MATIERE_STAT + "/" + anneeid + "/" + semestreid + "/" + matiereid}
+          lpath={ROUTE_MATIERE_STAT +
+            "/" +
+            anneeid +
+            "/" +
+            semestreid +
+            "/" +
+            matiereid}
         />
       </Col>
     </Row>
@@ -134,6 +141,7 @@
           <tr>
             <th>{PROMPT_PHOTO}</th>
             <th>{PROMPT_NAME}</th>
+            <th>{PROMPT_GROUPE}</th>
             <th>{PROMPT_NOTE}</th>
             <th>{PROMPT_EVTS}</th>
             <th>{PROMPT_OBSERVATIONS}</th>
@@ -151,17 +159,22 @@
                     handleSelectEtudiant(item.id);
                   }}
                 >
-                  {item.name}
+                  <strong> {item.name}</strong>
                 </NavLink>
               </td>
+              <td>
+                <strong>{item.groupe}</strong>
+              </td>
               <td class="float-right">
-                <strong> {item.note < 0 ? "" : "" + item.note}</strong>
+                {#if item.note >= 0}
+                  <strong> {item.note}</strong>
+                {/if}
               </td>
               <td>
                 {#if item.evts.length > 0}
                   <ul>
                     {#each item.evts as ev}
-                      <li>{ev}</li>
+                      <li><strong>{ev}</strong></li>
                     {/each}
                   </ul>
                 {/if}
@@ -170,7 +183,7 @@
                 {#if item.observations.length > 0}
                   <ul>
                     {#each item.observations as o}
-                      <li>{o}</li>
+                      <li><strong>{o}</strong></li>
                     {/each}
                   </ul>
                 {/if}

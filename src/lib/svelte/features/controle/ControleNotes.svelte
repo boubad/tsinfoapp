@@ -153,10 +153,16 @@
         {#each items as note}
           <tr class="align-middle">
             <td>
-              <PhotoComponent
-                url={note._url}
-                text={note._fullname ? note._fullname : ""}
-              />
+              <NavLink
+                on:click={() => {
+                  handleSelectEtudiant(note.etudiantid);
+                }}
+              >
+                <PhotoComponent
+                  url={note._url}
+                  text={note._fullname ? note._fullname : ""}
+                />
+              </NavLink>
             </td>
             <td>
               <NavLink
@@ -164,15 +170,31 @@
                   handleSelectEtudiant(note.etudiantid);
                 }}
               >
-                {note._fullname ? note._fullname : ""}
+                <strong>{note._fullname ? note._fullname : ""}</strong>
               </NavLink>
             </td>
             <td class="float-right">
-              {note.value !== undefined && note.value !== null
-                ? "" + note.value
-                : ""}
+              <NavLink
+                on:click={() => {
+                  handleSelectNote(note._id);
+                }}
+              >
+                <strong
+                  >{note.value !== undefined && note.value !== null
+                    ? "" + note.value
+                    : ""}</strong
+                >
+              </NavLink>
             </td>
-            <td>{note.observations ? note.observations : ""}</td>
+            <td>
+              <NavLink
+                on:click={() => {
+                  handleSelectNote(note._id);
+                }}
+              >
+                <strong>{note.observations ? note.observations : ""}</strong>
+              </NavLink>
+            </td>
             <td>
               <NavLink
                 on:click={() => {

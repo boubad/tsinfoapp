@@ -25,7 +25,7 @@
 </script>
 
 <FormGroup>
-  <Label for={id} class="font-weight-bold ">{label}</Label>
+  <Label for={id} class="font-weight-bold "><strong>{label}</strong></Label>
   <Input
     class="font-weight-bold"
     type="textarea"

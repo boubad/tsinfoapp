@@ -25,7 +25,7 @@
 
 <FormGroup>
   <Label for={id} class="font-weight-bold"
-    ><span class="font-weight-bold">{label}</span></Label
+    ><span class="font-weight-bold"><strong>{label}</strong></span></Label
   >
   <Input
     class="font-weight-bold"

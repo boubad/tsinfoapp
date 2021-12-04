@@ -5,6 +5,7 @@ import { DomainConstants } from './DomainConstants';
 import type { ICumuItem } from './ICumulItem';
 import { initialEtudiant } from './IEtudiantDoc';
 import { EvtType, ConvertEvtTypeToString } from './EvtType';
+import { initialGroupe } from './IGroupeDoc';
 //
 export class StatServices extends BaseServices {
     constructor(store?: IDataStore, dbUrl?: string
@@ -13,6 +14,10 @@ export class StatServices extends BaseServices {
     } // constructor
     public async getMatiereStats(anneeid: string, semestreid: string, matiereid: string): Promise<readonly IMatiereStatItem[]> {
         const pRet: IMatiereStatItem[] = [];
+        if (anneeid.length < 1 || semestreid.length < 1 || matiereid.length < 1) {
+            return pRet;
+        }
+        const groupesMap: Map<string, string> = new Map<string, string>();
         const workMap: Map<string, ICumuItem> = new Map<string, ICumuItem>();
         const dataMap: Map<string, IMatiereStatItem> = new Map<string, IMatiereStatItem>();
         const store = this.datastore;
@@ -27,10 +32,25 @@ export class StatServices extends BaseServices {
             }
             const filterControles: Record<string, unknown> = { doctype: DomainConstants.TYPE_CONTROLE, groupecontroleid, anneeid };
             const conts = await store.findAllDocsBySelectorAsync(filterControles, [DomainConstants.FIELD_ID,
-            DomainConstants.FIELD_COEFFICIENT, DomainConstants.FIELD_DATE]);
+            DomainConstants.FIELD_COEFFICIENT, DomainConstants.FIELD_DATE, DomainConstants.FIELD_GROUPEID]);
             const m = conts.length;
             for (let j = 0; j < m; j++) {
                 const doc = conts[j];
+                let groupeid = '';
+                if (doc[DomainConstants.FIELD_GROUPEID]) {
+                    groupeid = doc[DomainConstants.FIELD_GROUPEID] as string;
+                }
+                if (groupeid.length < 1) {
+                    continue;
+                }
+                if (!groupesMap.has(groupeid)) {
+                    const pg = await store.findItemByIdAsync(initialGroupe, groupeid);
+                    if (!pg) {
+                        continue;
+                    }
+                    groupesMap.set(groupeid, pg.sigle);
+                }
+                const groupe = groupesMap.get(groupeid);
                 const controleid = doc[DomainConstants.FIELD_ID] as string;
                 const date = (doc[DomainConstants.FIELD_DATE]) ? doc[DomainConstants.FIELD_DATE] as string : "";
                 const filter: Record<string, unknown> = { controleid };
@@ -49,7 +69,10 @@ export class StatServices extends BaseServices {
                     }
                     if (!workMap.has(etudiantid)) {
                         workMap.set(etudiantid, { count: 0, sumcoefs: 0, sumvalues: 0 });
-                        dataMap.set(etudiantid, { id: etudiantid, name: pEtud._fullname as string, url: pEtud._url, note: -1.0, observations: [], evts: [] });
+                        dataMap.set(etudiantid, {
+                            id: etudiantid, name: pEtud._fullname as string, url: pEtud._url, groupe: groupe,
+                            note: -1.0, observations: [], evts: []
+                        });
                     }// create
                     if (stype === DomainConstants.TYPE_NOTE) {
                         if (xdoc[DomainConstants.FIELD_VALUE]) {

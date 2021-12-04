@@ -81,6 +81,10 @@
     const spath = ROUTE_MATIERE_DETAIL + "/" + id;
     InfoRouter(spath);
   };
+  const handleSelectNote = (id: string): void => {
+    const spath = ROUTE_NOTE_DETAIL + "/" + id;
+    InfoRouter(spath);
+  };
   //
   onMount(async () => {
     await performRefresh(params.id);
@@ -127,7 +131,7 @@
                       selectItem(note._id);
                     }}
                   >
-                    {DateUtils.toDisplay(note._date)}
+                    <strong> {DateUtils.toDisplay(note._date)}</strong>
                   </NavLink>
                 </td>
                 <td>
@@ -136,7 +140,7 @@
                       handleSelectAnnee(note._anneeid);
                     }}
                   >
-                    {note._anneeSigle ? note._anneeSigle : ""}
+                    <strong>{note._anneeSigle ? note._anneeSigle : ""}</strong>
                   </NavLink>
                 </td>
                 <td>
@@ -145,7 +149,9 @@
                       handleSelectSemestre(note._semestreid);
                     }}
                   >
-                    {note._semestreSigle ? note._semestreSigle : ""}
+                    <strong
+                      >{note._semestreSigle ? note._semestreSigle : ""}</strong
+                    >
                   </NavLink>
                 </td>
                 <td>
@@ -154,7 +160,9 @@
                       handleSelectMatiere(note._matiereid);
                     }}
                   >
-                    {note._matiereSigle ? note._matiereSigle : ""}
+                    <strong>
+                      {note._matiereSigle ? note._matiereSigle : ""}</strong
+                    >
                   </NavLink>
                 </td>
                 <td>
@@ -163,15 +171,32 @@
                       selectControle(note.controleid);
                     }}
                   >
-                    {note._controleName ? note._controleName : ""}
+                    <strong
+                      >{note._controleName ? note._controleName : ""}</strong
+                    >
                   </NavLink>
                 </td>
                 <td class="float-right">
-                  {note.value !== undefined && note.value !== null
-                    ? "" + note.value
-                    : ""}
+                  {#if note.value}
+                    <NavLink
+                      on:click={() => {
+                        handleSelectNote(note._id);
+                      }}
+                    >
+                      <strong>{note.value}</strong>
+                    </NavLink>
+                  {/if}
                 </td>
-                <td>{note.observations ? note.observations : ""}</td>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      handleSelectNote(note._id);
+                    }}
+                  >
+                    <strong>{note.observations ? note.observations : ""}</strong
+                    >
+                  </NavLink>
+                </td>
               </tr>
             {/each}
           </tbody>

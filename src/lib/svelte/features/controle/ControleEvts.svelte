@@ -118,10 +118,16 @@
         {#each items as item}
           <tr class="align-middle">
             <td>
-              <PhotoComponent
-                url={item._url}
-                text={item._fullname ? item._fullname : ""}
-              />
+              <NavLink
+                on:click={() => {
+                  handleSelectEtudiant(item.etudiantid);
+                }}
+              >
+                <PhotoComponent
+                  url={item._url}
+                  text={item._fullname ? item._fullname : ""}
+                />
+              </NavLink>
             </td>
             <td>
               <NavLink
@@ -129,11 +135,27 @@
                   handleSelectEtudiant(item.etudiantid);
                 }}
               >
-                {item._fullname ? item._fullname : ""}
+                <strong>{item._fullname ? item._fullname : ""}</strong>
               </NavLink>
             </td>
-            <td>{ConvertEvtTypeToString(item.evttype)}</td>
-            <td>{item.observations ? item.observations : ""}</td>
+            <td>
+              <NavLink
+                on:click={() => {
+                  handleSelectEvt(item._id);
+                }}
+              >
+                <strong>{ConvertEvtTypeToString(item.evttype)}</strong>
+              </NavLink>
+            </td>
+            <td>
+              <NavLink
+                on:click={() => {
+                  handleSelectEvt(item._id);
+                }}
+              >
+                <strong>{item.observations ? item.observations : ""}</strong>
+              </NavLink>
+            </td>
             <td>
               <NavLink
                 on:click={() => {

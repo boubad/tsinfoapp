@@ -43,7 +43,7 @@
 </script>
 
 <FormGroup>
-  <Label class="" for={id}>{PROMPT_FICHIER}</Label>
+  <Label class="" for={id}><strong>{PROMPT_FICHIER}</strong></Label>
   <Input
     class={"font-weight-bold"}
     size={255}

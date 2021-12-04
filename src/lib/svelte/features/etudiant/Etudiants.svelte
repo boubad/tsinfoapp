@@ -153,13 +153,17 @@
             {#each items as item (item.value)}
               <tr class="align-middle">
                 <td>
-                  {#if item.url}
+                  <NavLink
+                    on:click={() => {
+                      handleSelectEtudiant(item.value);
+                    }}
+                  >
                     <PhotoComponent
                       url={item.url}
                       text={item.name}
                       height={56}
                     />
-                  {/if}
+                  </NavLink>
                 </td>
                 <td>
                   <NavLink
@@ -167,11 +171,17 @@
                       handleSelectEtudiant(item.value);
                     }}
                   >
-                    {item.name}
+                    <strong> {item.name}</strong>
                   </NavLink>
                 </td>
                 <td>
-                  {item.subTitle ? item.subTitle : ""}
+                  <NavLink
+                    on:click={() => {
+                      handleSelectEtudiant(item.value);
+                    }}
+                  >
+                    <strong> {item.subTitle ? item.subTitle : ""}</strong>
+                  </NavLink>
                 </td>
               </tr>
             {/each}

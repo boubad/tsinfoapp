@@ -121,7 +121,7 @@
                       handleSelectAnnee(aff.anneeid);
                     }}
                   >
-                    {aff._anneeSigle ? aff._anneeSigle : ""}
+                    <strong> {aff._anneeSigle ? aff._anneeSigle : ""}</strong>
                   </NavLink>
                 </td>
                 <td>
@@ -130,7 +130,9 @@
                       handleSelectSemestre(aff._semestreid);
                     }}
                   >
-                    {aff._semestreSigle ? aff._semestreSigle : ""}
+                    <strong
+                      >{aff._semestreSigle ? aff._semestreSigle : ""}</strong
+                    >
                   </NavLink>
                 </td>
                 <td>
@@ -139,7 +141,7 @@
                       handleSelectGroupe(aff.groupeid);
                     }}
                   >
-                    {aff._groupeSigle ? aff._groupeSigle : ""}
+                    <strong>{aff._groupeSigle ? aff._groupeSigle : ""}</strong>
                   </NavLink>
                 </td>
                 <td>
@@ -148,7 +150,7 @@
                       handleSelectEtudAffectation(aff._id);
                     }}
                   >
-                    {DateUtils.toDisplay(aff.startdate)}
+                    <strong> {DateUtils.toDisplay(aff.startdate)}</strong>
                   </NavLink>
                 </td>
                 <td>
@@ -157,10 +159,18 @@
                       handleSelectEtudAffectation(aff._id);
                     }}
                   >
-                    {DateUtils.toDisplay(aff.enddate)}
+                    <strong>{DateUtils.toDisplay(aff.enddate)}</strong>
                   </NavLink>
                 </td>
-                <td>{aff.observations}</td>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      handleSelectEtudAffectation(aff._id);
+                    }}
+                  >
+                    <strong> {aff.observations}</strong>
+                  </NavLink>
+                </td>
               </tr>
             {/each}
           </tbody>

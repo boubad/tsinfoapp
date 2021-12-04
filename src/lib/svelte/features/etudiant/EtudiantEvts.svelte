@@ -128,7 +128,7 @@
                       selectItem(evt._id);
                     }}
                   >
-                    {DateUtils.toDisplay(evt._date)}
+                    <strong>{DateUtils.toDisplay(evt._date)}</strong>
                   </NavLink>
                 </td>
                 <td>
@@ -137,7 +137,7 @@
                       handleSelectAnnee(evt._anneeid);
                     }}
                   >
-                    {evt._anneeSigle ? evt._anneeSigle : ""}
+                    <strong> {evt._anneeSigle ? evt._anneeSigle : ""}</strong>
                   </NavLink>
                 </td>
                 <td>
@@ -146,7 +146,9 @@
                       handleSelectSemestre(evt._semestreid);
                     }}
                   >
-                    {evt._semestreSigle ? evt._semestreSigle : ""}
+                    <strong>
+                      {evt._semestreSigle ? evt._semestreSigle : ""}</strong
+                    >
                   </NavLink>
                 </td>
                 <td>
@@ -155,7 +157,8 @@
                       handleSelectMatiere(evt._matiereid);
                     }}
                   >
-                    {evt._matiereSigle ? evt._matiereSigle : ""}
+                    <strong>{evt._matiereSigle ? evt._matiereSigle : ""}</strong
+                    >
                   </NavLink>
                 </td>
                 <td>
@@ -164,11 +167,29 @@
                       selectControle(evt.controleid);
                     }}
                   >
-                    {evt._controleName ? evt._controleName : ""}
+                    <strong>
+                      {evt._controleName ? evt._controleName : ""}</strong
+                    >
                   </NavLink>
                 </td>
-                <td>{ConvertEvtTypeToString(evt.evttype)}</td>
-                <td>{evt.observations ? evt.observations : ""}</td>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      selectItem(evt._id);
+                    }}
+                  >
+                    <strong>{ConvertEvtTypeToString(evt.evttype)}</strong>
+                  </NavLink>
+                </td>
+                <td>
+                  <NavLink
+                    on:click={() => {
+                      selectItem(evt._id);
+                    }}
+                  >
+                    <strong>{evt.observations ? evt.observations : ""}</strong>
+                  </NavLink>
+                </td>
               </tr>
             {/each}
           </tbody>
