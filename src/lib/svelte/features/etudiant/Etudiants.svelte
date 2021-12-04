@@ -72,7 +72,6 @@
     items = [...opts];
   };
   //
-  //
   const performRefresh = async (): Promise<void> => {
     const pMan = new EtudiantServices();
     pagination = $etudiantpaginationstore;
@@ -94,6 +93,18 @@
     pagination = { ...pdata };
     etudiantpaginationstore.set(pagination);
     updatePage();
+  };
+  //
+  const onPageSizeChanged = (n: number): void => {
+    if (n > 0 && n !== pagination.pageSize) {
+      const pdata = { ...pagination, pageSize: n };
+      pagination = { ...pdata };
+      const itemsCount = allItems.length;
+      const ppdata = PaginationDataSetItemsCount(pagination, itemsCount);
+      pagination = { ...ppdata };
+      etudiantpaginationstore.set(pagination);
+      updatePage();
+    }
   };
   //
   const handleSelectEtudiant = (etudiantid: string): void => {
@@ -127,13 +138,16 @@
     </Col>
   </Row>
   {#if items.length > 0}
-    <Row>
+    <Row class="align-middle">
       <Col class="text-center">
         <PageNavigator
           {pages}
           {page}
           {pagesCount}
+          pagesize={pagination.pageSize}
+          itemsCount={pagination.itemsCount}
           {onGotoPage}
+          {onPageSizeChanged}
           lpath={ROUTE_ETUDIANTS_LIST}
         />
       </Col>
@@ -161,7 +175,7 @@
                     <PhotoComponent
                       url={item.url}
                       text={item.name}
-                      height={56}
+                      height={112}
                     />
                   </NavLink>
                 </td>

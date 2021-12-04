@@ -6,16 +6,63 @@
     PaginationLink,
     Row,
   } from "sveltestrap";
+  import InputNumber from "./InputNumber.svelte";
+  //
+  const _DISPLAY_PAGES = 5;
   //
   export let page: number = 1;
   export let pagesCount: number = 0;
   export let pages: number[] = [];
   export let lpath: string = "#";
+  export let pagesize: number = 8;
+  export let itemsCount: number = 0;
   export let onGotoPage: (p: number) => void = (_p: number) => {};
+  export let onPageSizeChanged: (p: number) => void = (_p: number) => {};
   //
   const onNavigate = (n: number) => {
     if (n > 0 && page !== n) {
       onGotoPage(n);
+    }
+  };
+  //
+  const onValueChanged = (val: unknown, _name: string): void => {
+    const n = val as number;
+    if (n && n > 0 && n !== pagesize) {
+      pagesize = n;
+      if (itemsCount > 0) {
+        let oldpage = page;
+        if (oldpage < 1) {
+          oldpage = 1;
+        }
+        let np = Math.floor(itemsCount / n);
+        if (itemsCount % n !== 0) {
+          np = np + 1;
+        }
+        pagesCount = np;
+        if (oldpage > np) {
+          oldpage = np;
+        }
+        let startPage = Math.floor(oldpage - _DISPLAY_PAGES / 2);
+        if (startPage < 1) {
+          startPage = 1;
+        }
+        let lastPage = startPage + _DISPLAY_PAGES - 1;
+        if (lastPage > np) {
+          lastPage = np;
+        }
+        const xpages: number[] = [];
+        for (let i = startPage; i <= lastPage; i++) {
+          xpages.push(i);
+        }
+        pages = [...xpages];
+        if (page < startPage){
+          page = startPage;
+        }
+        if (page > lastPage){
+          page = lastPage;
+        }
+      } // itemsCount
+      onPageSizeChanged(n);
     }
   };
   //
@@ -75,6 +122,14 @@
             />
           </PaginationItem>
         </Pagination>
+      </Col>
+      <Col xs="2">
+        <InputNumber
+          name={"pagenavigator"}
+          label={"Nb./page"}
+          value={pagesize}
+          {onValueChanged}
+        />
       </Col>
       <Col
         ><strong class="">

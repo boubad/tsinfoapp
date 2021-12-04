@@ -102,6 +102,17 @@
     updatePage();
   };
   //
+  const onPageSizeChanged = (n: number): void => {
+    if (n > 0 && n !== pagination.pageSize) {
+      const pdata = { ...pagination, pageSize: n };
+      pagination = { ...pdata };
+      const itemsCount = allItems.length;
+      const ppdata = PaginationDataSetItemsCount(pagination, itemsCount);
+      pagination = { ...ppdata };
+      updatePage();
+    }
+  };
+  //
   const handleSelectEtudiant = (etudiantid: string): void => {
     SelectUtils.SelectEtudiant(etudiantid);
   };
@@ -116,13 +127,16 @@
     <h2 class="text-center">{TITLE_MATIERE_STATS}</h2>
   </Row>
   {#if allItems.length > 0}
-    <Row>
+    <Row class="align-middle">
       <Col class="text-center">
         <PageNavigator
           {pages}
           {page}
           {pagesCount}
+          pagesize={pagination.pageSize}
+          itemsCount={pagination.itemsCount}
           {onGotoPage}
+          {onPageSizeChanged}
           lpath={ROUTE_MATIERE_STAT +
             "/" +
             anneeid +

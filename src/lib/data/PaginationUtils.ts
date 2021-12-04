@@ -1,8 +1,8 @@
 import type { IPaginationData } from "./IPaginationData";
 //
-const _DEFAULT_PAGESIZE = 16;
+const _DEFAULT_PAGESIZE = 8;
 const _DISPLAY_PAGES = 5;
-//
+
 export function GetInitialPaginationData(): IPaginationData {
     return {
         page: 0,

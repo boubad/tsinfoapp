@@ -142,7 +142,7 @@
         <Col xs="2">
           <SexeChoice value={etudiant.sexe} {onValueChanged} />
         </Col>
-        <Col xs="2">
+        <Col xs="3">
           <InputDate
             value={etudiant.birthdate}
             label={PROMPT_BIRTHDATE}
@@ -152,7 +152,7 @@
         </Col>
       </Row>
       <Row>
-        <Col xs="3">
+        <Col xs="4">
           <InputText
             value={etudiant.lastname}
             label={PROMPT_LASTNAME}
@@ -161,7 +161,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col xs="3">
+        <Col xs="4">
           <InputText
             value={etudiant.firstname}
             label={PROMPT_FIRSTNAME}
@@ -172,7 +172,7 @@
         </Col>
       </Row>
       <Row>
-        <Col xs="2">
+        <Col xs="3">
           <InputEmail
             value={etudiant.email}
             label={PROMPT_EMAIL}
@@ -180,7 +180,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col xs="2">
+        <Col xs="3">
           <InputPhone
             value={etudiant.phone}
             label={PROMPT_PHONE}
@@ -189,7 +189,7 @@
             {onValueChanged}
           />
         </Col>
-        <Col xs="2">
+        <Col xs="3">
           <InputText
             value={etudiant.address}
             label={PROMPT_ADDRESS}
