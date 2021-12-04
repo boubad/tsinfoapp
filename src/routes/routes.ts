@@ -27,6 +27,8 @@ import EtudAffectationsCreate from "../lib/svelte/features/etudaffectation/EtudA
 import Controles from "../lib/svelte/features/controle/Controles.svelte";
 import Controle from "../lib/svelte/features/controle/Controle.svelte";
 import ControleCreate from "../lib/svelte/features/controle/ControleCreate.svelte";
+import MatiereStats from "../lib/svelte/features/stat/MatiereStats.svelte";
+//
 import Test from "../lib/svelte/features/Test.svelte";
 //
 export const routes: RouteDefinition = {
@@ -59,6 +61,7 @@ export const routes: RouteDefinition = {
   '/controles/:annee/:groupe/:semestre?/:matiere?': Controles,
   '/controle/:id?': Controle,
   '/controlecreate/:annee/:semestre/:matiere/:groupe': ControleCreate,
+  '/statmatiere/:annee/:semestre/:matiere': MatiereStats,
   // The catch-all route must always be last
   "*": NotFound,
 };

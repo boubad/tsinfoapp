@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Col, Form, Row } from "sveltestrap";
+  import { Col, Row } from "sveltestrap";
   import { DateUtils } from "../../../data/DateUtils";
   import type { IAttachedDoc } from "../../../data/IAttachedDoc";
   import { initialNote, INoteDoc } from "../../../data/INoteDoc";

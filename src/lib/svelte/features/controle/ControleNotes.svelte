@@ -151,7 +151,7 @@
       </thead>
       <tbody>
         {#each items as note}
-          <tr>
+          <tr class="align-middle">
             <td>
               <PhotoComponent
                 url={note._url}

@@ -3,7 +3,10 @@
   import { onMount } from "svelte";
   import { NavLink, Row, Table } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
-  import { ROUTE_ETUDAFFECTATIONS_CREATE, ROUTE_ETUDAFFECTATION_DETAIL } from "../../../../routes/routesdefs";
+  import {
+    ROUTE_ETUDAFFECTATIONS_CREATE,
+    ROUTE_ETUDAFFECTATION_DETAIL,
+  } from "../../../../routes/routesdefs";
   import { DateUtils } from "../../../data/DateUtils";
   import { EtudAffectationServices } from "../../../data/EtudAffectationServices";
   import type { IEtudAffectationDoc } from "../../../data/IEtudAffectation";
@@ -81,7 +84,7 @@
     <ListCommands
       cancreate={anneeid.length > 0 && groupeid.length > 0}
       canrefresh={anneeid.length > 0 && groupeid.length > 0}
-      newbuttontext={'Créer des affectations'}
+      newbuttontext={"Créer des affectations"}
       onCreate={handleCreate}
       onRefresh={performRefresh}
     />
@@ -99,7 +102,7 @@
         </thead>
         <tbody>
           {#each items as item}
-            <tr>
+            <tr class="align-middle">
               <td>
                 {#if item._url}
                   <PhotoComponent

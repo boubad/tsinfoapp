@@ -16,10 +16,15 @@ export class StatServices extends BaseServices {
         const workMap: Map<string, ICumuItem> = new Map<string, ICumuItem>();
         const dataMap: Map<string, IMatiereStatItem> = new Map<string, IMatiereStatItem>();
         const store = this.datastore;
-        const grpids = await store.findAllDocsIdsBySelectorAsync({ doctype: DomainConstants.TYPE_GROUPCONTROLE, matiereid, semestreid });
-        const n = grpids.length;
+        const grps = await store.findAllDocsBySelectorAsync({ doctype: DomainConstants.TYPE_GROUPCONTROLE, matiereid, semestreid }, [DomainConstants.FIELD_ID, DomainConstants.FIELD_COEFFICIENT]);
+        const n = grps.length;
         for (let i = 0; i < n; i++) {
-            const groupecontroleid = grpids[i];
+            const grp = grps[i];
+            const groupecontroleid = grp[DomainConstants.FIELD_ID] as string;
+            let coef = (grp[DomainConstants.FIELD_COEFFICIENT]) ? grp[DomainConstants.FIELD_COEFFICIENT] as number : 1.0;
+            if (coef <= 0.0) {
+                coef = 1.0;
+            }
             const filterControles: Record<string, unknown> = { doctype: DomainConstants.TYPE_CONTROLE, groupecontroleid, anneeid };
             const conts = await store.findAllDocsBySelectorAsync(filterControles, [DomainConstants.FIELD_ID,
             DomainConstants.FIELD_COEFFICIENT, DomainConstants.FIELD_DATE]);
@@ -27,10 +32,6 @@ export class StatServices extends BaseServices {
             for (let j = 0; j < m; j++) {
                 const doc = conts[j];
                 const controleid = doc[DomainConstants.FIELD_ID] as string;
-                let coef = (doc[DomainConstants.FIELD_COEFFICIENT]) ? doc[DomainConstants.FIELD_COEFFICIENT] as number : 1.0;
-                if (coef <= 0.0) {
-                    coef = 1.0;
-                }
                 const date = (doc[DomainConstants.FIELD_DATE]) ? doc[DomainConstants.FIELD_DATE] as string : "";
                 const filter: Record<string, unknown> = { controleid };
                 const xdocs = await store.findAllDocsBySelectorAsync(filter);
@@ -95,13 +96,17 @@ export class StatServices extends BaseServices {
         });
         if (pRet.length > 1) {
             pRet.sort((a, b) => {
+                if (a.note < b.note) {
+                    return 1;
+                } else if (a.note > b.note) {
+                    return -1;
+                }
                 if (a.name < b.name) {
                     return -1;
                 } else if (a.name > b.name) {
                     return 1;
-                } else {
-                    return 0;
                 }
+                return 0;
             });
         }// sort
         return pRet;

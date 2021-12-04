@@ -17,7 +17,6 @@
   import InputText from "../../components/InputText.svelte";
   import PersonHeader from "../../components/PersonHeader.svelte";
   import {
-    COMMAND_NEW_EVT,
     PROMPT_DURATION,
     TEXT_REMOVE_EVT,
     TITLE_REMOVE_EVT,

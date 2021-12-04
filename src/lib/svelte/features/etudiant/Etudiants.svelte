@@ -151,7 +151,7 @@
           </thead>
           <tbody>
             {#each items as item (item.value)}
-              <tr>
+              <tr class="align-middle">
                 <td>
                   {#if item.url}
                     <PhotoComponent

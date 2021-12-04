@@ -22,6 +22,7 @@
     TITLE_GROUPES,
     TITLE_GROUPESCONTROLES,
     TITLE_MATIERES,
+    TITLE_MATIERE_STATS,
     TITLE_MENU,
     TITLE_SEMESTRES,
     TITLE_UNITES,
@@ -43,8 +44,9 @@
     ROUTE_GROUPECONTROLES_LIST,
     ROUTE_GROUPES_LIST,
     ROUTE_MATIERES_LIST,
+    ROUTE_MATIERE_STAT,
     ROUTE_SEMESTRES_LIST,
-    ROUTE_TEST,
+    //    ROUTE_TEST,
     ROUTE_UNITES_LIST,
   } from "./routes/routesdefs";
 
@@ -66,9 +68,11 @@
   <NavbarToggler on:click={() => (isOpen = !isOpen)} />
   <Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
     <Nav class="ms-auto" navbar>
+      <!--
       <NavItem>
         <NavLink href={ROUTE_TEST}>{"Test"}</NavLink>
       </NavItem>
+    -->
       <NavItem
         disabled={anneeid.length < 1 ||
           groupeid.length < 1 ||
@@ -85,6 +89,21 @@
             semestreid +
             "/" +
             matiereid}>{TITLE_CONTROLES}</NavLink
+        >
+      </NavItem>
+      <NavItem
+        disabled={anneeid.length < 1 ||
+          semestreid.length < 1 ||
+          matiereid.length < 1}
+      >
+        <NavLink
+          href={ROUTE_MATIERE_STAT +
+            "/" +
+            anneeid +
+            "/" +
+            semestreid +
+            "/" +
+            matiereid}>{TITLE_MATIERE_STATS}</NavLink
         >
       </NavItem>
       <NavItem>

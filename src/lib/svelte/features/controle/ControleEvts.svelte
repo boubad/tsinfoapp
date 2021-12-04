@@ -91,6 +91,7 @@
   });
   //
 </script>
+
 <div>
   <Row>
     <h2 class="text-center">{controletitle}</h2>
@@ -115,7 +116,7 @@
       </thead>
       <tbody>
         {#each items as item}
-          <tr>
+          <tr class="align-middle">
             <td>
               <PhotoComponent
                 url={item._url}
