@@ -11,6 +11,7 @@
     PaginationDataSetPage,
   } from "../../../data/PaginationUtils";
   import { StatServices } from "../../../data/StatServices";
+  import ListStringItems from "../../components/ListStringItems.svelte";
   import PageNavigator from "../../components/PageNavigator.svelte";
   import PhotoComponent from "../../components/PhotoComponent.svelte";
   import {
@@ -185,22 +186,10 @@
                 {/if}
               </td>
               <td>
-                {#if item.evts.length > 0}
-                  <ul>
-                    {#each item.evts as ev}
-                      <li><strong>{ev}</strong></li>
-                    {/each}
-                  </ul>
-                {/if}
+                <ListStringItems items={item.evts} />
               </td>
               <td>
-                {#if item.observations.length > 0}
-                  <ul>
-                    {#each item.observations as o}
-                      <li><strong>{o}</strong></li>
-                    {/each}
-                  </ul>
-                {/if}
+                <ListStringItems items={item.observations} />
               </td>
             </tr>
           {/each}
