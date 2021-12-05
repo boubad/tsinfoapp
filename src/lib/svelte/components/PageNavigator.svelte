@@ -55,10 +55,10 @@
           xpages.push(i);
         }
         pages = [...xpages];
-        if (page < startPage){
+        if (page < startPage) {
           page = startPage;
         }
-        if (page > lastPage){
+        if (page > lastPage) {
           page = lastPage;
         }
       } // itemsCount
@@ -70,8 +70,8 @@
 
 <div>
   {#if pagesCount > 1}
-    <Row class="text-center">
-      <Col class="text-center">
+    <Row class="align-middle">
+      <Col>
         <Pagination>
           <PaginationItem disabled={page <= 1}>
             <PaginationLink
@@ -99,7 +99,7 @@
                   onNavigate(p);
                 }}
               >
-                {p}
+                <strong>{p}</strong>
               </PaginationLink>
             </PaginationItem>
           {/each}
@@ -131,8 +131,8 @@
           {onValueChanged}
         />
       </Col>
-      <Col
-        ><strong class="">
+      <Col xs="3">
+        <strong>
           {"Page " + page} / {pagesCount + " pages"}
         </strong></Col
       >
