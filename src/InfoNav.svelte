@@ -46,7 +46,7 @@
     ROUTE_MATIERES_LIST,
     ROUTE_MATIERE_STAT,
     ROUTE_SEMESTRES_LIST,
-    //    ROUTE_TEST,
+    ROUTE_TEST,
     ROUTE_UNITES_LIST,
   } from "./routes/routesdefs";
 
@@ -68,11 +68,9 @@
   <NavbarToggler on:click={() => (isOpen = !isOpen)} />
   <Collapse {isOpen} navbar expand="md" on:update={handleUpdate}>
     <Nav class="ms-auto" navbar>
-      <!--
       <NavItem>
         <NavLink href={ROUTE_TEST}>{"Test"}</NavLink>
       </NavItem>
-    -->
       <NavItem
         disabled={anneeid.length < 1 ||
           groupeid.length < 1 ||

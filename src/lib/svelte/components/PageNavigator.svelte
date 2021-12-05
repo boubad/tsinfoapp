@@ -6,7 +6,7 @@
     PaginationLink,
     Row,
   } from "sveltestrap";
-  import InputNumber from "./InputNumber.svelte";
+  import InputInteger from "./InputInteger.svelte";
   //
   const _DISPLAY_PAGES = 5;
   //
@@ -16,16 +16,17 @@
   export let lpath: string = "#";
   export let pagesize: number = 8;
   export let itemsCount: number = 0;
-  export let onGotoPage: (p: number) => void = (_p: number) => {};
-  export let onPageSizeChanged: (p: number) => void = (_p: number) => {};
+  export let name:string = "pagenavigator";
+  export let onGotoPage: (p: number, xname?:string) => void = (_p: number,_xname?:string) => {};
+  export let onPageSizeChanged: (p: number, xname?:string) => void = (_p: number,_xname?:string) => {};
   //
   const onNavigate = (n: number) => {
     if (n > 0 && page !== n) {
-      onGotoPage(n);
+      onGotoPage(n,name);
     }
   };
   //
-  const onValueChanged = (val: unknown, _name: string): void => {
+  const onValueChanged = (val: number, _name: string): void => {
     const n = val as number;
     if (n && n > 0 && n !== pagesize) {
       pagesize = n;
@@ -62,7 +63,7 @@
           page = lastPage;
         }
       } // itemsCount
-      onPageSizeChanged(n);
+      onPageSizeChanged(n, name);
     }
   };
   //
@@ -124,9 +125,11 @@
         </Pagination>
       </Col>
       <Col xs="2">
-        <InputNumber
-          name={"pagenavigator"}
-          label={"Nb./page"}
+        <strong>{"Nb./page"}</strong>
+      </Col>
+      <Col xs="2">
+        <InputInteger
+          {name}
           value={pagesize}
           {onValueChanged}
         />

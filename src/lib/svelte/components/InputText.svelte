@@ -8,6 +8,7 @@
   export let label: string = "";
   export let name: string = "";
   export let size: number = 63;
+  export let required: boolean = false;
   export let onValueChanged: (val: unknown, name: string) => void = (
     _value,
     _name
@@ -31,8 +32,10 @@
     class="font-weight-bold"
     type="text"
     {size}
+    maxlength={size}
     {name}
     {id}
+    {required}
     on:change={onChanged}
     bind:value
   />

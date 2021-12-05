@@ -4,6 +4,7 @@
   import InfoNav from "./InfoNav.svelte";
   import Global from "./lib/svelte/features/global/Global.svelte";
   import { routes } from "./routes/routes";
+  //
 </script>
 
 <Row>
