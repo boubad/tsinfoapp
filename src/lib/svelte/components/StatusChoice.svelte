@@ -8,7 +8,7 @@
     StatusType,
     StatusType2String,
     String2StatusType,
-  } from "../../data/StatusType ";
+  } from "../../data/StatusType";
 
   //
   export let value: StatusType = StatusType.Unknown;

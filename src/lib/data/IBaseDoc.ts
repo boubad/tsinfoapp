@@ -2,7 +2,7 @@
 //
 
 import type { IAttachedDoc } from "./IAttachedDoc";
-import type { StatusType } from "./StatusType ";
+import type { StatusType } from "./StatusType";
 
 //
 export interface IBaseDoc {

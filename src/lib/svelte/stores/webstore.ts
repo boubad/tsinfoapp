@@ -2,7 +2,7 @@ import type { IPaginationData } from "../../data/IPaginationData";
 import { GetInitialPaginationData } from "../../data/PaginationUtils";
 import { InfoStorage } from "../../data/InfoStorage";
 import { DomainConstants } from "../../data/DomainConstants";
-import { StatusType } from "../../data/StatusType ";
+import { StatusType } from "../../data/StatusType";
 //
 export class InfoWebStorage extends InfoStorage {
   //

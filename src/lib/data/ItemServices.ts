@@ -3,7 +3,7 @@ import type { IBaseDoc } from "./IBaseDoc";
 import { BaseServices } from "./BaseServices";
 import { ConvertData } from './ConvertData';
 import type { IDataStore } from "./IDataStore";
-import { StatusType } from "./StatusType ";
+import { StatusType } from "./StatusType";
 import type { IItemPayload } from "./IItemPayload";
 import type { ICouchDBUpdateResponse } from "./ICouchDBUpdateResponse";
 import type { IDataUrlCreator } from "./IDataUrlCreator";

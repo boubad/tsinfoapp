@@ -3,7 +3,7 @@
 
   import { Col, Form, Row } from "sveltestrap";
   import { DomainConstants } from "../../../data/DomainConstants";
-  import { StatusType } from "../../../data/StatusType ";
+  import { StatusType } from "../../../data/StatusType";
   import InputDate from "../../components/InputDate.svelte";
   import InputObservations from "../../components/InputObservations.svelte";
   import InputText from "../../components/InputText.svelte";
