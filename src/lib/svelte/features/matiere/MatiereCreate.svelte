@@ -1,8 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Col, Form, Row } from "sveltestrap";
+import { CouchDBClient } from "../../../data/CouchDBClient";
   import { DomainConstants } from "../../../data/DomainConstants";
+import { fetchClient } from "../../../data/fetchClient";
   import { CreateMatiere, IMatiereDoc } from "../../../data/IMatiereDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import { MatiereServices } from "../../../data/MatiereServices";
   import EditCommands from "../../components/EditCommands.svelte";
   import InputCoefficient from "../../components/InputCoefficient.svelte";
@@ -43,7 +46,7 @@
     _checkVars();
   };
   const performSave = async (): Promise<void> => {
-    const pMan = new MatiereServices();
+    const pMan = new MatiereServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(matiere);
     if (r.ok && r.item) {
       matiere = { ...r.item };

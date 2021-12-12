@@ -19,6 +19,9 @@
     PROMPT_SIGLE,
   } from "../../InfoPrompt";
   import GroupeTypeChoice from "./../../components/GroupeTypeChoice.svelte";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   //
   export let params: any = {};
   let groupe: IGroupeDoc = CreateGroupe();
@@ -40,7 +43,7 @@
   };
   //
   const findParents = async (): Promise<void> => {
-    const pMan = new GroupeServices();
+    const pMan = new GroupeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const aa = await pMan.findParentOptionsAsync(groupe, semestreid);
     parents = [...aa];
   };
@@ -66,7 +69,7 @@
     _checkVars();
   };
   const performSave = async (): Promise<void> => {
-    const pMan = new GroupeServices();
+    const pMan = new GroupeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(groupe);
     if (r.ok && r.item) {
       groupe = {...r.item};
@@ -76,7 +79,7 @@
     } // r
   };
   const performRemove = async (): Promise<void> => {
-    const pMan = new GroupeServices();
+    const pMan = new GroupeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAsync(groupe);
     if (r.ok) {
       InfoRouter(ROUTE_GROUPES_LIST + "/" + semestreid);
@@ -91,7 +94,7 @@
     blobs = [];
     if (id && id.trim().length > 0) {
       if (!pMan) {
-        pMan = new GroupeServices();
+        pMan = new GroupeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       }
       const p = await pMan.findItemByIdAsync(id);
       if (p) {
@@ -111,7 +114,7 @@
     data: Blob,
     _owner?: string
   ): Promise<void> => {
-    const pMan = new GroupeServices();
+    const pMan = new GroupeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAttachmentAsync(groupe, name, mime, data);
     if (r.ok && r.item) {
       groupe = {...r.item};
@@ -123,7 +126,7 @@
     name: string,
     _parentid?: string
   ): Promise<void> => {
-    const pMan = new GroupeServices();
+    const pMan = new GroupeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAttachmentAsync(groupe, name);
     if (r.ok && r.item) {
       groupe = {...r.item};

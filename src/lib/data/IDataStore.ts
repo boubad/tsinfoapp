@@ -5,7 +5,7 @@ export type IDataStore = {
     readonly isOnLineAsync: () => Promise<boolean>;
     readonly formBlobUrl: (id?: string, name?: string) => string | undefined;
     //
-    readonly findDocRevisionAsync: (sid: string) => Promise<string> | undefined;
+    readonly findDocRevisionAsync: (sid: string) => Promise<string | undefined>;
     readonly findDocByIdAsync: (id: string) => Promise<Record<string, unknown> | undefined>
     readonly maintainsDocAsync: (doc: Record<string, unknown>) => Promise<Record<string, unknown>>;
     readonly removeDocAsync: (id: string) => Promise<Record<string, unknown>>;
@@ -38,7 +38,7 @@ export type IDataStore = {
         data: Blob | ArrayBuffer
     ) => Promise<Record<string, unknown>>;
     readonly removeBlobAsync: (id: string, name: string) => Promise<Record<string, unknown>>;
-    
+
     //
     readonly maintainsManyDocsAsync: (docs: readonly Record<string, unknown>[]) => Promise<readonly Record<string, unknown>[]>;
     readonly bulkGetAsync: (ids: readonly string[]) => Promise<readonly Record<string, unknown>[]>;

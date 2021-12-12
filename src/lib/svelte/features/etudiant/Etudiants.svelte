@@ -29,6 +29,9 @@
   } from "../../stores/EtudiantStore";
   import { SelectUtils } from "../SelectUtils";
   import { DomainConstants } from "../../../data/DomainConstants";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
 
   //
   let items: IDataOption[] = [];
@@ -73,7 +76,7 @@
   };
   //
   const performRefresh = async (): Promise<void> => {
-    const pMan = new EtudiantServices();
+    const pMan = new EtudiantServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     pagination = $etudiantpaginationstore;
     const filter = $etudiantfilterstore;
     const aa = await pMan.getPersonsOptionsByFilterAsync({

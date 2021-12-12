@@ -7,8 +7,11 @@
     ROUTE_GROUPECONTROLE_CREATE,
     ROUTE_GROUPECONTROLE_DETAIL,
   } from "../../../../routes/routesdefs";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
   import { GroupeControlesServices } from "../../../data/GroupeControlesServices";
   import type { IGroupeControlesDoc } from "../../../data/IGroupeControlesDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import ListCommands from "../../components/ListCommands.svelte";
   import {
     COMMAND_NEW_GROUPEDONTROLE,
@@ -45,7 +48,7 @@
       matiereid = mat;
     }
     if (semestreid.length > 0 && matiereid.length > 0) {
-      const pMan = new GroupeControlesServices();
+      const pMan = new GroupeControlesServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const aa = await pMan.findAllItemsByFilterAsync({
         matiereid,
         semestreid,

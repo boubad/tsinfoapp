@@ -4,15 +4,32 @@ import type { IDataStore } from "./IDataStore";
 import type { ISigleNamedDoc } from "./ISigleNamedDoc";
 import type { IDataOption } from "./IDataOption";
 import { initialEtudiant } from "./IEtudiantDoc";
+import type { IDataUrlCreator } from './IDataUrlCreator';
 
 export class BaseServices {
-  public datastore: InfoDataStore;
-  public dbUrl: string;
+  private _datastore: InfoDataStore;
+  private _dbUrl?: string;
+  private _urlcreator?: IDataUrlCreator;
   //
-  constructor(store?: IDataStore, dbUrl?: string) {
-    this.dbUrl = dbUrl;
-    this.datastore = new InfoDataStore(store, dbUrl);
+  constructor(store: IDataStore, creator?: IDataUrlCreator, dbUrl?: string) {
+    if (!store) {
+      throw new Error("Invalid datastore");
+    }
+    this._datastore = new InfoDataStore(store, creator, dbUrl);
+    this._dbUrl = dbUrl;
+    this._urlcreator = creator;
   } // constructor
+  //
+  public get datastore(): InfoDataStore {
+    return this._datastore;
+  }
+  public get dbUrl(): string | undefined {
+    return this._dbUrl;
+  }
+  public get dataUrlCreator(): IDataUrlCreator | undefined {
+    return this._urlcreator;
+  }
+  //
   public async saveAttachmentAsync(
     docid: string,
     attName: string,
@@ -30,11 +47,11 @@ export class BaseServices {
   //
   public async getItemOptionsAsync<T extends ISigleNamedDoc>(
     item: T,
-    filter?: Record<string, unknown>
+    filter?: Record<string, unknown>,
+    bSortDesc?: boolean
   ): Promise<readonly IDataOption[]> {
-    const sel = filter
-      ? { ...filter, doctype: item.doctype }
-      : { doctype: item.doctype };
+    const sel: Record<string, unknown> = (filter) ? { ...filter } : {};
+    sel[DomainConstants.FIELD_TYPE] = item.doctype;
     const fields: readonly string[] = [
       DomainConstants.FIELD_ID,
       DomainConstants.FIELD_NAME,
@@ -44,37 +61,40 @@ export class BaseServices {
     const pp: readonly Record<string, unknown>[] =
       await this.datastore.findAllDocsBySelectorAsync(sel, fields);
     const pz: IDataOption[] = [];
-    const n = pp.length;
-    for (let i = 0; i < n; i++) {
-      const v = pp[i];
-      if (v._id && v.sigle && v.name) {
-        const id = v._id as string;
-        const sigle = v.sigle as string;
-        const title = v.name as string;
-        const rem = v.observations ? v.observations : "";
-        const subTitle = sigle + " " + rem;
-        pz.push({ value: id, name: title, subTitle });
-      }
-    } // i
+    pp.forEach((v) => {
+      const id = v[DomainConstants.FIELD_ID] as string;
+      const sigle = v[DomainConstants.FIELD_SIGLE] as string;
+      const title = v[DomainConstants.FIELD_NAME] as string;
+      const rem = v[DomainConstants.FIELD_OBSERVATIONS] ? v[DomainConstants.FIELD_OBSERVATIONS] as string : "";
+      const subTitle = sigle + " " + rem;
+      pz.push({ value: id, name: title, subTitle });
+    });
     if (pz.length > 1) {
-      pz.sort((a, b) => {
-        if (a.name < b.name) {
-          return -1;
-        } else if (a.name > b.name) {
-          return 1;
-        }
-        return 0;
-      });
+      if (bSortDesc !== undefined && bSortDesc === true) {
+        pz.sort((a, b) => {
+          if (a.name < b.name) {
+            return 1;
+          } else if (a.name > b.name) {
+            return -1;
+          }
+          return 0;
+        });
+      } else {
+        pz.sort((a, b) => {
+          if (a.name < b.name) {
+            return -1;
+          } else if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        });
+      }
+
     }
     if (pz.length < 1) {
       return pz;
     }
-    const pRet: IDataOption[] = [{ value: "", name: "Aucune sélection" }];
-    const nx = pz.length;
-    for (let i = 0; i < nx; i++) {
-      pRet.push(pz[i]);
-    } // i
-    return pRet;
+    return [{ value: "", name: "Aucune sélection" }, ...pz];
   } // getItemOptionsAsync
 
   //
@@ -82,7 +102,7 @@ export class BaseServices {
     sel: Record<string, unknown>
   ): Promise<readonly IDataOption[]> {
     const pRet: IDataOption[] = [];
-    const fields: string[] = [
+    const fields: readonly string[] = [
       DomainConstants.FIELD_ID,
       DomainConstants.FIELD_FIRSTNAME,
       DomainConstants.FIELD_LASTNAME,
@@ -90,7 +110,7 @@ export class BaseServices {
       DomainConstants.FIELD_ATTACHMENTS,
       DomainConstants.FIELD_OBSERVATIONS,
     ];
-    const sort: Record<string, unknown>[] = [
+    const sort: readonly Record<string, unknown>[] = [
       { lastname: "asc" },
       { firstname: "asc" },
     ];
@@ -102,32 +122,32 @@ export class BaseServices {
     const n = dd.length;
     for (let i = 0; i < n; i++) {
       const v = dd[i];
-      if (v && v._id && v.lastname && v.firstname) {
-        const id = v._id as string;
-        const lastname = (v.lastname as string).toUpperCase();
-        const firstname = v.firstname as string;
-        const title = lastname + " " + firstname;
-        const subTitle = v.observations? v.observations as string : '';
-        const avatar =
-          lastname.substring(0, 0).toUpperCase() +
-          firstname.substring(0, 0).toUpperCase();
-        const p: IDataOption = {
-          value: id,
-          name: title,
-          avatar,
-          subTitle,
-        };
+      const id = v[DomainConstants.FIELD_ID] as string;
+      const lastname = (v[DomainConstants.FIELD_LASTNAME] as string).toUpperCase();
+      const firstname = v[DomainConstants.FIELD_FIRSTNAME] as string;
+      const title = lastname + " " + firstname;
+      const subTitle = v[DomainConstants.FIELD_OBSERVATIONS] ? v[DomainConstants.FIELD_OBSERVATIONS] as string : '';
+      const avatar =
+        lastname.substring(0, 0).toUpperCase() +
+        firstname.substring(0, 0).toUpperCase();
+      const p: IDataOption = {
+        value: id,
+        name: title,
+        avatar,
+        subTitle,
+      };
+      if (v[DomainConstants.FIELD_ATTACHMENTS]) {
         await this._checkOptionAvatarAsync(
           id,
-          v._attachments,
-          v.avatar as string,
+          v[DomainConstants.FIELD_ATTACHMENTS],
+          v[DomainConstants.FIELD_AVATAR] as string,
           p
         );
-        pRet.push(p);
-      } // names
+      }// attachments
+      pRet.push(p);
     } // i
     return pRet;
-  } //GetPersonsOptionsByFilterAsync
+  } // GetPersonsOptionsByFilterAsync
   //
   public async getEtudiantsOptionsByIdsAsync(
     ids: readonly string[]
@@ -164,16 +184,13 @@ export class BaseServices {
   protected async _checkOptionAvatarAsync(
     docid: string,
     attachments: any,
-    avatar: string,
+    avatar: string | undefined,
     p: IDataOption
   ): Promise<void> {
-    if (!docid || !attachments) {
-      return;
-    }
-    const aa = await this.datastore.processDocAttachmentsAsync({
-      _id: docid,
-      _attachments: attachments,
-    });
+    const doc: Record<string, unknown> = {};
+    doc[DomainConstants.FIELD_ID] = docid;
+    doc[DomainConstants.FIELD_ATTACHMENTS] = attachments;
+    const aa = await this.datastore.processDocAttachmentsAsync(doc);
     if (avatar && avatar.length > 0) {
       const a = aa.find((x) => {
         return x.name && x.name === avatar;

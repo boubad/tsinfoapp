@@ -34,9 +34,8 @@ import type {
     IItemSigleNamed,
     IItemUnite,
 } from "./InfoDomain";
-import type { IEtudAffectationDoc } from "./IEtudAffectation";
 import { ControleType } from "./ControleType";
-import { CreateEtudAffectation } from "./IEtudAffectation";
+import { CreateEtudAffectation, IEtudAffectationDoc } from "./IEtudAffectationDoc";
 //
 export class ConvertData {
     //
@@ -44,9 +43,72 @@ export class ConvertData {
         item: T,
         src: Record<string, unknown>
     ): T {
-        const x: unknown = ConvertData._convertDataItemByType(item.doctype, src);
+        const x: unknown = ConvertData.ConvertDataItemByType(item.doctype, src);
         return x as T;
     } // ConvertDataItem
+    //
+    public static CreateRecordFromType(doctype: string): Record<string, unknown> | undefined {
+        switch (doctype) {
+            case DomainConstants.TYPE_ANNEE:
+                {
+                    const x = CreateAnnee() as unknown;
+                    return x as Record<string, unknown>;
+                }
+            case DomainConstants.TYPE_CONTROLE:
+                {
+                    const x = CreateControle() as unknown;
+                    return x as Record<string, unknown>;
+                }
+            case DomainConstants.TYPE_ETUDAFFECTATION:
+                {
+                    const x = CreateEtudAffectation() as unknown;
+                    return x as Record<string, unknown>;
+                }
+            case DomainConstants.TYPE_ETUDIANT:
+                {
+                    const x = CreateEtudiant() as unknown;
+                    return x as Record<string, unknown>;
+                }
+            case DomainConstants.TYPE_EVT:
+                {
+                    const x = CreateEvt() as unknown;
+                    return x as Record<string, unknown>;
+                }
+            case DomainConstants.TYPE_GROUPE:
+                {
+                    const x = CreateGroupe() as unknown;
+                    return x as Record<string, unknown>;
+                }
+            case DomainConstants.TYPE_MATIERE:
+                {
+                    const x = CreateMatiere() as unknown;
+                    return x as Record<string, unknown>;
+                }
+            case DomainConstants.TYPE_NOTE:
+                {
+                    const x = CreateNote() as unknown;
+                    return x as Record<string, unknown>;
+                }
+            case DomainConstants.TYPE_SEMESTRE:
+                {
+                    const x = CreateSemestre() as unknown;
+                    return x as Record<string, unknown>;
+                }
+            case DomainConstants.TYPE_UNITE:
+                {
+                    const x = CreateUnite() as unknown;
+                    return x as Record<string, unknown>;
+                }
+            case DomainConstants.TYPE_GROUPCONTROLE:
+                {
+                    const x = CreateGroupeControles() as unknown;
+                    return x as Record<string, unknown>;
+                }
+            default:
+                break;
+        }// doctype
+        return undefined;
+    }// CreateRecordFromType
     //
     private static _convertGroupeDoc(p: IItemGroupe): IGroupeDoc {
         const pp = CreateGroupe();
@@ -62,7 +124,7 @@ export class ConvertData {
         }
         return pp;
     } // ConvertGroupeDoc
-    private static _convertDataItemByType(
+    public static ConvertDataItemByType(
         doctype: string,
         src: Record<string, unknown>
     ): IBaseDoc {

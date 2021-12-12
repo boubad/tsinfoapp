@@ -19,6 +19,9 @@
     PROMPT_STARTDATE,
   } from "../../InfoPrompt";
   import StatusChoice from "../../components/StatusChoice.svelte";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   //
   export let params: any = {};
   let annee: IAnneeDoc = CreateAnnee();
@@ -58,7 +61,7 @@
     _checkVars();
   };
   const _performSave = async (): Promise<void> => {
-    const pMan = new AnneeServices();
+    const pMan = new AnneeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(annee);
     if (r.ok && r.item) {
       annee = { ...r.item };
@@ -68,7 +71,7 @@
     } // r
   };
   const _performRemove = async (): Promise<void> => {
-    const pMan = new AnneeServices();
+    const pMan = new AnneeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAsync(annee);
     if (r.ok) {
       InfoRouter(ROUTE_ANNEES_LIST);
@@ -83,7 +86,7 @@
     blobs = [];
     if (id && id.trim().length > 0) {
       if (!pMan) {
-        pMan = new AnneeServices();
+        pMan = new AnneeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       }
       const cc = await pMan.findItemByIdAsync(id);
       if (cc) {
@@ -101,7 +104,7 @@
     data: Blob,
     _owner?: string
   ): Promise<void> => {
-    const pMan = new AnneeServices();
+    const pMan = new AnneeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAttachmentAsync(annee, name, mime, data);
     if (r.ok && r.item) {
       annee = { ...r.item };
@@ -113,7 +116,7 @@
     name: string,
     _parentid?: string
   ): Promise<void> => {
-    const pMan = new AnneeServices();
+    const pMan = new AnneeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAttachmentAsync(annee, name);
     if (r.ok && r.item) {
       annee = { ...r.item };

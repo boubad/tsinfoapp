@@ -3,9 +3,12 @@
   import { Col, Form, Row } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import { ROUTE_MATIERES_LIST } from "../../../../routes/routesdefs";
+import { CouchDBClient } from "../../../data/CouchDBClient";
   import { DomainConstants } from "../../../data/DomainConstants";
+import { fetchClient } from "../../../data/fetchClient";
   import type { IAttachedDoc } from "../../../data/IAttachedDoc";
   import { CreateMatiere, IMatiereDoc } from "../../../data/IMatiereDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import { MatiereServices } from "../../../data/MatiereServices";
   import BlobInfo from "../../components/BlobInfo.svelte";
   import EditCommands from "../../components/EditCommands.svelte";
@@ -48,7 +51,7 @@
     _checkVars();
   };
   const performSave = async (): Promise<void> => {
-    const pMan = new MatiereServices();
+    const pMan = new MatiereServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(matiere);
     if (r.ok && r.item) {
       matiere = { ...r.item };
@@ -57,7 +60,7 @@
     } // r
   };
   const performRemove = async (): Promise<void> => {
-    const pMan = new MatiereServices();
+    const pMan = new MatiereServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAsync(matiere);
     if (r.ok) {
       InfoRouter(ROUTE_MATIERES_LIST + "/" + uniteid);
@@ -72,7 +75,7 @@
     matiere = CreateMatiere();
     if (id && id.trim().length > 0) {
       if (!pMan) {
-        pMan = new MatiereServices();
+        pMan = new MatiereServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       }
       const cc = await pMan.findItemByIdAsync(id);
       if (cc) {
@@ -91,7 +94,7 @@
     data: Blob,
     _owner?: string
   ): Promise<void> => {
-    const pMan = new MatiereServices();
+    const pMan = new MatiereServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAttachmentAsync(matiere, name, mime, data);
     if (r.ok && r.item) {
       matiere = { ...r.item };
@@ -103,7 +106,7 @@
     name: string,
     _parentid?: string
   ): Promise<void> => {
-    const pMan = new MatiereServices();
+    const pMan = new MatiereServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAttachmentAsync(matiere, name);
     if (r.ok && r.item) {
       matiere = { ...r.item };

@@ -3,8 +3,11 @@
   import { Col, Form, Row } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import { ROUTE_UNITES_LIST } from "../../../../routes/routesdefs";
+import { CouchDBClient } from "../../../data/CouchDBClient";
   import { DomainConstants } from "../../../data/DomainConstants";
+import { fetchClient } from "../../../data/fetchClient";
   import type { IAttachedDoc } from "../../../data/IAttachedDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import { CreateUnite, IUniteDoc } from "../../../data/IUniteDoc";
   import { UniteServices } from "../../../data/UniteServices";
   import BlobInfo from "../../components/BlobInfo.svelte";
@@ -36,7 +39,7 @@
     _checkVars();
   };
   const performSave = async (): Promise<void> => {
-    const pMan = new UniteServices();
+    const pMan = new UniteServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(unite);
     if (r.ok && r.item) {
       unite = { ...r.item };
@@ -46,7 +49,7 @@
     } // r
   };
   const performRemove = async () => {
-    const pMan = new UniteServices();
+    const pMan = new UniteServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAsync(unite);
     if (r.ok) {
       InfoRouter(ROUTE_UNITES_LIST);
@@ -61,7 +64,7 @@
     blobs = [];
     if (id && id.trim().length > 0) {
       if (!pMan) {
-        pMan = new UniteServices();
+        pMan = new UniteServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       }
       const cc = await pMan.findItemByIdAsync(id);
       if (cc) {
@@ -79,7 +82,7 @@
     data: Blob,
     _owner?: string
   ): Promise<void> => {
-    const pMan = new UniteServices();
+    const pMan = new UniteServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAttachmentAsync(unite, name, mime, data);
     if (r.ok && r.item) {
       unite = { ...r.item };
@@ -91,7 +94,7 @@
     name: string,
     _parentid?: string
   ): Promise<void> => {
-    const pMan = new UniteServices();
+    const pMan = new UniteServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAttachmentAsync(unite, name);
     if (r.ok && r.item) {
       unite = { ...r.item };

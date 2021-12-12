@@ -1,8 +1,11 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Col, Row } from "sveltestrap";
+import { CouchDBClient } from "../../../data/CouchDBClient";
   import { DateUtils } from "../../../data/DateUtils";
+import { fetchClient } from "../../../data/fetchClient";
   import type { IAttachedDoc } from "../../../data/IAttachedDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import { initialNote, INoteDoc } from "../../../data/INoteDoc";
   import { CreateNote } from "../../../data/INoteDoc";
   import { NoteServices } from "../../../data/NoteServices";
@@ -37,7 +40,7 @@
     blobs = [];
     let noteid = id ? id : note._id;
     if (noteid.length > 0) {
-      const pMan = new NoteServices();
+      const pMan = new NoteServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const store = pMan.datastore;
       const p = await store.findItemByIdAsync(initialNote, noteid);
       if (p) {
@@ -61,7 +64,7 @@
     _checkVars();
   };
   const performSave = async (): Promise<void> => {
-    const pMan = new NoteServices();
+    const pMan = new NoteServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(note);
     if (r.ok && r.item) {
       note = { ...r.item };
@@ -76,7 +79,7 @@
     data: Blob,
     _owner?: string
   ): Promise<void> => {
-    const pMan = new NoteServices();
+    const pMan = new NoteServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAttachmentAsync(note, name, mime, data);
     if (r.ok && r.item) {
       note = { ...r.item };
@@ -88,7 +91,7 @@
     name: string,
     _parentid?: string
   ): Promise<void> => {
-    const pMan = new NoteServices();
+    const pMan = new NoteServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAttachmentAsync(note, name);
     if (r.ok && r.item) {
       note = { ...r.item };

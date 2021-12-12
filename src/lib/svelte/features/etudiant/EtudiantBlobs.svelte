@@ -7,6 +7,9 @@
   import BlobInfo from "../../components/BlobInfo.svelte";
   import PersonHeader from "../../components/PersonHeader.svelte";
   import { TITLE_ETUDIANT_BLOBS } from "../../InfoPrompt";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
 
   //
   export let params: any = {};
@@ -21,7 +24,7 @@
     blobs = [];
     if (id && id.trim().length > 0) {
       if (!pMan) {
-        pMan = new EtudiantServices();
+        pMan = new EtudiantServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       }
       const cc = await pMan.findItemByIdAsync(id);
       if (cc) {
@@ -37,7 +40,7 @@
     data: Blob,
     _owner?: string
   ): Promise<void> => {
-    const pMan = new EtudiantServices();
+    const pMan = new EtudiantServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAttachmentAsync(etudiant, name, mime, data);
     if (r.ok && r.item) {
       etudiant = { ...r.item };
@@ -48,7 +51,7 @@
     name: string,
     _parentid?: string
   ): Promise<void> => {
-    const pMan = new EtudiantServices();
+    const pMan = new EtudiantServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAttachmentAsync(etudiant, name);
     if (r.ok && r.item) {
       etudiant = { ...r.item };

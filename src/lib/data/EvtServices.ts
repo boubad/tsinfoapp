@@ -3,14 +3,15 @@ import { EvtType, ConvertEvtTypeToString } from './EvtType';
 import { IEvtDoc, initialEvt } from "./IEvtDoc";
 import { ControleChildServices } from "./ControleChildServices";
 import type { IDataStore } from "./IDataStore";
+import type { IDataUrlCreator } from "./IDataUrlCreator";
 
 //
 export class EvtServices extends ControleChildServices<IEvtDoc> {
     //
     constructor(
-        store?: IDataStore, dbUrl?: string
+        store: IDataStore, creator?:IDataUrlCreator, dbUrl?: string
     ) {
-        super(initialEvt, store,dbUrl);
+        super(initialEvt, store,creator,dbUrl);
     }
     protected async registerDocAsync(doc: Record<string, unknown>): Promise<IEvtDoc> {
         const p = await super.registerDocAsync(doc)

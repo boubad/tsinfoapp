@@ -8,10 +8,13 @@
     ROUTE_EVT_DETAIL,
   } from "../../../../routes/routesdefs";
   import { ControleServices } from "../../../data/ControleServices ";
+import { CouchDBClient } from "../../../data/CouchDBClient";
   import { EvtServices } from "../../../data/EvtServices";
   import { ConvertEvtTypeToString } from "../../../data/EvtType";
+import { fetchClient } from "../../../data/fetchClient";
   import { CreateControle, IControleDoc } from "../../../data/IControleDoc";
   import type { IEvtDoc } from "../../../data/IEvtDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import PhotoComponent from "../../components/PhotoComponent.svelte";
   import {
     COMMAND_SELECT,
@@ -46,11 +49,11 @@
     controle = CreateControle();
     items = [];
     if (id && id.trim().length > 0) {
-      const pCont = new ControleServices();
+      const pCont = new ControleServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const cc = await pCont.findItemByIdAsync(id);
       if (cc) {
         controle = { ...cc };
-        const pMan = new EvtServices();
+        const pMan = new EvtServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
         const dd = await pMan.findAllItemsByFilterAsync({
           controleid: controle._id,
         });

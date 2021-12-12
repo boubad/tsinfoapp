@@ -17,6 +17,9 @@
   import GroupeTypeChoice from "./../../components/GroupeTypeChoice.svelte";
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import { ROUTE_GROUPES_LIST } from "../../../../routes/routesdefs";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   //
   export let params: any = {};
   let groupe: IGroupeDoc = CreateGroupe();
@@ -48,7 +51,7 @@
   }; // performRefresh
   //
   const findParents = async (): Promise<void> => {
-    const pMan = new GroupeServices();
+    const pMan = new GroupeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const aa = await pMan.findParentOptionsAsync(groupe, semestreid);
     parents = [...aa];
   };
@@ -74,7 +77,7 @@
     _checkVars();
   };
   const performSave = async (): Promise<void> => {
-    const pMan = new GroupeServices();
+    const pMan = new GroupeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(groupe);
     if (r.ok && r.item) {
       InfoRouter(ROUTE_GROUPES_LIST + "/" + semestreid);

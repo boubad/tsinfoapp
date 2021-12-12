@@ -4,6 +4,9 @@
   import { NavLink, Row, Table } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import { ROUTE_UNITE_DETAIL } from "../../../../routes/routesdefs";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import type { IUniteDoc } from "../../../data/IUniteDoc";
   import { UniteServices } from "../../../data/UniteServices";
   import ListCommands from "../../components/ListCommands.svelte";
@@ -26,7 +29,7 @@
   };
   //
   const performRefresh = async () => {
-    const pMan = new UniteServices();
+    const pMan = new UniteServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const dd = await pMan.findAllItemsByFilterAsync();
     const aa = [...dd];
     if (aa.length > 1) {

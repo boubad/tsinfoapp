@@ -3,7 +3,10 @@
   import { onMount } from "svelte";
   import { Col, NavLink, Row, Table } from "sveltestrap";
   import { ROUTE_MATIERE_STAT } from "../../../../routes/routesdefs";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
   import type { IMatiereStatItem } from "../../../data/IMatiereStatItem";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import type { IPaginationData } from "../../../data/IPaginationData";
   import {
     GetInitialPaginationData,
@@ -16,8 +19,9 @@
   import PhotoComponent from "../../components/PhotoComponent.svelte";
   import {
     PROMPT_EVTS,
+    PROMPT_FIRSTNAME,
     PROMPT_GROUPE,
-    PROMPT_NAME,
+    PROMPT_LASTNAME,
     PROMPT_NOTE,
     PROMPT_OBSERVATIONS,
     PROMPT_PHOTO,
@@ -86,7 +90,7 @@
     if (semestreid.length < 1 || anneeid.length < 1 || matiereid.length < 1) {
       allItems = [];
     } else {
-      const pMan = new StatServices();
+      const pMan = new StatServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const aa = await pMan.getMatiereStats(anneeid, semestreid, matiereid);
       allItems = [...aa];
     }
@@ -155,7 +159,8 @@
         <thead>
           <tr>
             <th>{PROMPT_PHOTO}</th>
-            <th>{PROMPT_NAME}</th>
+            <th>{PROMPT_LASTNAME}</th>
+            <th>{PROMPT_FIRSTNAME}</th>
             <th>{PROMPT_GROUPE}</th>
             <th>{PROMPT_NOTE}</th>
             <th>{PROMPT_EVTS}</th>
@@ -166,7 +171,7 @@
           {#each items as item}
             <tr class="align-middle">
               <td>
-                <PhotoComponent url={item.url} text={item.name} height={112} />
+                <PhotoComponent url={item.url} text={item.lastname} height={112} />
               </td>
               <td>
                 <NavLink
@@ -174,7 +179,16 @@
                     handleSelectEtudiant(item.id);
                   }}
                 >
-                  <strong> {item.name}</strong>
+                  <strong> {item.lastname}</strong>
+                </NavLink>
+              </td>
+              <td>
+                <NavLink
+                  on:click={() => {
+                    handleSelectEtudiant(item.id);
+                  }}
+                >
+                  <strong> {item.firstname}</strong>
                 </NavLink>
               </td>
               <td>

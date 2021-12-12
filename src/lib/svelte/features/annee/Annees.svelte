@@ -17,6 +17,9 @@
     TITLE_ANNEES,
   } from "../../InfoPrompt";
   import { DateUtils } from "../../../data/DateUtils";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   //
   let items: IAnneeDoc[] = [];
   //
@@ -29,7 +32,7 @@
   };
   //
   const performRefresh = async (): Promise<void> => {
-    const pMan = new AnneeServices();
+    const pMan = new AnneeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const dd = await pMan.findAllItemsByFilterAsync();
     const aa = [...dd];
     if (aa.length > 1) {

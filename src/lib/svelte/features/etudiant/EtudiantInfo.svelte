@@ -21,6 +21,9 @@
     PROMPT_VILLE,
     TITLE_ETUDIANT_INFO,
   } from "../../InfoPrompt";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   //
   export let params: any = {};
   let etudiant: IEtudiantDoc = CreateEtudiant();
@@ -50,7 +53,7 @@
     _checkVars();
   };
   const onSaveEtudiant = async (): Promise<void> => {
-    const pMan = new EtudiantServices();
+    const pMan = new EtudiantServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(etudiant);
     if (r.ok && r.item) {
       etudiant = { ...r.item };
@@ -62,7 +65,7 @@
   const performRefresh = async (id?: string): Promise<void> => {
     etudiant = CreateEtudiant();
     if (id && id.trim().length > 0) {
-      const pMan = new EtudiantServices();
+      const pMan = new EtudiantServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const cc = await pMan.findItemByIdAsync(id);
       if (cc) {
         etudiant = { ...cc };

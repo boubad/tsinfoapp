@@ -5,11 +5,14 @@
   import { ROUTE_CONTROLES_LIST } from "../../../../routes/routesdefs";
   import { AnneeServices } from "../../../data/AnneeServices";
   import { ControleServices } from "../../../data/ControleServices ";
+import { CouchDBClient } from "../../../data/CouchDBClient";
   import { DomainConstants } from "../../../data/DomainConstants";
+import { fetchClient } from "../../../data/fetchClient";
   import type { IControleDoc } from "../../../data/IControleDoc";
   import { CreateControle } from "../../../data/IControleDoc";
   import type { IDataOption } from "../../../data/IDataOption";
   import { initialGroupeControles } from "../../../data/IGroupeControlesDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import EditCommands from "../../components/EditCommands.svelte";
   import InputDate from "../../components/InputDate.svelte";
   import InputObservations from "../../components/InputObservations.svelte";
@@ -55,7 +58,7 @@
       groupeid = groupe;
     }
     if (matiereid.length > 0 && semestreid.length > 0) {
-      const pMan = new ControleServices();
+      const pMan = new ControleServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const oo = await pMan.getItemOptionsAsync(initialGroupeControles, {
         matiereid,
         semestreid,
@@ -65,7 +68,7 @@
       items = [];
     }
     if (anneeid.trim().length > 0) {
-      const pf = new AnneeServices();
+      const pf = new AnneeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const aa = await pf.findItemByIdAsync(anneeid);
       if (aa) {
         startdate = aa.startdate;
@@ -109,7 +112,7 @@
     _checkVars();
   };
   const performSave = async (): Promise<void> => {
-    const pMan = new ControleServices();
+    const pMan = new ControleServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(controle);
     if (r.ok && r.item) {
       InfoRouter(ROUTE_CONTROLES_LIST + "/" + anneeid + "/" + groupeid);

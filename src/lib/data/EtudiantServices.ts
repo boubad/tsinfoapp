@@ -1,24 +1,48 @@
 import { DomainConstants } from "./DomainConstants";
 import { IEtudiantDoc, initialEtudiant } from "./IEtudiantDoc";
-import { EtudAffectationServices } from "./EtudAffectationServices";
-import { EvtServices } from "./EvtServices";
 import type { IItemPayload } from "./IItemPayload";
 import { ItemServices } from "./ItemServices";
-import { NoteServices } from "./NoteServices";
 import type { IDataStore } from "./IDataStore";
 import type { ICouchDBUpdateResponse } from "./ICouchDBUpdateResponse";
 import { ConvertData } from "./ConvertData";
+import type { IDataUrlCreator } from "./IDataUrlCreator";
 
 export class EtudiantServices extends ItemServices<IEtudiantDoc> {
     constructor(
-        store?: IDataStore, dbUrl?: string
+        store: IDataStore, creator?:IDataUrlCreator, dbUrl?: string
     ) {
-        super(initialEtudiant, store,dbUrl);
+        super(initialEtudiant, store,creator,dbUrl);
     }
+    //
+       //
+  protected sortItems(src: readonly IEtudiantDoc[]): readonly IEtudiantDoc[] {
+    if (src.length > 1) {
+      const zz = [...src];
+      zz.sort((a, b) => {
+        let s1 = a.lastname;
+        let s2 = b.lastname ;
+        if (s1 < s2) {
+          return -1;
+        } else if (s1 > s2) {
+          return 1;
+        }
+        s1 = a.firstname ? a.firstname : '';
+        s2 = b.firstname ? b.firstname : '';
+        if (s1 < s2) {
+          return -1;
+        } else if (s1 > s2) {
+          return 1;
+        }
+        return 0;
+      });
+      return zz;
+    } // sort
+    return src;
+  }// sorItems
     //
      //
      protected async registerDocAsync(doc: Record<string, unknown>): Promise<IEtudiantDoc> {
-        const p = ConvertData.ConvertDataItem(this._item, doc)
+        const p = ConvertData.ConvertDataItem(this.item, doc)
         const lastname = p.lastname.toUpperCase();
         const firstname = p.firstname;
         const title = lastname + " " + firstname;
@@ -44,31 +68,6 @@ export class EtudiantServices extends ItemServices<IEtudiantDoc> {
         store.register_item(p)
         return p
     }// registerDocAsync
-    //
-    public async findItemsAsync(
-        filter?: Record<string, unknown>,
-        offset?: number,
-        count?: number
-    ): Promise<readonly IEtudiantDoc[]> {
-        const xx = await super.findItemsAsync(filter, offset, count)
-        const vret = [...xx];
-        if (vret.length > 1) {
-            vret.sort((a, b) => {
-                if (a.lastname > b.lastname) {
-                    return -1
-                } else if (a.lastname < b.lastname) {
-                    return 1
-                }
-                if (a.firstname > b.firstname) {
-                    return -1
-                } else if (a.firstname < b.firstname) {
-                    return 1
-                }
-                return 0
-            })
-        } // sort
-        return vret
-    } // findItemsAsync
     //
     protected async fetchUniqueId(
         current: IEtudiantDoc
@@ -129,62 +128,6 @@ export class EtudiantServices extends ItemServices<IEtudiantDoc> {
     protected isStoreable(p: IEtudiantDoc): boolean {
         return p.firstname.trim().length > 0 && p.lastname.trim().length > 0;
     } // isStorable
-    public async removeItemAsync(p: IEtudiantDoc): Promise<IItemPayload<IEtudiantDoc>> {
-        const id = p._id;
-        const rev = p._rev;
-        if (id.trim().length < 1 || rev.trim().length < 1) {
-            return {
-                ok: false,
-                error: 'Item not persisted'
-            };
-        }
-        {
-            const pf = new NoteServices(this.datastore)
-            const pp = await pf.findAllItemsByFilterAsync({ doctype: DomainConstants.TYPE_NOTE, etudiantid: id });
-            const n = pp.length;
-            for (let i = 0; i < n; i++) {
-                const x = pp[i];
-                const rsp = await pf.removeItemAsync(x);
-                if (!rsp.ok) {
-                    return {
-                        ok: false,
-                        error: rsp.error
-                    }
-                }
-            }// i
-        }// notes
-        {
-            const pf = new EvtServices(this.datastore)
-            const pp = await pf.findAllItemsByFilterAsync({ doctype: DomainConstants.TYPE_NOTE, etudiantid: id });
-            const n = pp.length;
-            for (let i = 0; i < n; i++) {
-                const x = pp[i];
-                const rsp = await pf.removeItemAsync(x);
-                if (!rsp.ok) {
-                    return {
-                        ok: false,
-                        error: rsp.error
-                    }
-                }
-            }// i
-        }// evts
-        {
-            const pf = new EtudAffectationServices(this.datastore)
-            const pp = await pf.findAllItemsByFilterAsync({ doctype: DomainConstants.TYPE_NOTE, etudiantid: id });
-            const n = pp.length;
-            for (let i = 0; i < n; i++) {
-                const x = pp[i];
-                const rsp = await pf.removeItemAsync(x);
-                if (!rsp.ok) {
-                    return {
-                        ok: false,
-                        error: rsp.error
-                    }
-                }
-            }// i
-        }// affetuds
-        return super.removeItemAsync(p);
-    } // removeItemAsync
     //
     protected getPersistMap(current: IEtudiantDoc): Record<string, unknown> {
         const data = super.getPersistMap(current);
@@ -410,7 +353,7 @@ export class EtudiantServices extends ItemServices<IEtudiantDoc> {
             return pRet;
         }
         const oMap = await store.findDocByIdAsync(id);
-        if (!oMap._id) {
+        if (!oMap) {
             return pRet;
         }
         oMap[DomainConstants.FIELD_AVATAR] = attName;

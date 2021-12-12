@@ -4,12 +4,15 @@
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import { ROUTE_CONTROLES_LIST } from "../../../../routes/routesdefs";
   import { ControleServices } from "../../../data/ControleServices ";
+import { CouchDBClient } from "../../../data/CouchDBClient";
   import { DomainConstants } from "../../../data/DomainConstants";
+import { fetchClient } from "../../../data/fetchClient";
   import { initialAnnee } from "../../../data/IAnneeDoc";
   import type { IControleDoc } from "../../../data/IControleDoc";
   import { CreateControle } from "../../../data/IControleDoc";
   import type { IDataOption } from "../../../data/IDataOption";
   import { initialGroupeControles } from "../../../data/IGroupeControlesDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import EditCommands from "../../components/EditCommands.svelte";
   import InputDate from "../../components/InputDate.svelte";
   import InputObservations from "../../components/InputObservations.svelte";
@@ -44,7 +47,7 @@
     semestreid = "";
     items = [];
     if (id && id.length > 0) {
-      const pMan = new ControleServices();
+      const pMan = new ControleServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const c = await pMan.findItemByIdAsync(id);
       if (c) {
         controle = { ...c };
@@ -105,7 +108,7 @@
     _checkVars();
   };
   const performSave = async (): Promise<void> => {
-    const pMan = new ControleServices();
+    const pMan = new ControleServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(controle);
     if (r.ok && r.item) {
       controle = { ...r.item };
@@ -114,7 +117,7 @@
     }
   };
   const performRemove = async (): Promise<void> => {
-    const pMan = new ControleServices();
+    const pMan = new ControleServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const b = await pMan.removeItemAsync(controle);
     if (b.ok) {
       InfoRouter(ROUTE_CONTROLES_LIST + "/" + anneeid + "/" + groupeid);

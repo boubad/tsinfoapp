@@ -7,18 +7,19 @@ import { ControleServices } from "./ControleServices ";
 import { ConvertData } from "./ConvertData";
 import { initialSemestre } from './ISemestreDoc';
 import { initialMatiere } from "./IMatiereDoc";
+import type { IDataUrlCreator } from "./IDataUrlCreator";
 
 //
 export class GroupeControlesServices extends SigleNamedItemServices<IGroupeControlesDoc> {
     //
     constructor(
-        store?: IDataStore, dbUrl?: string
+        store: IDataStore, creator?:IDataUrlCreator, dbUrl?: string
     ) {
-        super(initialGroupeControles, store,dbUrl);
+        super(initialGroupeControles, store,creator,dbUrl);
     }
     //
     protected async registerDocAsync(doc: Record<string, unknown>): Promise<IGroupeControlesDoc> {
-        const p = ConvertData.ConvertDataItem(this._item, doc)
+        const p = ConvertData.ConvertDataItem(this.item, doc)
         const store = this.datastore
         const semestre = await store.findItemByIdAsync(initialSemestre, p.semestreid);
         if (semestre) {

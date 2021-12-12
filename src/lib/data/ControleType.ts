@@ -27,7 +27,7 @@ export function GetControleTypeOptions(): IDataOption[] {
         { value: '7', name: 'Autre' },
     ];
     return options;
-} //get_controletype_options
+} // get_controletype_options
 //
 export function ControleType2String(etype: ControleType | null | undefined): string {
     if (etype !== undefined && etype !== null) {
@@ -51,7 +51,7 @@ export function ControleType2String(etype: ControleType | null | undefined): str
         } // etype
     }
     return "0";
-} //controletype_to_string
+} // controletype_to_string
 export function String2ControleType(s: string | null | undefined): ControleType {
     let etype: ControleType = ControleType.Unknown;
     if (s !== undefined && s !== null) {

@@ -29,6 +29,9 @@
   } from "../../InfoPrompt";
   import { ROUTE_ETUDIANTS_LIST } from "../../../../routes/routesdefs";
   import { InfoRouter } from "../../../../routes/InfoRouter";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   //
   export let params: any = {};
   let etudiant: IEtudiantDoc = CreateEtudiant();
@@ -62,7 +65,7 @@
     const id = etudiant._id;
     const rev = etudiant._rev;
     if (id.length > 0 && rev.length > 0) {
-      const pMan = new EtudiantServices();
+      const pMan = new EtudiantServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const r = await pMan.removeItemAsync(etudiant);
       if (r.ok) {
         InfoRouter(ROUTE_ETUDIANTS_LIST);
@@ -71,7 +74,7 @@
   };
 
   const onSaveEtudiant = async () => {
-    const pMan = new EtudiantServices();
+    const pMan = new EtudiantServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(etudiant);
     if (r.ok && r.item) {
       etudiant = { ...r.item };
@@ -83,7 +86,7 @@
   const performRefresh = async (id?: string) => {
     etudiant = CreateEtudiant();
     if (id && id.trim().length > 0) {
-      const pMan = new EtudiantServices();
+      const pMan = new EtudiantServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const cc = await pMan.findItemByIdAsync(id);
       if (cc) {
         etudiant = { ...cc };

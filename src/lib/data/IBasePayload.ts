@@ -1,8 +1,8 @@
 import type { IDataOption } from "./IDataOption";
 
 export interface IBasePayload {
-    error?: string;
-    info?: string;
-    ok?: boolean;
-    data?: Record<string,unknown>[] | IDataOption[] | unknown;
+    readonly error?: string;
+    readonly info?: string;
+    readonly ok?: boolean;
+    readonly data?: Record<string,unknown>[] | IDataOption[] | unknown;
 } // interface IBasePayload

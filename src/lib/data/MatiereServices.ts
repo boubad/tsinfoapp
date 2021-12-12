@@ -6,18 +6,19 @@ import { ConvertData } from './ConvertData';
 import { initialUnite } from './IUniteDoc';
 import type { IDataStore } from "./IDataStore";
 import type { IItemPayload } from './IItemPayload';
+import type { IDataUrlCreator } from "./IDataUrlCreator";
 
 //
 export class MatiereServices extends SigleNamedItemServices<IMatiereDoc> {
     //
     constructor(
-        store?: IDataStore, dbUrl?: string
+        store: IDataStore, creator?:IDataUrlCreator, dbUrl?: string
     ) {
-        super(initialMatiere, store,dbUrl);
+        super(initialMatiere, store,creator,dbUrl);
     }
     //
     protected async registerDocAsync(doc: Record<string, unknown>): Promise<IMatiereDoc> {
-        const p = ConvertData.ConvertDataItem(this._item, doc)
+        const p = ConvertData.ConvertDataItem(this.item, doc)
         const store = this.datastore
         const pUnite = await store.findItemByIdAsync(initialUnite, p.uniteid)
         if (pUnite) {

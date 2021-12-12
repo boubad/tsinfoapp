@@ -8,11 +8,14 @@
     ROUTE_GROUPE_DETAIL,
     ROUTE_SEMESTRE_DETAIL,
   } from "../../../../routes/routesdefs";
+import { CouchDBClient } from "../../../data/CouchDBClient";
   import { DateUtils } from "../../../data/DateUtils";
   import { EtudAffectationServices } from "../../../data/EtudAffectationServices";
   import { EtudiantServices } from "../../../data/EtudiantServices";
-  import type { IEtudAffectationDoc } from "../../../data/IEtudAffectation";
+import { fetchClient } from "../../../data/fetchClient";
+  import type { IEtudAffectationDoc } from "../../../data/IEtudAffectationDoc";
   import { CreateEtudiant, IEtudiantDoc } from "../../../data/IEtudiantDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import PersonHeader from "../../components/PersonHeader.svelte";
   import {
     PROMPT_ANNEE,
@@ -33,11 +36,11 @@
     etudiant = CreateEtudiant();
     items = [];
     if (id && id.trim().length > 0) {
-      const pEtudServices = new EtudiantServices();
+      const pEtudServices = new EtudiantServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const p = await pEtudServices.findItemByIdAsync(id);
       if (p) {
         etudiant = { ...p };
-        const pMan = new EtudAffectationServices();
+        const pMan = new EtudAffectationServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
         const cc = await pMan.findAllItemsByFilterAsync({ etudiantid: id });
         if (cc) {
           const aa = [...cc];
@@ -127,7 +130,7 @@
                 <td>
                   <NavLink
                     on:click={() => {
-                      handleSelectSemestre(aff._semestreid);
+                      handleSelectSemestre(aff.semestreid);
                     }}
                   >
                     <strong

@@ -19,6 +19,9 @@
   import InputCoefficient from "../../components/InputCoefficient.svelte";
   import { onMount } from "svelte";
   import { InfoRouter } from "../../../../routes/InfoRouter";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   //
   //
   export let params: any = {};
@@ -53,7 +56,7 @@
     _checkVars();
   };
   const performSave = async (): Promise<void> => {
-    const pMan = new GroupeControlesServices();
+    const pMan = new GroupeControlesServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(groupecontroles);
     if (r.ok && r.item) {
       InfoRouter(

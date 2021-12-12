@@ -1,4 +1,4 @@
-//DataConsts.ts
+// DataConsts.ts
 //////////////////////
 export const EMPTY_STRING: string = "";
 export const MIME_JPEG: string = 'image/jpeg';

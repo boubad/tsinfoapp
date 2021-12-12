@@ -9,8 +9,11 @@
     ROUTE_GROUPECONTROLE_DETAIL,
   } from "../../../../routes/routesdefs";
   import { ControleServices } from "../../../data/ControleServices ";
+import { CouchDBClient } from "../../../data/CouchDBClient";
   import { DateUtils } from "../../../data/DateUtils";
+import { fetchClient } from "../../../data/fetchClient";
   import type { IControleDoc } from "../../../data/IControleDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import ListCommands from "../../components/ListCommands.svelte";
   import {
     COMMAND_CONTROLE_NEW,
@@ -71,7 +74,7 @@
     if (groupeid.length < 1 || anneeid.length < 1) {
       items = [];
     } else {
-      const pMan = new ControleServices();
+      const pMan = new ControleServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const dd = await pMan.findAllItemsByFilterAsync({ anneeid, groupeid });
       const aa = [...dd];
       if (aa.length > 1) {

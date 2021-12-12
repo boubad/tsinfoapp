@@ -5,8 +5,11 @@
   import { NavLink, Row, Table } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import { ROUTE_GROUPE_DETAIL } from "../../../../routes/routesdefs";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
   import { GroupeServices } from "../../../data/GroupeServices";
   import type { IGroupeDoc } from "../../../data/IGroupeDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import ListCommands from "../../components/ListCommands.svelte";
   import {
     COMMAND_NEW_GROUPE,
@@ -34,7 +37,7 @@
       semestreid = id;
     }
     if (semestreid.length > 0) {
-      const pMan = new GroupeServices();
+      const pMan = new GroupeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const aa = await pMan.findAllItemsByFilterAsync({
         semestreid,
       });

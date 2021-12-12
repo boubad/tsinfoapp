@@ -2,13 +2,16 @@
   //
   import { onMount } from "svelte";
   import { Col, Form, Row } from "sveltestrap";
+import { CouchDBClient } from "../../../data/CouchDBClient";
   import { DateUtils } from "../../../data/DateUtils";
   import { DomainConstants } from "../../../data/DomainConstants";
   import { EvtServices } from "../../../data/EvtServices";
   import { EvtType } from "../../../data/EvtType";
+import { fetchClient } from "../../../data/fetchClient";
   import type { IAttachedDoc } from "../../../data/IAttachedDoc";
   import type { IEvtDoc } from "../../../data/IEvtDoc";
   import { CreateEvt } from "../../../data/IEvtDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import BlobInfo from "../../components/BlobInfo.svelte";
   import EditCommands from "../../components/EditCommands.svelte";
   import EvtTypeChoice from "../../components/EvtTypeChoice.svelte";
@@ -46,7 +49,7 @@
   const performRefresh = async (id?: string): Promise<void> => {
     blobs = [];
     const evtid = id ? id : evt._id;
-    const pMan = new EvtServices();
+    const pMan = new EvtServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     evt = CreateEvt();
     if (evtid.length > 0) {
       const p = await pMan.findItemByIdAsync(evtid);
@@ -67,7 +70,7 @@
   };
   //
   const performRemove = async (): Promise<void> => {
-    const pMan = new EvtServices();
+    const pMan = new EvtServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAsync(evt);
     if (r.ok) {
       blobs = [];
@@ -82,7 +85,7 @@
     _checkVars();
   };
   const performSave = async (): Promise<void> => {
-    const pMan = new EvtServices();
+    const pMan = new EvtServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(evt);
     if (r.ok && r.item) {
       evt = { ...r.item };
@@ -97,7 +100,7 @@
     data: Blob,
     _owner?: string
   ): Promise<void> => {
-    const pMan = new EvtServices();
+    const pMan = new EvtServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAttachmentAsync(evt, name, mime, data);
     if (r.ok && r.item) {
       evt = { ...r.item };
@@ -109,7 +112,7 @@
     name: string,
     _parentid?: string
   ): Promise<void> => {
-    const pMan = new EvtServices();
+    const pMan = new EvtServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAttachmentAsync(evt, name);
     if (r.ok && r.item) {
       evt = { ...r.item };

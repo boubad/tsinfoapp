@@ -8,10 +8,11 @@ import { initialGroupe } from "./IGroupeDoc";
 import { initialUnite } from "./IUniteDoc";
 import { initialMatiere } from "./IMatiereDoc";
 import { GroupeType } from "./GroupeType";
+import type { IDataUrlCreator } from "./IDataUrlCreator";
 //
 export class GlobalServices extends BaseServices {
-  constructor(store?: IDataStore, dbUrl?: string) {
-    super(store, dbUrl);
+  constructor(store: IDataStore, creator?: IDataUrlCreator, dbUrl?: string) {
+    super(store, creator, dbUrl);
   }
   //
   private _selectItemId(
@@ -37,7 +38,7 @@ export class GlobalServices extends BaseServices {
     anneeid: string,
     filterAnnee?: Record<string, unknown>
   ): Promise<IGlobalPayload> {
-    const annees = await this.getItemOptionsAsync(initialAnnee, filterAnnee);
+    const annees = await this.getItemOptionsAsync(initialAnnee, filterAnnee, true);
     const id = this._selectItemId(annees, anneeid);
     if (id.length > 0) {
       return {
@@ -66,7 +67,7 @@ export class GlobalServices extends BaseServices {
     };
   } // changeAnneeIdAsync
   //
-  public async RefreshSemestresAsync(
+  public async refreshSemestresAsync(
     semestreid: string,
     groupeid: string,
     filterSemestre?: Record<string, unknown>,
@@ -169,7 +170,7 @@ export class GlobalServices extends BaseServices {
       pRet.groupeid = g._id;
     }
     return pRet;
-  } // changeGroupeIdAsyn
+  } // changeGroupeIdAsync
   //
   public async refreshUnitesAsync(
     uniteid: string,
@@ -179,6 +180,7 @@ export class GlobalServices extends BaseServices {
   ): Promise<IGlobalPayload> {
     let pRet: IGlobalPayload = {
       ok: true,
+      unites: [],
       uniteid: "",
       matieres: [],
       matiereid: "",
@@ -339,10 +341,10 @@ export class GlobalServices extends BaseServices {
         pRet.semestreid = s._id;
         const xfilter = filterGroupe
           ? {
-              ...filterGroupe,
-              semestreid: semestreid,
-              groupetype: GroupeType.Tp,
-            }
+            ...filterGroupe,
+            semestreid: semestreid,
+            groupetype: GroupeType.Tp,
+          }
           : { semestreid: semestreid, groupetype: GroupeType.Tp };
         const groupes = await this.getItemOptionsAsync(initialGroupe, xfilter);
         pRet.groupes = groupes;
@@ -380,6 +382,6 @@ export class GlobalServices extends BaseServices {
       }
     }
     return pRet;
-  } //RefreshAllAsync
+  } // RefreshAllAsync
   //
 } // class AppStateServices

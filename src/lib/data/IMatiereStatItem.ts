@@ -1,9 +1,6 @@
-export type IMatiereStatItem = {
-    readonly id: string;
-    readonly name: string;
-    readonly url: string;
-    readonly groupe: string;
+import type { IEtudiantStatItem } from "./IEtudiantStatItem";
+
+export interface  IMatiereStatItem  extends  IEtudiantStatItem  {
     readonly note:number;
-    readonly observations: string[];
     readonly evts: string[];
 }// type IMatiereStatItem

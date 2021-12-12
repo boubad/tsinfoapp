@@ -4,13 +4,16 @@
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import { ROUTE_ETUDAFFECTATIONS_LIST } from "../../../../routes/routesdefs";
   import { AnneeServices } from "../../../data/AnneeServices";
+  import { CouchDBClient } from "../../../data/CouchDBClient";
   import { DomainConstants } from "../../../data/DomainConstants";
   import { EtudAffectationServices } from "../../../data/EtudAffectationServices";
+  import { fetchClient } from "../../../data/fetchClient";
   import type { IAttachedDoc } from "../../../data/IAttachedDoc";
   import {
     CreateEtudAffectation,
     IEtudAffectationDoc,
-  } from "../../../data/IEtudAffectation";
+  } from "../../../data/IEtudAffectationDoc";
+  import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import BlobInfo from "../../components/BlobInfo.svelte";
   import EditCommands from "../../components/EditCommands.svelte";
   import InputDate from "../../components/InputDate.svelte";
@@ -40,12 +43,18 @@
   //
   const performRefresh = async (id?: string): Promise<void> => {
     const affetudid = id && id.length > 0 ? id : "";
-    const pMan = new EtudAffectationServices();
+    const pMan = new EtudAffectationServices(
+      new CouchDBClient(fetchClient),
+      infoDataUrlCreator
+    );
     const p = await pMan.findItemByIdAsync(affetudid);
     if (p) {
       anneeid = p.anneeid;
       groupeid = p.groupeid;
-      const pf = new AnneeServices();
+      const pf = new AnneeServices(
+        new CouchDBClient(fetchClient),
+        infoDataUrlCreator
+      );
       const a = await pf.findItemByIdAsync(anneeid);
       if (a) {
         startdate = a.startdate;
@@ -69,7 +78,10 @@
     _checkVars();
   };
   const performSave = async (): Promise<void> => {
-    const pMan = new EtudAffectationServices();
+    const pMan = new EtudAffectationServices(
+      new CouchDBClient(fetchClient),
+      infoDataUrlCreator
+    );
     const r = await pMan.saveItemAsync(etudaffectation);
     if (r.ok && r.item) {
       etudaffectation = { ...r.item };
@@ -78,7 +90,10 @@
     } // r
   };
   const performRemove = async (): Promise<void> => {
-    const pMan = new EtudAffectationServices();
+    const pMan = new EtudAffectationServices(
+      new CouchDBClient(fetchClient),
+      infoDataUrlCreator
+    );
     const r = await pMan.removeItemAsync(etudaffectation);
     if (r.ok) {
       InfoRouter(ROUTE_ETUDAFFECTATIONS_LIST + "/" + anneeid + "/" + groupeid);
@@ -92,7 +107,10 @@
     data: Blob,
     _owner?: string
   ): Promise<void> => {
-    const pMan = new EtudAffectationServices();
+    const pMan = new EtudAffectationServices(
+      new CouchDBClient(fetchClient),
+      infoDataUrlCreator
+    );
     const r = await pMan.saveItemAttachmentAsync(
       etudaffectation,
       name,
@@ -109,7 +127,10 @@
     name: string,
     _parentid?: string
   ): Promise<void> => {
-    const pMan = new EtudAffectationServices();
+    const pMan = new EtudAffectationServices(
+      new CouchDBClient(fetchClient),
+      infoDataUrlCreator
+    );
     const r = await pMan.removeItemAttachmentAsync(etudaffectation, name);
     if (r.ok && r.item) {
       etudaffectation = { ...r.item };

@@ -7,6 +7,9 @@
   import { GroupeControlesServices } from "../../../data/GroupeControlesServices";
   import BlobInfo from "../../components/BlobInfo.svelte";
   import { TITLE_GROUPESCONTROLES_BLOBS } from "../../InfoPrompt";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   //
 
   export let params: any = {};
@@ -23,7 +26,7 @@
     blobs = [];
     if (id && id.trim().length > 0) {
       if (!pMan) {
-        pMan = new GroupeControlesServices();
+        pMan = new GroupeControlesServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       }
       const cc = await pMan.findItemByIdAsync(id);
       if (cc) {
@@ -41,7 +44,7 @@
     data: Blob,
     _owner?: string
   ): Promise<void> => {
-    const pMan = new GroupeControlesServices();
+    const pMan = new GroupeControlesServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAttachmentAsync(
       groupecontroles,
       name,
@@ -57,7 +60,7 @@
     name: string,
     _parentid?: string
   ): Promise<void> => {
-    const pMan = new GroupeControlesServices();
+    const pMan = new GroupeControlesServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAttachmentAsync(groupecontroles, name);
     if (r.ok && r.item) {
       groupecontroles = { ...r.item };

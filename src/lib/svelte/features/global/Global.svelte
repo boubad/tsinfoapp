@@ -1,10 +1,13 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Col, Form, Row } from "sveltestrap";
+import { CouchDBClient } from "../../../data/CouchDBClient";
   import { DomainConstants } from "../../../data/DomainConstants";
+import { fetchClient } from "../../../data/fetchClient";
   import { GlobalServices } from "../../../data/GlobalServices";
   import type { IDataOption } from "../../../data/IDataOption";
   import type { IGlobalPayload } from "../../../data/IGlobalPayload";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import ItemChoice from "../../components/ItemChoice.svelte";
   import {
     PROMPT_ANNEE,
@@ -99,7 +102,7 @@
           pStore.groupeid = groupe;
           pStore.semestreid = semestre;
         } else {
-          const pMan = new GlobalServices();
+          const pMan = new GlobalServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
           p = await pMan.changeSemestreIdAsync(id, groupe);
           semestre = "";
           if (p.semestreid) {
@@ -129,7 +132,7 @@
           pStore.uniteid = unite;
           pStore.matiereid = matiere;
         } else {
-          const pMan = new GlobalServices();
+          const pMan = new GlobalServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
           p = await pMan.changeUniteIdAsync(id, matiere);
           unite = "";
           if (p.uniteid) {
@@ -179,7 +182,7 @@
     $currentunitestore = unite;
     matiere = pStore.matiereid;
     $currentmatierestore = matiere;
-    const pMan = new GlobalServices();
+    const pMan = new GlobalServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const p = await pMan.refreshAllAsync(
       annee,
       semestre,

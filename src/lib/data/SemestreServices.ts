@@ -4,12 +4,13 @@ import { GroupeServices } from "./GroupeServices";
 import type { IDataStore } from "./IDataStore";
 import type { IItemPayload } from "./IItemPayload";
 import { DomainConstants } from "./DomainConstants";
+import type { IDataUrlCreator } from "./IDataUrlCreator";
 
 //
 export class SemestreServices extends SigleNamedItemServices<ISemestreDoc> {
   //
-  constructor(store?: IDataStore, dbUrl?: string) {
-    super(initialSemestre, store, dbUrl);
+  constructor(  store: IDataStore, creator?:IDataUrlCreator, dbUrl?: string) {
+    super(initialSemestre, store, creator,dbUrl);
   }
 
   public async removeItemAsync(

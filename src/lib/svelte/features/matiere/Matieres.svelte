@@ -4,7 +4,10 @@
   import { NavLink, Row, Table } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import { ROUTE_MATIERE_CREATE, ROUTE_MATIERE_DETAIL } from "../../../../routes/routesdefs";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
   import type { IMatiereDoc } from "../../../data/IMatiereDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import { MatiereServices } from "../../../data/MatiereServices";
   import ListCommands from "../../components/ListCommands.svelte";
   import {
@@ -35,7 +38,7 @@
     if (uniteid.length < 1) {
       items = [];
     } else {
-      const pMan = new MatiereServices();
+      const pMan = new MatiereServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const aa = await pMan.findAllItemsByFilterAsync({ uniteid });
       const dd = [...aa];
       if (dd.length > 1) {

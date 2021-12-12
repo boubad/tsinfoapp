@@ -7,9 +7,12 @@
     ROUTE_ETUDAFFECTATIONS_CREATE,
     ROUTE_ETUDAFFECTATION_DETAIL,
   } from "../../../../routes/routesdefs";
+import { CouchDBClient } from "../../../data/CouchDBClient";
   import { DateUtils } from "../../../data/DateUtils";
   import { EtudAffectationServices } from "../../../data/EtudAffectationServices";
-  import type { IEtudAffectationDoc } from "../../../data/IEtudAffectation";
+import { fetchClient } from "../../../data/fetchClient";
+  import type { IEtudAffectationDoc } from "../../../data/IEtudAffectationDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import ListCommands from "../../components/ListCommands.svelte";
   import PhotoComponent from "../../components/PhotoComponent.svelte";
   import {
@@ -39,7 +42,7 @@
     if (groupeid.length < 1 || anneeid.length < 1) {
       items = [];
     } else {
-      const pMan = new EtudAffectationServices();
+      const pMan = new EtudAffectationServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const dd = await pMan.findAllItemsByFilterAsync({ anneeid, groupeid });
       const aa = [...dd];
       if (aa.length > 1) {

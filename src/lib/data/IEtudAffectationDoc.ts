@@ -1,27 +1,23 @@
 import { DomainConstants } from "./DomainConstants";
-import type { IBaseDoc } from "./IBaseDoc";
+import type { IAffectationBaseDoc } from "./IAffectationBaseDoc";
 
-export interface IEtudAffectationDoc extends IBaseDoc {
-    anneeid: string;
+export interface IEtudAffectationDoc extends IAffectationBaseDoc {
     etudiantid: string;
-    groupeid: string;
-    startdate?: string;
-    enddate?: string;
-    _anneeSigle?: string;
-    _semestreSigle?: string;
-    _semestreid?: string;
-    _groupeSigle?: string;
     _lastname?: string;
     _firstname?: string;
     _fullname?: string;
+    _avatar?: string;
+    _url?: string;
     _photoData?: ArrayBuffer;
 }
-export function CreateEtudAffectation(anneeid?: string, groupeid?: string, etudiantid?: string): IEtudAffectationDoc {
+export function CreateEtudAffectation(anneeid?: string, semestreid?: string, groupeid?: string, etudiantid?: string): IEtudAffectationDoc {
     return (
         {
+            _linkfield: DomainConstants.FIELD_ETUDAFFECTATIONID,
             _id: "",
             _rev: "",
             anneeid: anneeid ? anneeid : "",
+            semestreid: semestreid ? semestreid : "",
             groupeid: groupeid ? groupeid : "",
             etudiantid: etudiantid ? etudiantid : "",
             doctype: DomainConstants.TYPE_ETUDAFFECTATION,

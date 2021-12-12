@@ -4,7 +4,10 @@
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import { ROUTE_NOTE_DETAIL } from "../../../../routes/routesdefs";
   import { ControleServices } from "../../../data/ControleServices ";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
   import { CreateControle, IControleDoc } from "../../../data/IControleDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import type { INoteDoc } from "../../../data/INoteDoc";
   import type { IPaginationData } from "../../../data/IPaginationData";
   import { NoteServices } from "../../../data/NoteServices";
@@ -84,11 +87,11 @@
     allnotes = [];
     let itemsCount = 0;
     if (id && id.trim().length > 0) {
-      const pCont = new ControleServices();
+      const pCont = new ControleServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const cc = await pCont.findItemByIdAsync(id);
       if (cc) {
         controle = { ...cc };
-        const pMan = new NoteServices();
+        const pMan = new NoteServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
         const dd = await pMan.findAllItemsByFilterAsync({
           controleid: controle._id,
         });

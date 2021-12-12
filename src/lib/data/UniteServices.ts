@@ -4,12 +4,13 @@ import { MatiereServices } from './MatiereServices'
 import { SigleNamedItemServices } from './SigleNamedItemServices'
 import type { IItemPayload } from './IItemPayload';
 import { DomainConstants } from './DomainConstants';
+import type { IDataUrlCreator } from './IDataUrlCreator';
 
 //
 export class UniteServices extends SigleNamedItemServices<IUniteDoc> {
     //
-    constructor( store?: IDataStore, dbUrl?: string) {
-        super(initialUnite, store,dbUrl)
+    constructor(   store: IDataStore, creator?:IDataUrlCreator, dbUrl?: string) {
+        super(initialUnite, store,creator,dbUrl)
     }
 
     public async removeItemAsync(p: IUniteDoc): Promise<IItemPayload<IUniteDoc>> {

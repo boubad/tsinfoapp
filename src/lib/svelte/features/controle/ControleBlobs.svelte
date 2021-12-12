@@ -2,8 +2,11 @@
   import { onMount } from "svelte";
   import { Row } from "sveltestrap";
   import { ControleServices } from "../../../data/ControleServices ";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
   import type { IAttachedDoc } from "../../../data/IAttachedDoc";
   import { CreateControle, IControleDoc } from "../../../data/IControleDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import BlobInfo from "../../components/BlobInfo.svelte";
   //
   export let params: any = {};
@@ -20,7 +23,7 @@
     blobs = [];
     if (id && id.trim().length > 0) {
       if (!pMan) {
-        pMan = new ControleServices();
+        pMan = new ControleServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       }
       const cc = await pMan.findItemByIdAsync(id);
       if (cc) {
@@ -39,7 +42,7 @@
     data: Blob,
     _owner?: string
   ): Promise<void> => {
-    const pMan = new ControleServices();
+    const pMan = new ControleServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAttachmentAsync(controle, name, mime, data);
     if (r.ok && r.item) {
       controle = { ...r.item };
@@ -50,7 +53,7 @@
     name: string,
     _parentid?: string
   ): Promise<void> => {
-    const pMan = new ControleServices();
+    const pMan = new ControleServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAttachmentAsync(controle, name);
     if (r.ok && r.item) {
       controle = { ...r.item };

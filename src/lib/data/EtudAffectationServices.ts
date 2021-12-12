@@ -2,21 +2,48 @@ import { ConvertData } from "./ConvertData";
 import { DomainConstants } from "./DomainConstants";
 import { initialAnnee } from "./IAnneeDoc";
 import type { IDataStore } from "./IDataStore";
-import { IEtudAffectationDoc, initialEtudAffectation } from "./IEtudAffectation";
 import { initialGroupe } from "./IGroupeDoc";
 import { ItemServices } from "./ItemServices";
 import { initialEtudiant } from './IEtudiantDoc';
+import type { IDataUrlCreator } from "./IDataUrlCreator";
+import { IEtudAffectationDoc, initialEtudAffectation } from "./IEtudAffectationDoc";
 //
 export class EtudAffectationServices extends ItemServices<IEtudAffectationDoc> {
     //
     constructor(
-        store?: IDataStore, dbUrl?: string
+        store: IDataStore, creator?:IDataUrlCreator, dbUrl?: string
     ) {
-        super(initialEtudAffectation, store,dbUrl);
+        super(initialEtudAffectation, store,creator,dbUrl);
     }
     //
+    //
+  protected sortItems(src: readonly IEtudAffectationDoc[]): readonly IEtudAffectationDoc[] {
+    if (src.length > 1) {
+      const zz = [...src];
+      zz.sort((a, b) => {
+        let s1 = a._lastname ? a._lastname : '';
+        let s2 = b._lastname ? b._lastname : '';
+        if (s1 < s2) {
+          return -1;
+        } else if (s1 > s2) {
+          return 1;
+        }
+        s1 = a._firstname ? a._firstname : '';
+        s2 = b._firstname ? b._firstname : '';
+        if (s1 < s2) {
+          return -1;
+        } else if (s1 > s2) {
+          return 1;
+        }
+        return 0;
+      });
+      return zz;
+    } // sort
+    return src;
+  }// sorItems
+    //
     protected async registerDocAsync(doc: Record<string, unknown>): Promise<IEtudAffectationDoc> {
-        const p = ConvertData.ConvertDataItem(this._item, doc)
+        const p = ConvertData.ConvertDataItem(this.item, doc)
         const store = this.datastore
         const annee = await store.findItemByIdAsync(initialAnnee, p.anneeid)
         if (annee) {
@@ -26,7 +53,6 @@ export class EtudAffectationServices extends ItemServices<IEtudAffectationDoc> {
         if (groupe) {
             p._groupeSigle = groupe.sigle;
             p._semestreSigle = groupe._semestreSigle;
-            p._semestreid = groupe.semestreid;
         }
         const etud = await store.findItemByIdAsync(initialEtudiant, p.etudiantid)
         if (etud) {

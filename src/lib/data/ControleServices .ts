@@ -3,7 +3,6 @@ import { IControleDoc, initialControle } from "./IControleDoc";
 import type { IItemPayload } from "./IItemPayload";
 import { ItemServices } from "./ItemServices";
 import { NoteServices } from "./NoteServices";
-import { EvtServices } from "./EvtServices";
 import type { IDataStore } from "./IDataStore";
 import { ConvertData } from "./ConvertData";
 import { initialAnnee } from "./IAnneeDoc";
@@ -11,17 +10,43 @@ import { initialGroupe } from "./IGroupeDoc";
 import { initialGroupeControles } from "./IGroupeControlesDoc";
 import type { IDataOption } from "./IDataOption";
 import { CreateNote } from "./INoteDoc";
+import type { IDataUrlCreator } from "./IDataUrlCreator";
 //
 export class ControleServices extends ItemServices<IControleDoc> {
   //
-  constructor(store?: IDataStore, dbUrl?: string) {
-    super(initialControle, store, dbUrl);
+  constructor(  store: IDataStore, creator?:IDataUrlCreator, dbUrl?: string) {
+    super(initialControle, store, creator,dbUrl);
   }
+  //
+  protected sortItems(src: readonly IControleDoc[]): readonly IControleDoc[] {
+    if (src.length > 1) {
+      const zz = [...src];
+      zz.sort((a, b) => {
+        let s1 = (a.date) ? a.date : '';
+        let s2 = (b.date) ? b.date : '';
+        if (s1 < s2) {
+          return 1;
+        } else if (s1 > s2) {
+          return -1;
+        }
+        s1 = a._name ? a._name : '';
+        s2 = b._name ? b._name : '';
+        if (s1 < s2) {
+          return -1;
+        } else if (s1 > s2) {
+          return 1;
+        }
+        return 0;
+      });
+      return zz;
+    } // sort
+    return src;
+  }// sorItems
   //
   protected async registerDocAsync(
     doc: Record<string, unknown>
   ): Promise<IControleDoc> {
-    const p = ConvertData.ConvertDataItem(this._item, doc);
+    const p = ConvertData.ConvertDataItem(this.item, doc);
     const store = this.datastore;
     const annee = await store.findItemByIdAsync(initialAnnee, p.anneeid);
     if (annee) {
@@ -128,49 +153,6 @@ export class ControleServices extends ItemServices<IControleDoc> {
     }
     return r;
   } // saveItemAsync
-  public async removeItemAsync(
-    p: IControleDoc
-  ): Promise<IItemPayload<IControleDoc>> {
-    const id = p._id;
-    const rev = p._rev;
-    if (id.trim().length < 1 || rev.trim().length < 1) {
-      return {
-        ok: false,
-        error: "Item not persisted",
-      };
-    }
-    {
-      const pf = new NoteServices(this.datastore);
-      const pp = await pf.findAllItemsByFilterAsync({ controleid: id });
-      const n = pp.length;
-      for (let i = 0; i < n; i++) {
-        const x = pp[i];
-        const rsp = await pf.removeItemAsync(x);
-        if (!rsp.ok) {
-          return {
-            ok: false,
-            error: rsp.error,
-          };
-        }
-      } // i
-    } // notes
-    {
-      const pf = new EvtServices(this.datastore);
-      const pp = await pf.findAllItemsByFilterAsync({ controleid: id });
-      const n = pp.length;
-      for (let i = 0; i < n; i++) {
-        const x = pp[i];
-        const rsp = await pf.removeItemAsync(x);
-        if (!rsp.ok) {
-          return {
-            ok: false,
-            error: rsp.error,
-          };
-        }
-      } // i
-    } // evts
-    return super.removeItemAsync(p);
-  } // removeItemAsync
   public async getControleEtudiantsIdsAsync(
     controleid: string
   ): Promise<readonly string[]> {
@@ -200,13 +182,13 @@ export class ControleServices extends ItemServices<IControleDoc> {
       } // etudiantid
     } // i
     return vret;
-  } //getControleEtudiantsOptionsAsync
+  } // getControleEtudiantsOptionsAsync
   public async getControleEtudiantsOptionsAsync(
     controleid: string
   ): Promise<readonly IDataOption[]> {
     const ids = await this.getControleEtudiantsIdsAsync(controleid);
     return this.getEtudiantsOptionsByIdsAsync(ids);
-  } //getControleEtudiantsOptionsAsync
+  } // getControleEtudiantsOptionsAsync
   public async checkControleNotesAsync(controleid: string): Promise<boolean> {
     const pControle = await this.findItemByIdAsync(controleid);
     if (!pControle) {
@@ -215,7 +197,7 @@ export class ControleServices extends ItemServices<IControleDoc> {
     const store = this.datastore;
     const ids = await this.getControleEtudiantsIdsAsync(controleid);
     const n = ids.length;
-    const pf = new NoteServices();
+    const pf = new NoteServices(this.datastore);
     for (let i = 0; i < n; i++) {
       const etudiantid = ids[i];
       const doc = await store.findDocBySelectorAsync({
@@ -229,7 +211,7 @@ export class ControleServices extends ItemServices<IControleDoc> {
         if (r.ok) {
           return false;
         }
-      } // inser
+      } // insert
     } // i
     return true;
   } //  checkControleNotesAsync

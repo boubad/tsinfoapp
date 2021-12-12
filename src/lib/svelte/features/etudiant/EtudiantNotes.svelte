@@ -25,6 +25,9 @@
   import { SelectUtils } from "../SelectUtils";
   import { NoteServices } from "../../../data/NoteServices";
   import { DateUtils } from "../../../data/DateUtils";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   //
   export let params: any = {};
   let etudiant: IEtudiantDoc = CreateEtudiant();
@@ -36,11 +39,11 @@
     etudiant = CreateEtudiant();
     items = [];
     if (id && id.trim().length > 0) {
-      const pEtudServices = new EtudiantServices();
+      const pEtudServices = new EtudiantServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const p = await pEtudServices.findItemByIdAsync(id);
       if (p) {
         etudiant = { ...p };
-        const pMan = new NoteServices();
+        const pMan = new NoteServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
         const cc = await pMan.findAllItemsByFilterAsync({ etudiantid: id });
         if (cc) {
           const aa = [...cc];

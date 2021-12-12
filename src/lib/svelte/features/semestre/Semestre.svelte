@@ -3,8 +3,11 @@
   import { Col, Form, Row } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import { ROUTE_SEMESTRES_LIST } from "../../../../routes/routesdefs";
+import { CouchDBClient } from "../../../data/CouchDBClient";
   import { DomainConstants } from "../../../data/DomainConstants";
+import { fetchClient } from "../../../data/fetchClient";
   import type { IAttachedDoc } from "../../../data/IAttachedDoc";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import { initialSemestre, ISemestreDoc } from "../../../data/ISemestreDoc";
   import { CreateSemestre } from "../../../data/ISemestreDoc";
   import { SemestreServices } from "../../../data/SemestreServices";
@@ -41,7 +44,7 @@
     _checkVars();
   };
   const performSave = async (): Promise<void> => {
-    const pMan = new SemestreServices();
+    const pMan = new SemestreServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(semestre);
     if (r.ok && r.item) {
       semestre = { ...r.item };
@@ -51,7 +54,7 @@
     } // ritem
   };
   const performRemove = async (): Promise<void> => {
-    const pMan = new SemestreServices();
+    const pMan = new SemestreServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAsync(semestre);
     if (r.ok) {
       InfoRouter(ROUTE_SEMESTRES_LIST);
@@ -66,7 +69,7 @@
     blobs = [];
     if (id && id.trim().length > 0) {
       if (!pMan) {
-        pMan = new SemestreServices();
+        pMan = new SemestreServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       }
       const store = pMan.datastore;
       const cc = await store.findItemByIdAsync(initialSemestre, id);
@@ -85,7 +88,7 @@
     data: Blob,
     _owner?: string
   ): Promise<void> => {
-    const pMan = new SemestreServices();
+    const pMan = new SemestreServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAttachmentAsync(semestre, name, mime, data);
     if (r.ok && r.item) {
       semestre = { ...r.item };
@@ -97,7 +100,7 @@
     name: string,
     _parentid?: string
   ): Promise<void> => {
-    const pMan = new SemestreServices();
+    const pMan = new SemestreServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAttachmentAsync(semestre, name);
     if (r.ok && r.item) {
       semestre = { ...r.item };

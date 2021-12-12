@@ -75,22 +75,12 @@ export class DomainConstants {
     public static readonly FIELD_USERNAME: string = 'username'
     public static readonly FIELD_VALUE: string = 'value'
     public static readonly FIELD_VILLE: string = 'ville'
-    // ==================================
-    public static readonly ROLE_ADMIN: string = 'admin'
-    public static readonly ROLE_ETUD: string = 'etud'
-    public static readonly ROLE_OPER: string = 'oper'
-    public static readonly ROLE_PROF: string = 'prof'
-    public static readonly ROLE_ROOT: string = 'sysadmin'
-    public static readonly ROLE_USER: string = 'user'
     // ========================================
     public static readonly TYPE_ANNEE: string = 'annee'
     public static readonly TYPE_CONTROLE: string = 'cont'
     public static readonly TYPE_ETUDAFFECTATION: string = 'affetud'
     public static readonly TYPE_ETUDIANT: string = 'etud'
     public static readonly TYPE_EVT: string = 'evt'
-    public static readonly TYPE_FIELDAFFECTATION: string = 'affectation'
-    public static readonly TYPE_FIELDDESC: string = 'fielddesc'
-    public static readonly TYPE_FIELDEVENT: string = 'event'
     public static readonly TYPE_GROUPCONTROLE: string = 'grpcont'
     public static readonly TYPE_GROUPE: string = 'groupe'
     public static readonly TYPE_MATIERE: string = 'matiere'
@@ -98,4 +88,3 @@ export class DomainConstants {
     public static readonly TYPE_SEMESTRE: string = 'semestre'
     public static readonly TYPE_UNITE: string = 'unite'
   } // class DomainConstants
-  

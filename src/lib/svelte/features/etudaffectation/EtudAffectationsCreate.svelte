@@ -16,9 +16,12 @@
   import { DomainConstants } from "../../../data/DomainConstants";
   import { AnneeServices } from "../../../data/AnneeServices";
   import { EtudAffectationServices } from "../../../data/EtudAffectationServices";
-  import { CreateEtudAffectation } from "../../../data/IEtudAffectation";
+  import { CreateEtudAffectation } from "../../../data/IEtudAffectationDoc";
   import type { IPaginationData } from "../../../data/IPaginationData";
   import ItemOption from "../../components/ItemOption.svelte";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
 
   //
   export let params: any = {};
@@ -49,7 +52,7 @@
     groupeid = "";
     if (annee && annee.length > 0) {
       anneeid = annee;
-      const pf = new AnneeServices();
+      const pf = new AnneeServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const a = await pf.findItemByIdAsync(anneeid);
       if (a) {
         startdate = a.startdate;
@@ -60,7 +63,7 @@
       groupeid = groupe;
     } // groupeid
     if (anneeid.length > 0 && groupeid.length > 0) {
-      const pMan = new EtudiantServices();
+      const pMan = new EtudiantServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const filter = $etudiantfilterstore;
       const aa = await pMan.getPersonsOptionsByFilterAsync({
         ...filter,
@@ -128,7 +131,7 @@
   //
   const getCurrentIds = async (annee: string): Promise<string[]> => {
     const vret: string[] = [];
-    const pMan = new EtudAffectationServices();
+    const pMan = new EtudAffectationServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const dd = await pMan.datastore.findAllDocsBySelectorAsync(
       {
         doctype: DomainConstants.TYPE_ETUDAFFECTATION,
@@ -154,7 +157,7 @@
   //
   const handleCreate = async (): Promise<void> => {
     const n = ids.length;
-    const pMan = new EtudAffectationServices();
+    const pMan = new EtudAffectationServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     for (let i = 0; i < n; i++) {
       const p = CreateEtudAffectation(anneeid, groupeid, ids[i]);
       p.startdate = startdate;

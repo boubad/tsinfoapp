@@ -19,6 +19,9 @@
   import InputHasNotes from "../../components/InputHasNotes.svelte";
   import InputCoefficient from "../../components/InputCoefficient.svelte";
   import { onMount } from "svelte";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   //
   export let params: any = {};
   let groupecontroles: IGroupeControlesDoc = CreateGroupeControles();
@@ -49,14 +52,14 @@
     _checkVars();
   };
   const performSave = async (): Promise<void> => {
-    const pMan = new GroupeControlesServices();
+    const pMan = new GroupeControlesServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.saveItemAsync(groupecontroles);
     if (r.ok && r.item) {
       groupecontroles = { ...r.item };
     }
   };
   const performRemove = async (): Promise<void> => {
-    const pMan = new GroupeControlesServices();
+    const pMan = new GroupeControlesServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const r = await pMan.removeItemAsync(groupecontroles);
     if (r.ok) {
       InfoRouter(ROUTE_GROUPECONTROLES_LIST);
@@ -65,7 +68,7 @@
   //
   const performRefresh = async (id?: string): Promise<void> => {
     if (id && id.trim().length > 0) {
-      const pMan = new GroupeControlesServices();
+      const pMan = new GroupeControlesServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
       const p = await pMan.findItemByIdAsync(id);
       if (p) {
         groupecontroles = { ...p };

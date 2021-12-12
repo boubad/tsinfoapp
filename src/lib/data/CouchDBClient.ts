@@ -1,4 +1,4 @@
-import environment from '../../environment'
+import environment from './environment'
 import type { ICouchDBUpdateResponse } from './ICouchDBUpdateResponse'
 import type { IDataStore } from './IDataStore'
 import type { IFetchClient } from './IFetchClient'
@@ -146,7 +146,7 @@ export class CouchDBClient implements IDataStore {
     } // maintainsDocAsync
     public async removeDocAsync(id: string): Promise<Record<string, unknown>> {
         const srev = await this.findDocRevisionAsync(id)
-        if (srev.length < 1) {
+        if (!srev  || srev.length < 1) {
             return {
                 ok: true,
                 error: 'Document  not found'
@@ -195,7 +195,7 @@ export class CouchDBClient implements IDataStore {
     } // findDocsCountBySelectorAsync
     public async findDocBySelectorAsync(
         sel: Record<string, unknown>,
-        fields?: string[]
+        fields?: readonly string[]
     ): Promise<Record<string, unknown>> {
         const mm = await this.findDocsBySelectorAsync(sel, 0, 1, fields)
         return mm.length > 0 ? mm[0] : {}
@@ -225,7 +225,7 @@ export class CouchDBClient implements IDataStore {
     //
     public async getBlobDataAsync(id: string, name: string): Promise<IHttpOutput> {
         const url = this.formBlobUrl(id, name)
-        return this._client.getBlobDataAsync(url)
+        return this._client.getBlobDataAsync(url as string)
     } // getBlobDataAsync
     public async maintainsBlobAsync(
         id: string,
@@ -234,7 +234,7 @@ export class CouchDBClient implements IDataStore {
         data: Blob | ArrayBuffer
     ): Promise<Record<string, unknown>> {
         const srev = await this.findDocRevisionAsync(id)
-        if (srev.length < 1) {
+        if (!srev || srev.length < 1) {
             return {
                 ok: false,
                 error: 'Document  not found'
@@ -246,7 +246,7 @@ export class CouchDBClient implements IDataStore {
     } // maintainsBlobAsync
     public async removeBlobAsync(id: string, name: string): Promise<Record<string, unknown>> {
         const srev = await this.findDocRevisionAsync(id)
-        if (srev.length < 1) {
+        if (!srev || srev.length < 1) {
             return {
                 ok: true,
                 error: 'Document  not found'

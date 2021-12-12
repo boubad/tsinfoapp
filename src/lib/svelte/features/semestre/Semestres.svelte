@@ -4,6 +4,9 @@
   import { NavLink, Row, Table } from "sveltestrap";
   import { InfoRouter } from "../../../../routes/InfoRouter";
   import { ROUTE_SEMESTRE_DETAIL } from "../../../../routes/routesdefs";
+import { CouchDBClient } from "../../../data/CouchDBClient";
+import { fetchClient } from "../../../data/fetchClient";
+import { infoDataUrlCreator } from "../../../data/infoDataUrlCreator";
   import type { ISemestreDoc } from "../../../data/ISemestreDoc";
   import { SemestreServices } from "../../../data/SemestreServices";
   import ListCommands from "../../components/ListCommands.svelte";
@@ -27,7 +30,7 @@
   };
   //
   const performRefresh = async (): Promise<void> => {
-    const pMan = new SemestreServices();
+    const pMan = new SemestreServices(new CouchDBClient(fetchClient),infoDataUrlCreator);
     const dd = await pMan.findAllItemsByFilterAsync();
     const aa = [...dd];
     if (aa.length > 1) {
