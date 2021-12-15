@@ -4,7 +4,8 @@ import type { IDataStore } from "./IDataStore";
 import type { ISigleNamedDoc } from "./ISigleNamedDoc";
 import type { IDataOption } from "./IDataOption";
 import { initialEtudiant } from "./IEtudiantDoc";
-import type { IDataUrlCreator } from './IDataUrlCreator';
+import { STRING_ASC } from './DataConstants';
+import type { IDataUrlCreator } from "./IDataUrlCreator";
 
 export class BaseServices {
   private _datastore: InfoDataStore;
@@ -12,9 +13,6 @@ export class BaseServices {
   private _urlcreator?: IDataUrlCreator;
   //
   constructor(store: IDataStore, creator?: IDataUrlCreator, dbUrl?: string) {
-    if (!store) {
-      throw new Error("Invalid datastore");
-    }
     this._datastore = new InfoDataStore(store, creator, dbUrl);
     this._dbUrl = dbUrl;
     this._urlcreator = creator;
@@ -111,8 +109,8 @@ export class BaseServices {
       DomainConstants.FIELD_OBSERVATIONS,
     ];
     const sort: readonly Record<string, unknown>[] = [
-      { lastname: "asc" },
-      { firstname: "asc" },
+      { lastname: STRING_ASC },
+      { firstname: STRING_ASC },
     ];
     const dd = await this.datastore.findAllDocsBySelectorAsync(
       sel,

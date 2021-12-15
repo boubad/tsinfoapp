@@ -1,4 +1,4 @@
-import environment from './environment'
+import { DBConstants } from './DBConstants'
 import type { ICouchDBUpdateResponse } from './ICouchDBUpdateResponse'
 import type { IDataStore } from './IDataStore'
 import type { IFetchClient } from './IFetchClient'
@@ -15,33 +15,7 @@ const STRING_UNDER = '_'
 const STRING_ARG_REV = '?rev='
 //
 const MAX_INT_VALUE = Number.MAX_SAFE_INTEGER
-//
-class DBConstants {
-    private static readonly _DB_HOST = environment.debug
-        ? environment.testDataServerUrl
-        : environment.prodDataServerUrl
-    private static readonly _DB_NAME = environment.debug
-        ? environment.testDatabaseName
-        : environment.prodDatabaseName
-    //
-    public static GetDefaultDatabase(): string {
-        return this._DB_NAME
-    }
-    public static GetDefaultHost(): string {
-        return this._DB_HOST
-    }
-    public static GetUrl(host?: string, database?: string): string {
-        const s1 = host && host.trim().length > 0 ? host.trim() : DBConstants.GetDefaultHost()
-        const s2 =
-            database && database.trim().length > 9
-                ? database.trim().toLowerCase()
-                : DBConstants.GetDefaultDatabase()
-        const s = s1 + '/' + s2 + '/'
-        return s
-    }
-};// class DBConstants
-
-
+const CHUNK_SIZE = 128;
 //
 export class CouchDBClient implements IDataStore {
     //
@@ -50,8 +24,7 @@ export class CouchDBClient implements IDataStore {
     //
     constructor(client: IFetchClient, dbUrl?: string) {
         this._client = client
-        this._baseurl =
-            dbUrl !== undefined && dbUrl && dbUrl.trim().length > 0 ? dbUrl : DBConstants.GetUrl()
+        this._baseurl = dbUrl && dbUrl.trim().length > 0 ? dbUrl.trim() : DBConstants.GetUrl()
         const n = this._baseurl.length
         if (this._baseurl[n - 1] !== '/') {
             this._baseurl += '/'
@@ -69,6 +42,9 @@ export class CouchDBClient implements IDataStore {
             s = s.substring(0, n)
         }
         const p = await this._client.getAsync(s)
+        if (p.status && p.status >= HTTP_ERROR) {
+            return false;
+        }
         const pp = p.body as Record<string, unknown>
         return pp.couchdb !== undefined && pp.couchdb !== null
     }
@@ -137,8 +113,8 @@ export class CouchDBClient implements IDataStore {
                 doc._attachments = old._attachments
             }
             const sUrl = this._formDocUrl(doc._id as string, rev)
-            const rsp = await this._client.putAsync(sUrl, doc)
-            return rsp.body as Record<string, unknown>
+            const hh = await this._client.putAsync(sUrl, doc)
+            return hh.body as Record<string, unknown>
         } // old
         // insert new document
         const rsp = await this._createDocAsync(doc)
@@ -146,7 +122,7 @@ export class CouchDBClient implements IDataStore {
     } // maintainsDocAsync
     public async removeDocAsync(id: string): Promise<Record<string, unknown>> {
         const srev = await this.findDocRevisionAsync(id)
-        if (!srev  || srev.length < 1) {
+        if (!srev || srev.length < 1) {
             return {
                 ok: true,
                 error: 'Document  not found'
@@ -173,32 +149,44 @@ export class CouchDBClient implements IDataStore {
         const sUrl = this._formUrl(STRING_FIND_IMPL)
         const opts: Record<string, unknown> = {
             limit: count,
-            selector: sel,
+            selector: { ...sel },
             skip: start && start >= 0 ? start : 0
         }
         if (fields && fields.length > 0) {
-            opts.fields = fields
+            opts.fields = [...fields];
         }
         if (sort !== undefined && sort.length > 0) {
-            opts.sort = sort
+            opts.sort = [...sort];
         }
         const hrsp = await this._client.postAsync(sUrl, opts)
+        if (hrsp.status && hrsp.status >= HTTP_ERROR) {
+            return [];
+        }
         const rsp = hrsp.body as Record<string, unknown>
-        return rsp.docs as Record<string, unknown>[]
+        if (rsp.docs) {
+            return rsp.docs as Record<string, unknown>[]
+        }
+        return [];
     } // findDocsBySelectorAsync
     public async findDocsCountBySelectorAsync(sel: Record<string, unknown>): Promise<number> {
-        const offset = 0
-        const count = MAX_INT_VALUE
-        const fields = [STRING_ID]
-        const docs = await this.findDocsBySelectorAsync(sel, offset, count, fields)
-        return docs.length
+        let offset = 0;
+        const fields: readonly string[] = [STRING_ID];
+        let done: boolean = false;
+        const filter = { ...sel };
+        while (!done) {
+            const docs = await this.findDocsBySelectorAsync(filter, offset, CHUNK_SIZE, fields)
+            const ncur = docs.length;
+            offset += ncur;
+            done = ncur < CHUNK_SIZE;
+        }// not done
+        return offset;
     } // findDocsCountBySelectorAsync
     public async findDocBySelectorAsync(
         sel: Record<string, unknown>,
         fields?: readonly string[]
-    ): Promise<Record<string, unknown>> {
+    ): Promise<Record<string, unknown> | undefined> {
         const mm = await this.findDocsBySelectorAsync(sel, 0, 1, fields)
-        return mm.length > 0 ? mm[0] : {}
+        return mm.length > 0 ? mm[0] : undefined;
     } // findDocBySelectorAsync
     public async findAllDocsBySelectorAsync(
         sel: Record<string, unknown>,
@@ -211,15 +199,10 @@ export class CouchDBClient implements IDataStore {
         const fields: string[] = ['_id']
         const vRet: string[] = []
         const pp = await this.findAllDocsBySelectorAsync(sel, fields)
-        if (pp) {
-            const n = pp.length
-            for (let i = 0; i < n; i++) {
-                const x = pp[i]
-                if (x._id) {
-                    vRet.push(x._id as string)
-                }
-            } // i
-        } // pp
+        pp.forEach((x) => {
+            const id = x._id as string;
+            vRet.push(id);
+        });
         return vRet
     } // findAllDocsIdsBySelectorAsync
     //
@@ -241,8 +224,8 @@ export class CouchDBClient implements IDataStore {
             }
         }
         const url = this.formBlobUrl(id, name) + '?rev=' + srev
-        const rsp = await this._client.putBlobAsync(url, mime, data)
-        return rsp.body as Record<string, unknown>
+        const hrsp = await this._client.putBlobAsync(url, mime, data)
+        return hrsp.body as Record<string, unknown>
     } // maintainsBlobAsync
     public async removeBlobAsync(id: string, name: string): Promise<Record<string, unknown>> {
         const srev = await this.findDocRevisionAsync(id)
@@ -278,25 +261,24 @@ export class CouchDBClient implements IDataStore {
         } // i
         const sUrl = this._formUrl(STRING_BULK_GET)
         const hrsp = await this._client.postAsync(sUrl, { docs: vdocs })
+        if (hrsp.status && hrsp.status >= HTTP_ERROR) {
+            return [];
+        }
         const rsp = hrsp.body as Record<string, unknown>
         const pRet: Record<string, unknown>[] = []
         if (rsp && rsp.results) {
             const rr = rsp.results as Record<string, unknown>[]
-            const nx = rr.length
-            for (let i1 = 0; i1 < nx; i1++) {
-                const x = rr[i1]
+            rr.forEach((x) => {
                 if (x.docs) {
                     const yy = x.docs as Record<string, unknown>[]
-                    const ny = yy.length
-                    for (let j = 0; j < ny; j++) {
-                        const y = yy[j]
+                    yy.forEach((y) => {
                         if (y.ok) {
-                            pRet.push(y)
-                        } // ok
-                    } // j
-                } // xdocs
-            } // i
-        } // rsp.results
+                            pRet.push(y.ok as Record<string, unknown>)
+                        }// ok
+                    }); // y
+                }// xdocs
+            }); // x
+        }// rsp.results
         return pRet
     } // bulkGetAsync
     public async removeDocsBySelectorAsync(

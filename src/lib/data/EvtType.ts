@@ -98,32 +98,4 @@ export function ConvertEvtTypeToString(etype: EvtType | null | undefined): strin
     } // etype
     return stype;
 } // ConvertEvtTypeToString
-export function ConvertStringToEvtType(s: string | null | undefined): EvtType {
-    let etype: EvtType = EvtType.Inconnu;
-    if (s !== undefined && s !== null) {
-        const ss = s.trim();
-        switch (ss) {
-            case 'Absence':
-                etype = EvtType.Absence;
-                break;
-            case 'Retard':
-                etype = EvtType.Retard;
-                break;
-            case 'Comportement':
-                etype = EvtType.Comportement;
-                break;
-            case 'Discipline':
-                etype = EvtType.Discipline;
-                break;
-            case 'Autre':
-                etype = EvtType.Autre;
-                break;
-            case 'InfoEvent':
-                etype = EvtType.InfoEvent;
-                break;
-            default:
-                break;
-        } // s
-    } //
-    return etype;
-}// ConvertStringToEvtType
+

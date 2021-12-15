@@ -13,11 +13,6 @@ export class NoteServices extends ControleChildServices<INoteDoc> {
         super(initialNote, store,creator,dbUrl);
     }
     //
-    protected async registerDocAsync(doc: Record<string, unknown>): Promise<INoteDoc> {
-        const p = await super.registerDocAsync(doc)
-        this.datastore.register_item(p)
-        return p
-    }// registerDocAsync
     protected getPersistMap(current: INoteDoc): Record<string, unknown> {
         const data = super.getPersistMap(current);
         if (

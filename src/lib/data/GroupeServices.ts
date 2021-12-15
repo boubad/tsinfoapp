@@ -3,9 +3,6 @@ import { GroupeType } from "./GroupeType";
 import type { IDataOption } from "./IDataOption";
 import { IGroupeDoc, initialGroupe } from "./IGroupeDoc";
 import { SigleNamedItemServices } from "./SigleNamedItemServices";
-import { EtudAffectationServices } from "./EtudAffectationServices";
-import { ConvertData } from "./ConvertData";
-import { initialSemestre } from "./ISemestreDoc";
 import type { IDataStore } from "./IDataStore";
 import type { IItemPayload } from './IItemPayload';
 import { ControleServices } from "./ControleServices ";
@@ -15,21 +12,10 @@ import type { IDataUrlCreator } from "./IDataUrlCreator";
 export class GroupeServices extends SigleNamedItemServices<IGroupeDoc> {
     //
     constructor(
-        store: IDataStore, creator?:IDataUrlCreator, dbUrl?: string
+        store: IDataStore, creator?: IDataUrlCreator, dbUrl?: string
     ) {
-        super(initialGroupe, store,creator,dbUrl);
+        super(initialGroupe, store, creator, dbUrl);
     }
-    //
-    protected async registerDocAsync(doc: Record<string, unknown>): Promise<IGroupeDoc> {
-        const p = ConvertData.ConvertDataItem(this.item, doc)
-        const store = this.datastore
-        const pSemestre = await store.findItemByIdAsync(initialSemestre, p.semestreid)
-        if (pSemestre) {
-            p._semestreSigle = pSemestre.sigle
-        }
-        store.register_item(p)
-        return p
-    }// registerDocAsync
     //
     protected isStoreable(p: IGroupeDoc): boolean {
         return (
@@ -73,10 +59,10 @@ export class GroupeServices extends SigleNamedItemServices<IGroupeDoc> {
         }
         if (etype !== GroupeType.Promotion) {
             const store = this.datastore;
-            const mm = await store.findAllDocsBySelectorAsync({
-                doctype: DomainConstants.TYPE_GROUPE,
-                semestreid,
-            });
+            const sel: Record<string, unknown> = {};
+            sel[DomainConstants.FIELD_TYPE] = DomainConstants.TYPE_GROUPE;
+            sel[DomainConstants.FIELD_SEMESTREID] = semestreid;
+            const mm = await store.findAllDocsBySelectorAsync(sel);
             const n = mm.length;
             for (let i = 0; i < n; i++) {
                 const m = mm[i];
@@ -126,11 +112,10 @@ export class GroupeServices extends SigleNamedItemServices<IGroupeDoc> {
         if (!p) {
             return pRet;
         }
-        const filter: Record<string, unknown> = {
-            doctype: DomainConstants.TYPE_GROUPE,
-            parentid: groupeid,
-        };
-        const dd = await this.datastore.findAllDocsBySelectorAsync(filter, [
+        const sel: Record<string, unknown> = {};
+        sel[DomainConstants.FIELD_TYPE] = DomainConstants.TYPE_GROUPE;
+        sel[DomainConstants.FIELD_PARENTID] = groupeid;
+        const dd = await this.datastore.findAllDocsBySelectorAsync(sel, [
             DomainConstants.FIELD_ID,
         ]);
         if (dd && dd.length > 0) {
@@ -177,23 +162,10 @@ export class GroupeServices extends SigleNamedItemServices<IGroupeDoc> {
             } // i
         }
         {
-            const pf = new ControleServices(this.datastore)
-            const pp = await pf.findAllItemsByFilterAsync({ doctype: DomainConstants.TYPE_CONTROLE, groupeid: id });
-            const n = pp.length;
-            for (let i = 0; i < n; i++) {
-                const x = pp[i];
-                const rsp = await pf.removeItemAsync(x);
-                if (!rsp.ok) {
-                    return {
-                        ok: false,
-                        error: rsp.error
-                    }
-                }
-            }// i
-        }// controles
-        {
-            const pf = new EtudAffectationServices(this.datastore)
-            const pp = await pf.findAllItemsByFilterAsync({ doctype: DomainConstants.TYPE_ETUDAFFECTATION, groupeid: id });
+            const pf = new ControleServices(this.datastore, this.dataUrlCreator,this.dbUrl)
+            const sel: Record<string, unknown> = {};
+            sel[DomainConstants.FIELD_GROUPEID] = id;
+            const pp = await pf.findAllItemsByFilterAsync(sel);
             const n = pp.length;
             for (let i = 0; i < n; i++) {
                 const x = pp[i];

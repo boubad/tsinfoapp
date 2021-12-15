@@ -4,71 +4,42 @@ import type { IItemPayload } from "./IItemPayload";
 import { ItemServices } from "./ItemServices";
 import type { IDataStore } from "./IDataStore";
 import type { ICouchDBUpdateResponse } from "./ICouchDBUpdateResponse";
-import { ConvertData } from "./ConvertData";
 import type { IDataUrlCreator } from "./IDataUrlCreator";
 
 export class EtudiantServices extends ItemServices<IEtudiantDoc> {
     constructor(
-        store: IDataStore, creator?:IDataUrlCreator, dbUrl?: string
+        store: IDataStore, creator?: IDataUrlCreator, dbUrl?: string
     ) {
-        super(initialEtudiant, store,creator,dbUrl);
+        super(initialEtudiant, store, creator, dbUrl);
     }
     //
-       //
-  protected sortItems(src: readonly IEtudiantDoc[]): readonly IEtudiantDoc[] {
-    if (src.length > 1) {
-      const zz = [...src];
-      zz.sort((a, b) => {
-        let s1 = a.lastname;
-        let s2 = b.lastname ;
-        if (s1 < s2) {
-          return -1;
-        } else if (s1 > s2) {
-          return 1;
-        }
-        s1 = a.firstname ? a.firstname : '';
-        s2 = b.firstname ? b.firstname : '';
-        if (s1 < s2) {
-          return -1;
-        } else if (s1 > s2) {
-          return 1;
-        }
-        return 0;
-      });
-      return zz;
-    } // sort
-    return src;
-  }// sorItems
     //
-     //
-     protected async registerDocAsync(doc: Record<string, unknown>): Promise<IEtudiantDoc> {
-        const p = ConvertData.ConvertDataItem(this.item, doc)
-        const lastname = p.lastname.toUpperCase();
-        const firstname = p.firstname;
-        const title = lastname + " " + firstname;
-        p._fullname = title;
-        const avatar =
-          lastname.substring(0, 0).toUpperCase() +
-          firstname.substring(0, 0).toUpperCase();
-        p._avatar = avatar;
-        const store = this.datastore
-        const av = p.avatar;
-        const aa = p._attachments;
-        if (aa && av && av.trim().length > 0) {
-           const n = aa.length;
-           for (let i = 0; i < n; i++){
-            const x = aa[i];
-            if (x.name && x.name === av){
-                p._url = x.url;
-                p._photoData = x.imgData;
-                break;
-            }
-           }// i
-        }// av
-        store.register_item(p)
-        return p
-    }// registerDocAsync
+    protected sortItems(src: readonly IEtudiantDoc[]): readonly IEtudiantDoc[] {
+        if (src.length > 1) {
+            const zz = [...src];
+            zz.sort((a, b) => {
+                let s1 = a.lastname;
+                let s2 = b.lastname;
+                if (s1 < s2) {
+                    return -1;
+                } else if (s1 > s2) {
+                    return 1;
+                }
+                s1 = a.firstname ? a.firstname : '';
+                s2 = b.firstname ? b.firstname : '';
+                if (s1 < s2) {
+                    return -1;
+                } else if (s1 > s2) {
+                    return 1;
+                }
+                return 0;
+            });
+            return zz;
+        } // sort
+        return src;
+    }// sorItems
     //
+
     protected async fetchUniqueId(
         current: IEtudiantDoc
     ): Promise<string | undefined> {
@@ -77,9 +48,22 @@ export class EtudiantServices extends ItemServices<IEtudiantDoc> {
             return sret;
         }
         const store = this.datastore;
+        const firstname = current.firstname.trim();
+        const lastname = current.lastname.trim();
+        if (firstname.length > 0 && lastname.length > 0) {
+            const filter: Record<string, unknown> = {};
+            filter[DomainConstants.FIELD_TYPE] = DomainConstants.TYPE_ETUDIANT;
+            filter[DomainConstants.FIELD_LASTNAME] = lastname;
+            filter[DomainConstants.FIELD_FIRSTNAME] = firstname;
+            const ix = await store.findOneItemIdByFilter(filter);
+            if (ix) {
+                return ix;
+            }
+        }// names
         const ident = current.ident ? current.ident.trim() : "";
         if (ident.length > 0) {
-            const filter: Record<string, unknown> = { doctype: DomainConstants.TYPE_ETUDIANT };
+            const filter: Record<string, unknown> = {};
+            filter[DomainConstants.FIELD_TYPE] = DomainConstants.TYPE_ETUDIANT;
             filter[DomainConstants.FIELD_DOSSIER] = ident;
             const ix = await store.findOneItemIdByFilter(filter);
             if (ix) {
@@ -88,7 +72,8 @@ export class EtudiantServices extends ItemServices<IEtudiantDoc> {
         } // ident
         const username = current.username ? current.username.trim() : "";
         if (username.length > 0) {
-            const filter: Record<string, unknown> = { doctype: DomainConstants.TYPE_ETUDIANT };
+            const filter: Record<string, unknown> = {};
+            filter[DomainConstants.FIELD_TYPE] = DomainConstants.TYPE_ETUDIANT;
             filter[DomainConstants.FIELD_USERNAME] = username;
             const ix = await store.findOneItemIdByFilter(filter);
             if (ix) {
@@ -97,7 +82,8 @@ export class EtudiantServices extends ItemServices<IEtudiantDoc> {
         } // username
         const email = current.email ? current.email.trim() : "";
         if (email.length > 0) {
-            const filter: Record<string, unknown> = { doctype: DomainConstants.TYPE_ETUDIANT };
+            const filter: Record<string, unknown> = {};
+            filter[DomainConstants.FIELD_TYPE] = DomainConstants.TYPE_ETUDIANT;
             filter[DomainConstants.FIELD_EMAIL] = email;
             const ix = await store.findOneItemIdByFilter(filter);
             if (ix) {
@@ -106,27 +92,19 @@ export class EtudiantServices extends ItemServices<IEtudiantDoc> {
         }
         const phone = current.phone ? current.phone.trim() : "";
         if (phone.length > 0) {
-            const filter: Record<string, unknown> = { doctype: DomainConstants.TYPE_ETUDIANT };
+            const filter: Record<string, unknown> = {};
+            filter[DomainConstants.FIELD_TYPE] = DomainConstants.TYPE_ETUDIANT;
             filter[DomainConstants.FIELD_PHONE] = phone;
             const ix = await store.findOneItemIdByFilter(filter);
             if (ix) {
                 return ix;
             }
         }
-        const firstname = current.firstname.trim();
-        const lastname = current.lastname.trim().toUpperCase();
-        const filter: Record<string, unknown> = { doctype: DomainConstants.TYPE_ETUDIANT };
-        filter[DomainConstants.FIELD_LASTNAME] = lastname;
-        filter[DomainConstants.FIELD_FIRSTNAME] = firstname;
-        const ix = await store.findOneItemIdByFilter(filter);
-        if (ix) {
-            return ix;
-        }
         return undefined;
     } // fetchUniqueId
     //
     protected isStoreable(p: IEtudiantDoc): boolean {
-        return p.firstname.trim().length > 0 && p.lastname.trim().length > 0;
+        return super.isStoreable(p) && p.firstname.trim().length > 0 && p.lastname.trim().length > 0;
     } // isStorable
     //
     protected getPersistMap(current: IEtudiantDoc): Record<string, unknown> {
@@ -342,7 +320,7 @@ export class EtudiantServices extends ItemServices<IEtudiantDoc> {
     ): Promise<IItemPayload<IEtudiantDoc>> {
         const pRet: IItemPayload<IEtudiantDoc> = {};
         const store = this.datastore;
-        const pEtud = await store.findItemByIdAsync(initialEtudiant, etudiantid);
+        const pEtud = await this.findItemByIdAsync(etudiantid);
         if (!pEtud) {
             return pRet;
         }

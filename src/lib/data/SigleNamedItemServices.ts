@@ -11,9 +11,9 @@ export class SigleNamedItemServices<
   //
   constructor(
     item: T,
-    store: IDataStore, creator?:IDataUrlCreator, dbUrl?: string
+    store: IDataStore, creator?: IDataUrlCreator, dbUrl?: string
   ) {
-    super(item, store, creator,dbUrl);
+    super(item, store, creator, dbUrl);
   }
   //
   public async findItemsAsync(
@@ -62,21 +62,21 @@ export class SigleNamedItemServices<
     const store = this.datastore;
     const stype = current.doctype;
     const sigle = current.sigle;
-    if (sigle.length > 0) {
-      const ix = await store.findOneItemIdByFilter({
-        doctype: stype,
-        sigle,
-      });
+    if (sigle.trim().length > 0) {
+      const sel: Record<string, unknown> = {};
+      sel[DomainConstants.FIELD_SIGLE] = sigle.trim();
+      sel[DomainConstants.FIELD_TYPE] = stype;
+      const ix = await store.findOneItemIdByFilter(sel);
       if (ix && ix.length > 0) {
         return ix;
       }
     } // sigle
     const name = current.name;
-    if (name.length > 0) {
-      const ix = await store.findOneItemIdByFilter({
-        doctype: stype,
-        name,
-      });
+    if (name.trim().length > 0) {
+      const sel: Record<string, unknown> = {};
+      sel[DomainConstants.FIELD_NAME] = name.trim();
+      sel[DomainConstants.FIELD_TYPE] = stype;
+      const ix = await store.findOneItemIdByFilter(sel);
       if (ix && ix.length > 0) {
         return ix;
       }
@@ -85,7 +85,7 @@ export class SigleNamedItemServices<
   } // fetchUniqueId
   //
   protected isStoreable(p: T): boolean {
-    return p.sigle.trim().length > 0 && p.name.trim().length > 0;
+    return p.sigle.trim().length > 0 && p.name.trim().length > 0 && super.isStoreable(p);
   } // getPersistMap
   protected getPersistMap(current: T): Record<string, unknown> {
     const data: Record<string, unknown> = super.getPersistMap(current)
@@ -99,5 +99,5 @@ export class SigleNamedItemServices<
     }
     return data;
   } // SaveItemAsync
-} // class UniteServices
+} // class SigleNamedItemServices<T>
 //

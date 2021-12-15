@@ -9,34 +9,25 @@ import type { IDataUrlCreator } from './IDataUrlCreator';
 //
 export class UniteServices extends SigleNamedItemServices<IUniteDoc> {
     //
-    constructor(   store: IDataStore, creator?:IDataUrlCreator, dbUrl?: string) {
-        super(initialUnite, store,creator,dbUrl)
+    constructor(store: IDataStore, creator?: IDataUrlCreator, dbUrl?: string) {
+        super(initialUnite, store, creator, dbUrl)
     }
-
     public async removeItemAsync(p: IUniteDoc): Promise<IItemPayload<IUniteDoc>> {
-        const id = p._id
-        const rev = p._rev
-        if (id.trim().length < 1 || rev.trim().length < 1) {
-            return {
-                ok: false,
-                error: 'Item not persisted'
-            };
-        }
-        {
-            const pf = new MatiereServices(this.datastore)
-            const pp = await pf.findAllItemsByFilterAsync({ doctype: DomainConstants.TYPE_MATIERE, uniteid: id });
-            const n = pp.length;
-            for (let i = 0; i < n; i++) {
-                const x = pp[i];
-                const rsp = await pf.removeItemAsync(x);
-                if (!rsp.ok) {
-                    return {
-                        ok: false,
-                        error: rsp.error
-                    }
+        const pf = new MatiereServices(this.datastore, this.dataUrlCreator, this.dbUrl);
+        const sel: Record<string, unknown> = {};
+        sel[DomainConstants.FIELD_UNITEID] = p._id;
+        const pp = await pf.findAllItemsByFilterAsync(sel);
+        const n = pp.length;
+        for (let i = 0; i < n; i++) {
+            const x = pp[i];
+            const rsp = await pf.removeItemAsync(x);
+            if (!rsp.ok) {
+                return {
+                    ok: false,
+                    error: rsp.error
                 }
-            }// i
-        }// controles
+            }
+        }// i
         return super.removeItemAsync(p)
     } // removeItemAsync
 } // class UniteServices

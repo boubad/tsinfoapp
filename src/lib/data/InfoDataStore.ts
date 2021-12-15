@@ -26,17 +26,13 @@ export class InfoDataStore implements IDataStore {
   //
   private readonly _creator?: IDataUrlCreator;
   private readonly _dburl?: string;
-  //
   private readonly _datastore: IDataStore;
-  private _data: Map<string, Map<string, IBaseDoc>> = new Map<
+  private readonly _data: Map<string, Map<string, IBaseDoc>> = new Map<
     string,
     Map<string, IBaseDoc>
   >();
   //
   constructor(store: IDataStore, creator?: IDataUrlCreator, dbUrl?: string) {
-    if (!store) {
-      throw new Error("Invalid datastore");
-    }
     this._datastore = store;
     this._dburl = dbUrl;
     this._creator = creator;
@@ -47,38 +43,36 @@ export class InfoDataStore implements IDataStore {
   public get dbUrl(): string | undefined {
     return this._dburl;
   }
+  public get dataUrlCreator(): IDataUrlCreator | undefined {
+    return this._creator;
+  }
   //
   public async processDocAttachmentsAsync(p: Record<string, unknown>): Promise<IAttachedDoc[]> {
     const vret: IAttachedDoc[] = [];
-    const id: string = p._id ? (p._id as string) : "";
-    if ((!p._attachments) || id.length < 1) {
+    const id: string = p[DomainConstants.FIELD_ID] ? (p[DomainConstants.FIELD_ID] as string) : "";
+    if ((!p[DomainConstants.FIELD_ATTACHMENTS]) || id.length < 1) {
       return vret;
     }
-    const aa = p._attachments as Record<string, unknown>[];
+    const aa = p[DomainConstants.FIELD_ATTACHMENTS] as Record<string, unknown>[];
     for (const key in aa) {
       const x = aa[key] as unknown;
       const info = x as IAttachedDoc;
-      if (!this._creator) {
-        const px = { ...info, docid: id, name: key };
-        vret.push(px);
-      } else {
-        const rsp = await this.datastore.getBlobDataAsync(id, key);
-        if ((!rsp.body) || (rsp.status !== HTTP_OK && rsp.status !== HTTP_MODIFIED)) {
-          const px = { ...info, docid: id, name: key };
-          vret.push(px);
+      let px: IAttachedDoc = { ...info, docid: id, name: key };
+      const hrsp = await this.datastore.getBlobDataAsync(id, key);
+      if (hrsp.status && hrsp.body && (hrsp.status === HTTP_OK || hrsp.status !== HTTP_MODIFIED)) {
+        const data = hrsp.body as ArrayBuffer;
+        let url: string | undefined = undefined;
+        if (this.dataUrlCreator) {
+          url = this.dataUrlCreator.createUrl(data, info.content_type);
+        } // dataUrlCreator
+        const p = { ...px };
+        if (url) {
+          px = { ...p, url: url };
         } else {
-          const data = rsp.body as ArrayBuffer;
-          const url = this._creator.createUrl(data, info.content_type);
-          if (url) {
-            const px = { ...info, docid: id, name: key, url: url };
-            vret.push(px);
-          } else {
-            const px = { ...info, docid: id, name: key };
-            vret.push(px);
-          }
-
+          px = { ...p, imgData: data };
         }
-      }// urlCreator
+      } // data OK
+      vret.push(px);
     } // key
     return vret;
   } // _processDocAttachmentsAsync
@@ -102,7 +96,7 @@ export class InfoDataStore implements IDataStore {
   public async findOneItemIdByFilter(
     filter: Record<string, unknown>
   ): Promise<string | undefined> {
-    const dd = await this.findAllDocsIdsBySelectorAsync(filter)
+    const dd = await this.findAllDocsIdsBySelectorAsync({ ...filter })
     return (dd.length > 0) ? dd[0] : undefined;
   } // findOneItemIdByFilter
   //
@@ -110,8 +104,8 @@ export class InfoDataStore implements IDataStore {
     item: T,
     sel?: Record<string, unknown>
   ): Promise<number> {
-    const filter: Record<string, unknown> = sel ? sel : {};
-    filter.doctype = item.doctype;
+    const filter: Record<string, unknown> = sel ? { ...sel } : {};
+    filter[DomainConstants.FIELD_TYPE] = item.doctype;
     return this.findDocsCountBySelectorAsync(filter);
   } // GetItemsCountAsync
   public async getItemsAsync<T extends IBaseDoc>(
@@ -120,7 +114,8 @@ export class InfoDataStore implements IDataStore {
     skip?: number,
     limit?: number
   ): Promise<readonly T[]> {
-    const filter: Record<string, unknown> = sel ? { ...sel, doctype: item.doctype } : { doctype: item.doctype };
+    const filter: Record<string, unknown> = sel ? { ...sel } : {};
+    filter[DomainConstants.FIELD_TYPE] = item.doctype;
     const pp = await this.findDocsBySelectorAsync(
       filter,
       skip,
@@ -131,11 +126,9 @@ export class InfoDataStore implements IDataStore {
     const n = pp.length;
     for (let i = 0; i < n; i++) {
       const x = pp[i];
-      if (x._id) {
-        const y = await this.findItemByIdAsync(item, x._id as string);
-        if (y) {
-          pRet.push(y);
-        }
+      const y = await this.findItemByIdAsync(item, x._id as string);
+      if (y) {
+        pRet.push(y);
       }
     } // i
     return pRet;
@@ -146,7 +139,8 @@ export class InfoDataStore implements IDataStore {
     skip?: number,
     limit?: number
   ): Promise<readonly T[]> {
-    const filter: Record<string, unknown> = sel ? { ...sel, doctype: item.doctype } : { doctype: item.doctype };
+    const filter: Record<string, unknown> = sel ? { ...sel } : {};
+    filter[DomainConstants.FIELD_TYPE] = item.doctype;
     const pp = await this.findDocsBySelectorAsync(
       filter,
       skip,
@@ -157,7 +151,9 @@ export class InfoDataStore implements IDataStore {
     for (let i = 0; i < n; i++) {
       const x = pp[i];
       const v = ConvertData.ConvertDataItem(item, x)
-      pRet.push(v);
+      if (v) {
+        pRet.push(v);
+      }
     } // i
     return pRet;
   } //   findItemsAsync<
@@ -294,7 +290,8 @@ export class InfoDataStore implements IDataStore {
     sel: Record<string, unknown>,
     fields?: readonly string[]
   ): Promise<Record<string, unknown> | undefined> {
-    return this.datastore.findDocBySelectorAsync(sel, fields);
+    const dd = await this.findDocsBySelectorAsync(sel, 0, 1, fields);
+    return (dd.length > 0) ? dd[0] : undefined;
   }
   //
   // private methods

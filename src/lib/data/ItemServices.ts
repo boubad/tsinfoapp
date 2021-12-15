@@ -1,7 +1,6 @@
 import { DomainConstants } from "./DomainConstants";
 import type { IBaseDoc } from "./IBaseDoc";
 import { BaseServices } from "./BaseServices";
-import { ConvertData } from './ConvertData';
 import type { IDataStore } from "./IDataStore";
 import { StatusType } from "./StatusType";
 import type { IItemPayload } from "./IItemPayload";
@@ -23,11 +22,6 @@ export class ItemServices<T extends IBaseDoc> extends BaseServices {
   protected get item(): T {
     return this._item;
   }
-  //
-  protected async registerDocAsync(doc: Record<string, unknown>): Promise<T> {
-    return ConvertData.ConvertDataItem(this.item, doc);
-  }// registerDocAsync
-  //
   protected async fetchUniqueId(current: T): Promise<string | undefined> {
     const id = current._id.trim();
     if (id.length > 0) {
@@ -63,11 +57,6 @@ export class ItemServices<T extends IBaseDoc> extends BaseServices {
     }
     return data;
   } // getPersistMap
-  protected getItemsFilter(): Record<string, unknown> {
-    const sel: Record<string, unknown> = {};
-    sel[DomainConstants.FIELD_TYPE] = this.item.doctype;
-    return sel;
-  }
   protected sortItems(src: readonly T[]): readonly T[] {
     return src;
   }// sorItems
